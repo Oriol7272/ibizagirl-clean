@@ -15,3 +15,7 @@ ibizagirl-deployable2-main.zip
 .vercel/
 .vercel/
 .vercel/
+
+# local backups
+*.bak.*
+deploy-trigger.txt
