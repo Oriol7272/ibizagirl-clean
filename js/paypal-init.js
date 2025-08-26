@@ -1,10 +1,11 @@
 (function(){
   var cid = (window.ENV && window.ENV.PAYPAL_CLIENT_ID) || "";
-  if(!cid){ console.error("PAYPAL_CLIENT_ID vacío; no cargo SDK"); return; }
+  if(!cid){ console.error("[paypal-init] PAYPAL_CLIENT_ID vacío; no cargo SDK"); return; }
   var params = new URLSearchParams({
     "client-id": cid,
-    currency: "EUR",
+    // Para subscripción funciona, y también permite orders con createOrder
     intent: "subscription",
+    currency: "EUR",
     components: "buttons"
   });
   var s=document.createElement("script");
