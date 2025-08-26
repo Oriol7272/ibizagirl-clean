@@ -4,13 +4,14 @@ set -euo pipefail
 OUT=".vercel/output"
 STATIC="$OUT/static"
 
-# Cargar env de prod si existe localmente (para generar js/env.js)
+# Cargar env local de producción si existe (para generar js/env.js)
 if [ -f ".vercel/.env.production.local" ]; then
   set -a
   . .vercel/.env.production.local
   set +a
 fi
 
+# Preparar estructura v3
 rm -rf "$OUT"
 mkdir -p "$STATIC/js"
 
@@ -27,10 +28,21 @@ cat > "$OUT/config.json" <<JSON
 }
 JSON
 
-# Copiar TODO al artefacto (sin carpetas internas)
-rsync -a --delete \
-  --exclude ".git" --exclude ".vercel" --exclude "node_modules" \
-  ./ "$STATIC/"
+# Copiar TODO al artefacto, excluyendo .git/.vercel/node_modules
+if command -v tar >/dev/null 2>&1; then
+  # Método preferido (rápido y disponible normalmente)
+  tar --exclude="./.git" --exclude="./.vercel" --exclude="./node_modules" \
+      -cf - . | ( cd "$STATIC" && tar -xf - )
+else
+  # Fallback sin tar: usa cp -a sobre los top-level que no queremos excluir
+  shopt -s dotglob || true
+  for entry in * ; do
+    case "$entry" in
+      .git|.vercel|node_modules) continue ;;
+    esac
+    cp -a "$entry" "$STATIC"/
+  done
+fi
 
 # env.js para frontend
 cat > "$STATIC/js/env.js" <<JS
