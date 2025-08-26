@@ -1,47 +1,16 @@
-#!/usr/bin/env bash
-set -euo pipefail
+set -e
+OUT=".vercel/output/static"
+mkdir -p "$OUT/js"
 
-OUT=".vercel/output"
-STATIC="$OUT/static"
+# Copia TODO menos .git y node_modules
+rsync -a --delete \
+  --exclude '.git' \
+  --exclude '.vercel' \
+  --exclude 'node_modules' \
+  ./ "$OUT/"
 
-# Cargar env local (para generar js/env.js si existe)
-if [ -f ".vercel/.env.production.local" ]; then
-  set -a
-  . .vercel/.env.production.local
-  set +a
-fi
-
-# Estructura v3
-rm -rf "$OUT"
-mkdir -p "$STATIC/js"
-
-# Config Output v3 con rutas limpias
-cat > "$OUT/config.json" <<JSON
-{
-  "version": 3,
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "^/premium/?$",      "dest": "/premium.html" },
-    { "src": "^/subscription/?$", "dest": "/subscription.html" },
-    { "src": "^/videos/?$",       "dest": "/videos.html" }
-  ]
-}
-JSON
-
-# Copiar TODO salvo .git/.vercel/node_modules
-if command -v tar >/dev/null 2>&1; then
-  tar --exclude="./.git" --exclude="./.vercel" --exclude="./node_modules" \
-      -cf - . | ( cd "$STATIC" && tar -xf - )
-else
-  shopt -s dotglob || true
-  for entry in * ; do
-    case "$entry" in .git|.vercel|node_modules) continue;; esac
-    cp -a "$entry" "$STATIC"/
-  done
-fi
-
-# Generar env.js con nuevos precios
-cat > "$STATIC/js/env.js" <<JS
+# Genera env.js con todas las vars
+cat > "$OUT/js/env.js" <<EOT
 window.ENV = {
   PAYPAL_CLIENT_ID: "${PAYPAL_CLIENT_ID:-}",
   PAYPAL_PLAN_MONTHLY_1499: "${PAYPAL_PLAN_MONTHLY_1499:-}",
@@ -56,10 +25,4 @@ window.ENV = {
   CRISP_WEBSITE_ID: "${CRISP_WEBSITE_ID:-}",
   IBG_ASSETS_BASE_URL: "${IBG_ASSETS_BASE_URL:-}"
 };
-JS
-
-# Sanidad
-[ -f "$STATIC/index.html" ]   || { echo "FALTA index.html en $STATIC"; exit 1; }
-[ -f "$STATIC/premium.html" ] || { echo "FALTA premium.html en $STATIC"; exit 1; }
-
-echo "OK: artefacto v3 listo en $OUT"
+EOT
