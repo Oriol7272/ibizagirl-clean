@@ -1,16 +1,38 @@
-set -e
-OUT=".vercel/output/static"
-mkdir -p "$OUT/js"
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Copia TODO menos .git y node_modules
-rsync -a --delete \
-  --exclude '.git' \
-  --exclude '.vercel' \
-  --exclude 'node_modules' \
-  ./ "$OUT/"
+OUT_DIR=".vercel/output"
+STATIC="$OUT_DIR/static"
+rm -rf "$OUT_DIR"
+mkdir -p "$STATIC/js"
 
-# Genera env.js con todas las vars
-cat > "$OUT/js/env.js" <<EOT
+# Output v3 con rutas limpias
+cat > "$OUT_DIR/config.json" <<JSON
+{
+  "version": 3,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "^/premium/?$",      "dest": "/premium.html" },
+    { "src": "^/subscription/?$", "dest": "/subscription.html" },
+    { "src": "^/videos/?$",       "dest": "/videos.html" }
+  ]
+}
+JSON
+
+# Copiar el repo al artefacto SIN .git/.vercel/node_modules
+if command -v tar >/dev/null 2>&1; then
+  tar --exclude="./.git" --exclude="./.vercel" --exclude="./node_modules" \
+      -cf - . | ( cd "$STATIC" && tar -xf - )
+else
+  shopt -s dotglob || true
+  for entry in * ; do
+    case "$entry" in .git|.vercel|node_modules) continue;; esac
+    cp -a "$entry" "$STATIC"/
+  done
+fi
+
+# Generar env.js con todas las variables (Vercel las inyecta en build)
+cat > "$STATIC/js/env.js" <<JS
 window.ENV = {
   PAYPAL_CLIENT_ID: "${PAYPAL_CLIENT_ID:-}",
   PAYPAL_PLAN_MONTHLY_1499: "${PAYPAL_PLAN_MONTHLY_1499:-}",
@@ -25,4 +47,11 @@ window.ENV = {
   CRISP_WEBSITE_ID: "${CRISP_WEBSITE_ID:-}",
   IBG_ASSETS_BASE_URL: "${IBG_ASSETS_BASE_URL:-}"
 };
-EOT
+JS
+
+# Sanidad mínima
+for f in index.html premium.html; do
+  [ -f "$STATIC/$f" ] || { echo "FALTA $f en artefacto"; exit 1; }
+done
+
+echo "OK: artefacto v3 en $OUT_DIR"
