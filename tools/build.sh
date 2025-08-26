@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-OUT_DIR=".vercel/output"
-STATIC="$OUT_DIR/static"
-rm -rf "$OUT_DIR"
+OUT=".vercel/output"
+STATIC="$OUT/static"
+rm -rf "$OUT"
 mkdir -p "$STATIC/js"
 
-# Output v3 con rutas limpias
-cat > "$OUT_DIR/config.json" <<JSON
-{
-  "version": 3,
+# Rutas limpias
+cat > "$OUT/config.json" <<JSON
+{ "version": 3,
   "routes": [
     { "handle": "filesystem" },
     { "src": "^/premium/?$",      "dest": "/premium.html" },
@@ -19,7 +17,7 @@ cat > "$OUT_DIR/config.json" <<JSON
 }
 JSON
 
-# Copiar el repo al artefacto SIN .git/.vercel/node_modules
+# Copiar todo excepto .git/.vercel/node_modules
 if command -v tar >/dev/null 2>&1; then
   tar --exclude="./.git" --exclude="./.vercel" --exclude="./node_modules" \
       -cf - . | ( cd "$STATIC" && tar -xf - )
@@ -31,7 +29,7 @@ else
   done
 fi
 
-# Generar env.js con todas las variables (Vercel las inyecta en build)
+# Generar env.js (sin espacios fantasmas)
 cat > "$STATIC/js/env.js" <<JS
 window.ENV = {
   PAYPAL_CLIENT_ID: "${PAYPAL_CLIENT_ID:-}",
@@ -53,5 +51,4 @@ JS
 for f in index.html premium.html; do
   [ -f "$STATIC/$f" ] || { echo "FALTA $f en artefacto"; exit 1; }
 done
-
-echo "OK: artefacto v3 en $OUT_DIR"
+echo "OK build -> $OUT"
