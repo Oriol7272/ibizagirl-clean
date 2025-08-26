@@ -1,10 +1,9 @@
-.vercel
-.git
-node_modules
-ibg_audit
-_backup_*
-scripts
-tools
+# Ignora repos y caches, pero NO ignores tools/ ni *.sh
+.git/
+node_modules/
+.vercel/output/
+_backup_*/
+*.bak
+*.tmp
 *.log
-*.md
-*.sh
+*.DS_Store

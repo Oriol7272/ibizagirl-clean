@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
 OUT=".vercel/output"
 STATIC="$OUT/static"
 
-# Cargar env de producción para generar js/env.js
+# Cargar env de prod si existe localmente (para generar js/env.js)
 if [ -f ".vercel/.env.production.local" ]; then
   set -a
   . .vercel/.env.production.local
@@ -13,7 +14,7 @@ fi
 rm -rf "$OUT"
 mkdir -p "$STATIC/js"
 
-# Config v3 con rutas limpias
+# Config Output v3 y rutas limpias
 cat > "$OUT/config.json" <<JSON
 {
   "version": 3,
@@ -26,12 +27,12 @@ cat > "$OUT/config.json" <<JSON
 }
 JSON
 
-# Copiar TODO el sitio al artefacto (excepto carpetas internas)
+# Copiar TODO al artefacto (sin carpetas internas)
 rsync -a --delete \
   --exclude ".git" --exclude ".vercel" --exclude "node_modules" \
   ./ "$STATIC/"
 
-# Generar js/env.js para el frontend
+# env.js para frontend
 cat > "$STATIC/js/env.js" <<JS
 window.ENV = {
   PAYPAL_CLIENT_ID: "${PAYPAL_CLIENT_ID:-}",
@@ -47,7 +48,7 @@ window.ENV = {
 };
 JS
 
-# Sanidad: si faltan, aborta (evita 404)
+# Sanidad para evitar 404
 [ -f "$STATIC/index.html" ]   || { echo "FALTA index.html en $STATIC"; exit 1; }
 [ -f "$STATIC/premium.html" ] || { echo "FALTA premium.html en $STATIC"; exit 1; }
 
