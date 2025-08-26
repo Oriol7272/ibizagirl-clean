@@ -1,0 +1,10 @@
+.vercel
+.git
+node_modules
+ibg_audit
+_backup_*
+scripts
+tools
+*.log
+*.md
+*.sh
