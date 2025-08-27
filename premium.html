@@ -99,9 +99,11 @@
 
   window.addEventListener('DOMContentLoaded',()=>{ IBG_Payments.enableThumbHandlers(); IBG_Payments.markLockedThumbs(); });
   window.IBG_Payments=IBG_Payments;
-})();</script>  <script src="/js/env.js"></script>
+})();</script>  <link rel="stylesheet" href="/css/premium.css"/>
+  <script src="/js/env.js"></script>
   <script src="/js/paypal-init.js" defer></script>
   <script src="/js/premium-paypal.js" defer></script>
+  <script src="/js/premium-gallery.js" defer></script>
 </head><body>
 <aside id="ad-left" class="side-ad left"></aside>
 <aside id="ad-right" class="side-ad right"></aside>
@@ -155,6 +157,31 @@
       <div><h3>Lifetime</h3><div id="btn-lifetime"></div><div id="status-lifetime" class="status"></div></div>
     </div>
   </section>
+  <section id="ibg-payments">
+    <div class="menu">
+      <span class="pay-chip">💠 Imagen (one-shot) <strong>€</strong><span id="price-img"></span></span>
+      <span class="pay-chip">🎬 Vídeo (one-shot) <strong>€</strong><span id="price-video"></span></span>
+      <span class="pay-chip">🗓️ Mensual</span>
+      <span class="pay-chip">📆 Anual</span>
+      <span class="pay-chip">♾️ Lifetime (sin anuncios)</span>
+      <span class="pay-chip">📦 Pack 10 imágenes <strong>€</strong><span id="price-pack10"></span></span>
+      <span class="pay-chip">📦 Pack 5 vídeos <strong>€</strong><span id="price-pack5v"></span></span>
+    </div>
+    <div class="pay-row">
+      <div class="pay-block"><h3>Mensual</h3><div id="btn-monthly"></div><div id="status-monthly" class="status"></div></div>
+      <div class="pay-block"><h3>Anual</h3><div id="btn-annual"></div><div id="status-annual" class="status"></div></div>
+      <div class="pay-block"><h3>Imagen</h3><div id="btn-img"></div><div id="status-img" class="status"></div></div>
+      <div class="pay-block"><h3>Vídeo</h3><div id="btn-video"></div><div id="status-video" class="status"></div></div>
+      <div class="pay-block"><h3>Lifetime</h3><div id="btn-lifetime"></div><div id="status-lifetime" class="status"></div></div>
+      <div class="pay-block"><h3>Pack 10 img</h3><div id="btn-pack10"></div><div id="status-pack10" class="status"></div></div>
+      <div class="pay-block"><h3>Pack 5 vídeos</h3><div id="btn-pack5v"></div><div id="status-pack5v" class="status"></div></div>
+    </div>
+  </section>
+  <section id="premium-thumbs">
+    <h2>Contenido premium</h2>
+    <div id="premium-grid"></div>
+  </section>
+  <script> (function(){const c=(window.ENV||{}); function s(id,v){var el=document.getElementById(id); if(el) el.textContent = (v||"").toString();} s("price-img",c.PAYPAL_ONESHOT_PRICE_EUR_IMAGE); s("price-video",c.PAYPAL_ONESHOT_PRICE_EUR_VIDEO); s("price-pack10",c.PAYPAL_ONESHOT_PACK10_IMAGES_EUR); s("price-pack5v",c.PAYPAL_ONESHOT_PACK5_VIDEOS_EUR);})(); </script>
 </body></html>
 
   

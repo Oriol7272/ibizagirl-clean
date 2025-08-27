@@ -1,50 +1,44 @@
-// Reemplaza por completo el archivo
+// js/paypal-init.js
 (function () {
   const cfg = (window.ENV || {});
-  const clientId = cfg.PAYPAL_CLIENT_ID || "";
-  if (!clientId) {
-    console.warn("[paypal-init] client-id vacío: no cargo SDK");
-    return;
-  }
+  const loaded = { subs: null, pay: null };
 
-  // ¿Tenemos planes para suscripción?
-  const hasMonthly = !!(cfg.PAYPAL_PLAN_MONTHLY_1499 && String(cfg.PAYPAL_PLAN_MONTHLY_1499).trim());
-  const hasAnnual  = !!(cfg.PAYPAL_PLAN_ANNUAL_4999  && String(cfg.PAYPAL_PLAN_ANNUAL_4999).trim());
-  const isSubscriptions = hasMonthly || hasAnnual;
-
-  function ensureScriptOnce(url) {
-    if ([...document.scripts].some(s => s.src && s.src.includes("www.paypal.com/sdk/js"))) {
-      return;
-    }
-    const s = document.createElement("script");
-    s.src = url;
-    s.async = true;
-    s.onload = () => console.log("[paypal-init] SDK cargado:", url);
-    s.onerror = (e) => console.error("[paypal-init] error cargando SDK:", e, url);
-    document.head.appendChild(s);
-  }
-
-  if (isSubscriptions) {
-    // SUSCRIPCIONES: sin currency, con vault=true
-    const params = new URLSearchParams({
-      "client-id": clientId,
-      intent: "subscription",
-      vault: "true",
-      components: "buttons",
+  function loadScript(src, attrs={}) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src^="${src.split('?')[0]}"][data-ns="${attrs["data-namespace"]||""}"]`)) {
+        return resolve();
+      }
+      const s = document.createElement("script");
+      s.src = src;
+      s.type = "text/javascript";
+      Object.entries(attrs).forEach(([k,v]) => s.setAttribute(k, v));
+      s.onload = () => resolve();
+      s.onerror = (e) => reject(e);
+      document.head.appendChild(s);
     });
-    const url = `https://www.paypal.com/sdk/js?${params.toString()}`;
-    console.log("[paypal-init] suscripciones, URL SDK =", url);
-    ensureScriptOnce(url);
-  } else {
-    // PAGOS SUELTOS: capture + currency=EUR
-    const params = new URLSearchParams({
-      "client-id": clientId,
-      intent: "capture",
-      currency: "EUR",
-      components: "buttons",
-    });
-    const url = `https://www.paypal.com/sdk/js?${params.toString()}`;
-    console.log("[paypal-init] pagos sueltos, URL SDK =", url);
-    ensureScriptOnce(url);
   }
+
+  async function loadSubsSDK() {
+    if (loaded.subs) return loaded.subs;
+    // Intent = subscription; vault=true; solo buttons
+    const url = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(cfg.PAYPAL_CLIENT_ID||"")}&intent=subscription&vault=true&components=buttons&currency=EUR`;
+    await loadScript(url, {"data-namespace":"paypal_subs", "data-ns":"paypal_subs"});
+    loaded.subs = true;
+    return true;
+  }
+  async function loadPaySDK() {
+    if (loaded.pay) return loaded.pay;
+    // Intent = capture para pagos sueltos
+    const url = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(cfg.PAYPAL_CLIENT_ID||"")}&intent=capture&components=buttons&currency=EUR`;
+    await loadScript(url, {"data-namespace":"paypal_pay", "data-ns":"paypal_pay"});
+    loaded.pay = true;
+    return true;
+  }
+
+  window._ibgPayPal = {
+    loadSubsSDK,   // usa window.paypal_subs
+    loadPaySDK     // usa window.paypal_pay
+  };
+
+  console.log("[paypal-init] listo (namespaces: paypal_subs / paypal_pay)");
 })();
