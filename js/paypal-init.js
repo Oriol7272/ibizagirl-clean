@@ -1,28 +1,18 @@
-(() => {
-  const CURRENCY='EUR';
-  function loadSdk({intent, ns, clientId}) {
-    return new Promise((resolve, reject) => {
-      if (window[ns]) return resolve(window[ns]);
-      const id=`pp-sdk-${ns}`;
-      if (document.getElementById(id)) {
-        const t=setInterval(()=>{ if(window[ns]){ clearInterval(t); resolve(window[ns]); }},50);
-        return;
-      }
-      const s=document.createElement('script');
-      const qp=new URLSearchParams({'client-id':clientId, intent, components:'buttons', currency:CURRENCY});
-      if (intent==='subscription') qp.set('vault','true');
-      s.id=id; s.async=true; s.src=`https://www.paypal.com/sdk/js?${qp}`;
-      s.setAttribute('data-namespace',ns);
-      s.onload=()=>resolve(window[ns]); s.onerror=reject;
-      document.head.appendChild(s);
-    });
+(function(){
+  const env = window.IBG_ENV || {};
+  const cid = env.PAYPAL_CLIENT_ID;
+  console.log("[paypal-init] cid len:", cid ? String(cid).length : 0);
+  if(!cid){ console.warn("[paypal-init] PAYPAL_CLIENT_ID ausente; /js/env.js debe exponer window.IBG_ENV.PAYPAL_CLIENT_ID"); return; }
+
+  function loadSdk(intent, ns, extra){
+    if (window[ns] && window[ns].Buttons) return;
+    var s=document.createElement('script');
+    s.src='https://www.paypal.com/sdk/js?client-id='+encodeURIComponent(cid)+'&components=buttons&currency=EUR&intent='+intent+(intent==='subscription'?'&vault=true':'')+(extra||'');
+    s.dataset.namespace=ns;
+    s.async=true; s.defer=true;
+    s.onload=function(){ console.log('[paypal-init] '+ns+' listo'); };
+    document.head.appendChild(s);
   }
-  window.__IBG_PayPal={ initAll: async(cfg={})=>{
-    const cid = cfg.PAYPAL_CLIENT_ID || (window.IBG_ENV&&window.IBG_ENV.PAYPAL_CLIENT_ID);
-    if(!cid){ console.warn('[paypal-init] PAYPAL_CLIENT_ID ausente'); return {}; }
-    const subs=await loadSdk({intent:'subscription',ns:'paypal_subs',clientId:cid});
-    const pay =await loadSdk({intent:'capture',     ns:'paypal_pay', clientId:cid});
-    console.log('[paypal-init] listo (namespaces: paypal_subs / paypal_pay)');
-    return {subs,pay};
-  }};
+  loadSdk('subscription','paypal_subs','');
+  loadSdk('capture','paypal_pay','');
 })();

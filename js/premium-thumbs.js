@@ -1,90 +1,99 @@
-(() => {
-  const S_EXT=/\.(jpg|jpeg|png|webp|mp4)$/i;
-  const looksPremiumPath=(p)=>/uncensored(-videos)?/i.test(p||'');
-  const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;};
-  const pick=(arr,n)=>shuffle([...arr]).slice(0,n);
-  const norm=(x)=>{
-    if(typeof x==='string'){ return {src:x, type:/\.mp4$/i.test(x)?'vid':'img'}; }
-    if(x && typeof x==='object'){
-      const cand = x.url||x.path||x.file||x.src||'';
-      if(cand) return {src:cand, type:/\.mp4$/i.test(cand)?'vid':'img'};
-    }
-    return null;
-  };
-  function crawlWindow(){
-    const out=[];
-    const seen=new Set();
-    const push=(src)=>{
-      if(!src) return;
-      if(!S_EXT.test(src)) return;
-      if(!looksPremiumPath(src)) return;
-      if(seen.has(src)) return;
-      seen.add(src);
-      out.push(norm(src));
-    };
-    // 1) UnifiedContentAPI si existe
-    const U=window.UnifiedContentAPI;
-    try{
-      if(U){
-        const all = (U.getAll && U.getAll()) || (U.list && U.list({})) || [];
-        const arr = Array.isArray(all)? all : (Array.isArray(all.items)? all.items : []);
-        arr.forEach(it=>{
-          const p=it?.url||it?.path||it?.file||it?.src;
-          if(p) push(p);
-        });
-      }
-    }catch(_){}
-    // 2) Variables globales varias
-    try{
-      for(const k in window){
-        const v = window[k];
-        if(!v) continue;
-        if(Array.isArray(v)){
-          v.forEach(it=>{
-            const n = norm(it);
-            if(n) push(n.src);
-          });
-        }else if(typeof v==='object' && v.items && Array.isArray(v.items)){
-          v.items.forEach(it=>{
-            const n = norm(it);
-            if(n) push(n.src);
-          });
-        }
-      }
-    }catch(_){}
-    return out.filter(Boolean);
+(function(){
+  const ADS_EVERY = Number((window.IBG_ENV||{}).ADS_EVERY || 8);
+  const GRID_LIMIT = 100;
+
+  function ready(fn){ (document.readyState!=='loading') ? fn() : document.addEventListener('DOMContentLoaded',fn); }
+  function getAPI(){ return window.UnifiedContentAPI || null; }
+
+  function selectItems(){
+    const api = getAPI();
+    let imgs=[], vids=[];
+    try {
+      if(api && typeof api.getPremiumImages==='function') imgs = api.getPremiumImages();
+      else if(api && typeof api.list==='function') imgs = api.list({type:'premiumImages'});
+      if(api && typeof api.getPremiumVideos==='function') vids = api.getPremiumVideos();
+    } catch(e){ console.warn('[thumbs] api error', e); }
+    const all = [].concat(imgs.map(x=>({__type:'image', ...x})), vids.map(x=>({__type:'video', ...x})));
+    return all.slice(0, GRID_LIMIT);
   }
-  const buildSrc=(src)=>{
-    const base=(window.IBG_ENV&&window.IBG_ENV.IBG_ASSETS_BASE_URL)||'';
-    if(/^https?:\/\//i.test(src)) return src;
-    if(base) return base.replace(/\/$/,'') + '/' + src.replace(/^\//,'');
-    return src;
-  };
+
+  function urlFor(item){
+    return item.thumb || item.preview || item.url || item.src || item.path || (item.name?('/uncensored/'+item.name):'#');
+  }
+  function isVideo(item){
+    const u=urlFor(item);
+    return item.__type==='video' || /\.mp4$|\.webm$/i.test(u);
+  }
+
+  function css(){
+    const s=document.createElement('style');
+    s.id='premium-thumbs-style';
+    s.textContent = `
+      /* ocultar laterales y galerías previas si existieran */
+      #sidebar, .sidebar, .premium-sidebar, .menu-lateral, .left-menu { display:none !important; }
+      .gallery, .full-gallery, .grid-full { display:none !important; }
+
+      #premium-grid{max-width:1200px;margin:12px auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;padding:0 8px}
+      #premium-grid .thumb{position:relative;background:#000;border-radius:10px;overflow:hidden}
+      #premium-grid .imgwrap{position:relative}
+      #premium-grid img.blur{width:100%;height:180px;object-fit:cover;filter:blur(10px) saturate(0.85);transform:scale(1.05);display:block}
+      #premium-grid .overlay{position:absolute;left:0;right:0;bottom:0;padding:6px;background:linear-gradient(transparent, rgba(0,0,0,.6));display:flex;justify-content:space-between;align-items:flex-end}
+      #premium-grid .price{color:#fff;font-size:12px;background:rgba(0,0,0,.5);padding:2px 6px;border-radius:6px}
+      #premium-grid .pp{min-height:30px}
+      #premium-grid .ad{grid-column:1 / -1}
+      #premium-grid .ad-inner{height:90px;border:1px dashed #bbb;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#666;background:#fcfcfc}
+    `;
+    document.head.appendChild(s);
+  }
+
   function adBlock(){
-    const w=document.createElement('div'); w.className='ad'; const inner=document.createElement('div');
-    try{
-      const E=window.IBG_ENV||{};
-      if(E.EROADVERTISING_SNIPPET_B64){ inner.innerHTML=atob(E.EROADVERTISING_SNIPPET_B64); }
-      else if(E.JUICYADS_SNIPPET_B64){ inner.innerHTML=atob(E.JUICYADS_SNIPPET_B64); }
-      else inner.innerHTML='<div style="padding:18px;text-align:center;color:#9bb">— Ad —</div>';
-    }catch(_){ inner.innerHTML='<div style="padding:18px;text-align:center;color:#9bb">— Ad —</div>'; }
-    w.appendChild(inner); return w;
+    const b=document.createElement('div');
+    b.className='ad';
+    b.innerHTML='<div class="ad-inner">ANUNCIO</div>';
+    return b;
   }
-  window.__IBG_renderThumbs=()=>{
-    const grid=document.getElementById('thumbs-grid'); if(!grid) return;
-    let pool=crawlWindow().filter(Boolean);
-    if(!pool.length){ console.warn('[thumbs] sin fuentes'); return; }
-    const items=pick(pool,100);
-    const NEW=new Set(pick(items.map((_,i)=>i), Math.floor(items.length*0.30)));
-    items.forEach((it,idx)=>{
-      if(idx>0 && idx%10===0) grid.appendChild(adBlock());
-      const card=document.createElement('div'); card.className='card';
-      const img=document.createElement('img'); img.loading='lazy'; img.src=buildSrc(it.src); img.alt='';
-      card.appendChild(img);
-      if(NEW.has(idx)){ const b=document.createElement('div'); b.className='badge'; b.textContent='NEW'; card.appendChild(b); }
-      const overlay=document.createElement('div'); overlay.className='overlay'; const slot=document.createElement('div'); overlay.appendChild(slot); card.appendChild(overlay);
-      grid.appendChild(card);
-      window.__IBG_PremiumPay && window.__IBG_PremiumPay.renderThumb(slot, it.type==='vid');
+
+  function buildTile(item, idx){
+    const price = isVideo(item)? 0.30 : 0.10;
+    const d=document.createElement('div'); d.className='thumb';
+    const u=urlFor(item);
+    d.innerHTML = `
+      <div class="imgwrap">
+        <img src="${u}" loading="lazy" class="blur" alt="">
+        <div class="overlay">
+          <div class="price">${price.toFixed(2)}€</div>
+          <div class="pp" id="pp-${idx}"></div>
+        </div>
+      </div>`;
+    // Montar botón PayPal por ítem (capture)
+    (function mount(){
+      if(!(window.paypal_pay && window.paypal_pay.Buttons)) return setTimeout(mount,150);
+      window.paypal_pay.Buttons({
+        style:{ layout:'horizontal', tagline:false, height:30 },
+        createOrder:(d,a)=>a.order.create({ purchase_units:[{ amount:{ currency_code:'EUR', value: price.toFixed(2) } }]}),
+        onApprove:(d,a)=>a.order.capture().then(x=>console.log('[item paid]', u, x))
+      }).render('#pp-'+idx);
+    })();
+    return d;
+  }
+
+  function render(){
+    let grid=document.getElementById('premium-grid');
+    if(!grid){
+      grid=document.createElement('div');
+      grid.id='premium-grid';
+      let app=document.getElementById('premium-app');
+      if(!app){ app=document.createElement('div'); app.id='premium-app'; document.body.appendChild(app); }
+      app.appendChild(grid);
+    }
+    const items = selectItems();
+    if(!items.length){ console.warn('[thumbs] sin fuentes'); return; }
+    grid.innerHTML='';
+    items.forEach((it,i)=>{
+      if(i>0 && (i%ADS_EVERY===0)) grid.appendChild(adBlock());
+      grid.appendChild(buildTile(it,i));
     });
-  };
+  }
+
+  ready(function(){ css(); render(); });
 })();
