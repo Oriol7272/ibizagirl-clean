@@ -1,4 +1,4 @@
-/* AUTO-GENERADO DESDE VERCEL ENV (PROD). NO EDITAR. */
+/* AUTO-GENERADO. NO EDITAR. */
 ;(function(){ window.IBG_ENV = window.IBG_ENV || {};
   window.IBG_ENV["PAYPAL_CLIENT_ID"] = "\"AfQEdiielw5fm3wF08p9pcxwqR3gPz82YRNUTKY4A8WNG9AktiGsDNyr2i7BsjVzSwwpeCwR7Tt7DPq5\"";
   window.IBG_ENV["PAYPAL_SECRET"] = "\"EGeBAStDv-G2iALPalvnyERyNFnInPCI03pgP_rscAKaszgJTKzJwz4kbFQx_XeKfPVS4HLGuhM533Dv\"";
@@ -19,5 +19,5 @@
   window.IBG_ENV["POPADS_ENABLE"] = "\"true\"";
   window.IBG_ENV["POPADS_SITE_ID"] = "\"e494ffb82839a29122608e933394c091\"";
   window.IBG_ENV["CRISP_WEBSITE_ID"] = "\"59e184b1-e679-4c93-b3ea-d60b63c1c04c\"";
-  console.log("[env-inline] OK ->", Object.keys(window.IBG_ENV));
+  console.log("[env-inline] claves:", Object.keys(window.IBG_ENV));
 })();
