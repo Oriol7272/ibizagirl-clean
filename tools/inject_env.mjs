@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 
-// Lee KEY="value" o KEY=value
+// Carga .env style KEY="value" o KEY=value
 function loadEnvFile(file) {
   const out = {};
   if (!fs.existsSync(file)) return out;
@@ -16,20 +16,17 @@ function loadEnvFile(file) {
   return out;
 }
 
-const envCandidates = [
+const candidates = [
   path.join(".vercel", ".env.production.local"),
   path.join(".vercel", ".env.preview.local"),
   path.join(".vercel", ".env.development.local"),
   ".env",
 ];
 
-let injected = {};
-for (const f of envCandidates) {
-  if (fs.existsSync(f)) injected = { ...injected, ...loadEnvFile(f) };
-}
-
-// En Vercel, process.env ya viene poblado
-const ENV = { ...injected, ...process.env };
+// Merge de archivos locales y process.env (en Vercel)
+let merged = {};
+for (const f of candidates) if (fs.existsSync(f)) merged = { ...merged, ...loadEnvFile(f) };
+const ENV = { ...merged, ...process.env };
 const get = (k, d = "") => (ENV[k] ?? d).toString();
 
 const cfg = {
