@@ -1,19 +1,20 @@
 (function(){
-  const env = (window.IBG_ENV||{});
-  const currency = env.PAYPAL_CURRENCY || 'EUR';
+  function env(){ return (window.IBG_ENV||window.ENV||{}); }
+  function num(v, d){ const n = Number(v); return isFinite(n)? n : d; }
 
-  const priceImg = Number(env.PAYPAL_ONESHOT_PRICE_EUR_IMAGE || 0.10).toFixed(2);
-  const priceVid = Number(env.PAYPAL_ONESHOT_PRICE_EUR_VIDEO || 0.30).toFixed(2);
-  const pricePack10 = Number(env.PAYPAL_PACK10_PRICE_EUR || 0.80).toFixed(2);
-  const pricePack5v = Number(env.PAYPAL_PACK5V_PRICE_EUR || 1.00).toFixed(2);
-  const priceLifetime = Number(env.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME || 100).toFixed(2);
-
-  const planMonthly = env.PAYPAL_PLAN_MONTHLY_1499 || env.PAYPAL_PLAN_MONTHLY || '';
-  const planAnnual  = env.PAYPAL_PLAN_ANNUAL_4999  || env.PAYPAL_PLAN_ANNUAL  || '';
+  const e = env();
+  const currency = e.PAYPAL_CURRENCY || 'EUR';
+  const priceImg = num(e.PAYPAL_ONESHOT_PRICE_EUR_IMAGE, 0.10).toFixed(2);
+  const priceVid = num(e.PAYPAL_ONESHOT_PRICE_EUR_VIDEO, 0.30).toFixed(2);
+  const pricePack10 = num(e.PAYPAL_PACK10_PRICE_EUR, 0.80).toFixed(2);
+  const pricePack5v = num(e.PAYPAL_PACK5V_PRICE_EUR, 1.00).toFixed(2);
+  const priceLifetime = num(e.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME, 100).toFixed(2);
+  const planMonthly = e.PAYPAL_PLAN_MONTHLY_1499 || e.PAYPAL_PLAN_MONTHLY || '';
+  const planAnnual  = e.PAYPAL_PLAN_ANNUAL_4999  || e.PAYPAL_PLAN_ANNUAL  || '';
 
   function mountSubs(slotId, planId){
     const el = document.getElementById(slotId);
-    if(!el || !planId || !window.paypal) return;
+    if(!el || !window.paypal) return;
     window.paypal.Buttons({
       style:{ label:'subscribe', shape:'pill' },
       createSubscription: (_d, actions)=>actions.subscription.create({ plan_id: planId }),
@@ -21,7 +22,6 @@
       onError: (err)=>console.error('[subs] error', err)
     }).render(el);
   }
-
   function mountPay(container, value, description){
     if(!container || !window.paypal) return;
     window.paypal.Buttons({
@@ -36,22 +36,28 @@
     }).render(container);
   }
 
-  // Topbar (packs + lifetime)
+  // Topbar packs + lifetime
   const slots = {
     'paypal-pack10':   {v:pricePack10, desc:'Pack 10 imágenes'},
     'paypal-pack5v':   {v:pricePack5v, desc:'Pack 5 vídeos'},
     'paypal-lifetime': {v:priceLifetime, desc:'Lifetime'}
   };
-  Object.keys(slots).forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) mountPay(el, slots[id].v, slots[id].desc);
-  });
+  function initTopbar(){
+    Object.keys(slots).forEach(id=>{
+      const el = document.getElementById(id);
+      if(el && !el.dataset.ppReady){ el.dataset.ppReady="1"; mountPay(el, slots[id].v, slots[id].desc); }
+    });
+    if(planMonthly && !document.getElementById('paypal-monthly').dataset.ppReady){
+      document.getElementById('paypal-monthly').dataset.ppReady="1";
+      mountSubs('paypal-monthly', planMonthly);
+    }
+    if(planAnnual && !document.getElementById('paypal-annual').dataset.ppReady){
+      document.getElementById('paypal-annual').dataset.ppReady="1";
+      mountSubs('paypal-annual', planAnnual);
+    }
+  }
 
-  // Suscripciones
-  mountSubs('paypal-monthly', planMonthly);
-  mountSubs('paypal-annual',  planAnnual);
-
-  // Botones por thumb cuando el grid esté listo
+  // Por thumb
   function initPerThumb(){
     document.querySelectorAll('[data-pp-item]').forEach(card=>{
       if(card.dataset.ppReady) return;
@@ -62,6 +68,8 @@
       if(c){ mountPay(c, val, isVideo ? 'Vídeo individual' : 'Imagen individual'); }
     });
   }
-  document.addEventListener('DOMContentLoaded', initPerThumb);
+
+  document.addEventListener('DOMContentLoaded', ()=>{ initTopbar(); initPerThumb(); });
   window.addEventListener('IBG_GRID_READY', initPerThumb);
+  window.addEventListener('load', initTopbar);
 })();

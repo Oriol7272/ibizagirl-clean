@@ -1,9 +1,12 @@
 (function(){
-  // === Inyección de barra superior y contenedores ===
-  function el(html){ var t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstChild; }
+  function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstChild; }
+  function loadScript(src){ return new Promise((res,rej)=>{ 
+    if([...(document.scripts||[])].some(s=>s.src.includes(src))) return res();
+    const s=document.createElement('script'); s.src=src; s.async=false; s.onload=res; s.onerror=rej; 
+    (document.head||document.body).appendChild(s);
+  });}
 
-  // Topbar (5 botones) + 5 contenedores PayPal
-  var topbar = el(`
+  const topbar = el(`
     <div id="premium-topbar" style="position:sticky;top:0;z-index:50;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);padding:12px 10px;">
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;">
         <button id="btn-pack10"   class="ibg-pill">Pack 10 imágenes</button>
@@ -25,8 +28,7 @@
     </div>
   `);
 
-  // Estilos + grid (100 thumbs)
-  var styles = el(`<style>
+  const styles = el(`<style>
     .ibg-pill{border:0;border-radius:9999px;padding:8px 14px;background:#00457c;color:#fff;font-weight:700;cursor:pointer}
     .ibg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
     .ibg-card{position:relative;border-radius:14px;overflow:hidden;background:#ffffff12;box-shadow:0 8px 22px rgba(0,0,0,.15)}
@@ -36,29 +38,27 @@
     .ibg-ad{display:flex;align-items:center;justify-content:center;height:160px;border:1px dashed #ffffff40;border-radius:14px;color:#fff;font-size:12px}
   </style>`);
 
-  var gridWrap = el(`
+  const gridWrap = el(`
     <div id="premium-area" style="padding:18px 12px 80px;">
       <h3 style="color:#fff;margin:0 0 10px 6px;font-weight:800;">Contenido premium</h3>
       <div id="premium-grid" class="ibg-grid"></div>
     </div>
   `);
 
-  // Inserción: justo al principio del <body>
-  var body = document.body;
+  const body=document.body;
   if (body && !document.getElementById('premium-topbar')) {
     body.insertBefore(topbar, body.firstChild || null);
     body.insertBefore(styles, body.firstChild || null);
   }
-  if (!document.getElementById('premium-grid')) {
-    body.appendChild(gridWrap);
-  }
+  if (!document.getElementById('premium-grid')) body.appendChild(gridWrap);
 
-  // Asegura que los otros scripts existan (si el HTML no los incluye)
-  function ensureScript(src){
-    if ([...document.scripts].some(s=>s.src.includes(src))) return;
-    var s=document.createElement('script'); s.src=src; document.body.appendChild(s);
-  }
-  ensureScript('/js/paypal-init.js');
-  ensureScript('/js/premium-thumbs.js');
-  ensureScript('/js/premium-paypal.js');
+  // Carga secuencial para asegurar ENV -> PayPal -> thumbs -> lógica PayPal
+  (async ()=>{
+    try{
+      await loadScript('/js/env.js');
+      await loadScript('/js/paypal-init.js');
+      await loadScript('/js/premium-thumbs.js');
+      await loadScript('/js/premium-paypal.js');
+    }catch(e){ console.warn('[premium-boot] error de carga', e); }
+  })();
 })();
