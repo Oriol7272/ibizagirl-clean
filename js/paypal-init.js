@@ -15,3 +15,4 @@
     document.head.appendChild(s);
   }catch(e){ console.error("[paypal-init] error", e); }
 })();
+// deploy-bump: 2025-08-27T07:18:30Z
