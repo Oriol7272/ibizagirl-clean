@@ -1,13 +1,16 @@
 :root{--card-bg:#0e1b21;--slot-bg:#0b3a53}
-#ibg-premium{padding:8px 10px}
-#ibg-premium .topbar{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 2px}
+#ibg-premium{padding:10px}
+#ibg-premium .topbar{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
 #ibg-premium .slot{flex:1 1 220px;min-width:220px;background:var(--slot-bg);color:#fff;border-radius:16px;padding:10px 12px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
 #ibg-premium .slot h4{margin:0 0 6px;font-weight:600}
-#ibg-premium .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;padding:12px 0}
+#ibg-premium .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;padding:6px 0 20px}
 #ibg-premium .card{position:relative;border-radius:14px;overflow:hidden;background:var(--card-bg)}
-#ibg-premium .card img{width:100%;display:block;filter:blur(12px) saturate(1.2);transform:scale(1.02)}
+#ibg-premium .card img{width:100%;display:block;filter:blur(12px) saturate(1.15);transform:scale(1.02)}
 #ibg-premium .overlay{position:absolute;left:8px;right:8px;bottom:8px}
 #ibg-premium .badge{position:absolute;right:8px;top:8px;background:#ff4d6d;color:#fff;font-weight:700;font-size:12px;padding:4px 7px;border-radius:999px}
 #ibg-premium .ad{grid-column:1/-1;background:#09161c;border-radius:14px;padding:10px}
 #ibg-premium .ad>div{width:100%}
-#ibg-hide-side,.left-menu,#side-menu,.premium-sidebar{display:none!important}
+/* Oculta menús laterales/duplicados comunes */
+#side-menu,.left-menu,.premium-sidebar,.sidebar,nav.side,.menu-left,[data-side="true"], .suscripciones-lateral{display:none!important}
+/* Oculta cualquier “cabecera de subscripciones” duplicada */
+.header-subscriptions,.subscriptions-bar,.premium-header,.premium-menu{display:none!important}
