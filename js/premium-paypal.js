@@ -1,75 +1,36 @@
-(function(){
-  function env(){ return (window.IBG_ENV||window.ENV||{}); }
-  function num(v, d){ const n = Number(v); return isFinite(n)? n : d; }
-
-  const e = env();
-  const currency = e.PAYPAL_CURRENCY || 'EUR';
-  const priceImg = num(e.PAYPAL_ONESHOT_PRICE_EUR_IMAGE, 0.10).toFixed(2);
-  const priceVid = num(e.PAYPAL_ONESHOT_PRICE_EUR_VIDEO, 0.30).toFixed(2);
-  const pricePack10 = num(e.PAYPAL_PACK10_PRICE_EUR, 0.80).toFixed(2);
-  const pricePack5v = num(e.PAYPAL_PACK5V_PRICE_EUR, 1.00).toFixed(2);
-  const priceLifetime = num(e.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME, 100).toFixed(2);
-  const planMonthly = e.PAYPAL_PLAN_MONTHLY_1499 || e.PAYPAL_PLAN_MONTHLY || '';
-  const planAnnual  = e.PAYPAL_PLAN_ANNUAL_4999  || e.PAYPAL_PLAN_ANNUAL  || '';
-
-  function mountSubs(slotId, planId){
-    const el = document.getElementById(slotId);
-    if(!el || !window.paypal) return;
-    window.paypal.Buttons({
-      style:{ label:'subscribe', shape:'pill' },
-      createSubscription: (_d, actions)=>actions.subscription.create({ plan_id: planId }),
-      onApprove: (data)=>{ console.log('[subs] OK', data); alert('¡Suscripción activa!'); },
-      onError: (err)=>console.error('[subs] error', err)
-    }).render(el);
+(() => {
+  const EUR='EUR';
+  const fix = (n) => Number(n||0).toFixed(2);
+  function renderBuy(node, amount, desc){
+    node.innerHTML='';
+    return paypal_pay.Buttons({
+      style:{label:'pay',color:'gold',shape:'pill'},
+      createOrder:(_,a)=>a.order.create({ intent:'CAPTURE',
+        purchase_units:[{ amount:{ value:fix(amount), currency_code:EUR }, description:desc }] }),
+      onApprove: async(_,a)=>{ try{ await a.order.capture(); node.innerHTML='<div style="text-align:center;color:#19f079;font-weight:700">✔ OK</div>'; }catch(e){console.error(e);} }
+    }).render(node);
   }
-  function mountPay(container, value, description){
-    if(!container || !window.paypal) return;
-    window.paypal.Buttons({
-      style:{ label:'pay', shape:'pill' },
-      createOrder: (_d, actions)=>actions.order.create({
-        purchase_units:[{ amount:{ currency_code: currency, value:String(value) }, description }]
-      }),
-      onApprove: (_d, actions)=> actions.order.capture().then((details)=>{
-        console.log('[pay] OK', details); alert('Pago correcto ✅');
-      }),
-      onError: (err)=>console.error('[pay] error', err)
-    }).render(container);
+  function renderSub(node, planId, label){
+    node.innerHTML='';
+    return paypal_subs.Buttons({
+      style:{label:'subscribe',color:'gold',shape:'pill'},
+      createSubscription:(_,a)=>a.subscription.create({ plan_id:planId }),
+      onApprove:(d)=>{ node.innerHTML='<div style="text-align:center;color:#19f079;font-weight:700">✔ Suscrito</div>'; console.log('[subs]',label,d); }
+    }).render(node);
   }
-
-  // Topbar packs + lifetime
-  const slots = {
-    'paypal-pack10':   {v:pricePack10, desc:'Pack 10 imágenes'},
-    'paypal-pack5v':   {v:pricePack5v, desc:'Pack 5 vídeos'},
-    'paypal-lifetime': {v:priceLifetime, desc:'Lifetime'}
+  window.__IBG_PremiumPay={
+    renderTop:()=>{
+      const E=window.IBG_ENV||{}, byId=(i)=>document.getElementById(i);
+      if(E.PAYPAL_PLAN_MONTHLY_1499 && byId('btn-sub-monthly')) renderSub(byId('btn-sub-monthly'),E.PAYPAL_PLAN_MONTHLY_1499,'Mensual');
+      if(E.PAYPAL_PLAN_ANNUAL_4999  && byId('btn-sub-annual'))  renderSub(byId('btn-sub-annual'), E.PAYPAL_PLAN_ANNUAL_4999,'Anual');
+      if(E.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME && byId('btn-lifetime')) renderBuy(byId('btn-lifetime'),E.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME,'Lifetime');
+      if(E.PAYPAL_ONESHOT_PACK10_IMAGES_EUR && byId('btn-pack10')) renderBuy(byId('btn-pack10'),E.PAYPAL_ONESHOT_PACK10_IMAGES_EUR,'Pack 10 imágenes');
+      if(E.PAYPAL_ONESHOT_PACKS_VIDEOS_EUR  && byId('btn-pack5'))  renderBuy(byId('btn-pack5'), E.PAYPAL_ONESHOT_PACKS_VIDEOS_EUR,'Pack 5 vídeos');
+    },
+    renderThumb:(node,isVideo)=>{
+      const E=window.IBG_ENV||{};
+      const amount=isVideo? (E.PAYPAL_ONESHOT_PRICE_EUR_VIDEO||0.30) : (E.PAYPAL_ONESHOT_PRICE_EUR_IMAGE||0.10);
+      renderBuy(node, amount, isVideo?'Vídeo individual':'Imagen individual');
+    }
   };
-  function initTopbar(){
-    Object.keys(slots).forEach(id=>{
-      const el = document.getElementById(id);
-      if(el && !el.dataset.ppReady){ el.dataset.ppReady="1"; mountPay(el, slots[id].v, slots[id].desc); }
-    });
-    if(planMonthly && !document.getElementById('paypal-monthly').dataset.ppReady){
-      document.getElementById('paypal-monthly').dataset.ppReady="1";
-      mountSubs('paypal-monthly', planMonthly);
-    }
-    if(planAnnual && !document.getElementById('paypal-annual').dataset.ppReady){
-      document.getElementById('paypal-annual').dataset.ppReady="1";
-      mountSubs('paypal-annual', planAnnual);
-    }
-  }
-
-  // Por thumb
-  function initPerThumb(){
-    document.querySelectorAll('[data-pp-item]').forEach(card=>{
-      if(card.dataset.ppReady) return;
-      card.dataset.ppReady="1";
-      const isVideo = card.getAttribute('data-kind') === 'video';
-      const val = isVideo ? priceVid : priceImg;
-      const c = card.querySelector('.ibg-pay');
-      if(c){ mountPay(c, val, isVideo ? 'Vídeo individual' : 'Imagen individual'); }
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', ()=>{ initTopbar(); initPerThumb(); });
-  window.addEventListener('IBG_GRID_READY', initPerThumb);
-  window.addEventListener('load', initTopbar);
 })();
