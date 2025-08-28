@@ -14,3 +14,5 @@
 #ad-left,#ad-right{position:fixed;top:90px;width:160px;height:600px;z-index:40}
 #ad-left{left:10px}#ad-right{right:10px}
 @media (max-width:1400px){#ad-left,#ad-right{display:none!important}}
+body{background:#0b0b0c;color:#eee}
+a{color:#9ad}
