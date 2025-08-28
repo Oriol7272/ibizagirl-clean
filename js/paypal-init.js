@@ -1,14 +1,14 @@
 ;(function () {
   function waitForEnv(cb){
-    let n=0; (function loop(){ 
-      if (window.IBG_ENV && window.IBG_ENV.PAYPAL_CLIENT_ID) return cb();
-      if (++n>80) { console.warn('[paypal-init] PAYPAL_CLIENT_ID vacío'); return; }
-      setTimeout(loop, 50);
+    let n=0; (function loop(){
+      const ok = !!(window.IBG_ENV && window.IBG_ENV.PAYPAL_CLIENT_ID);
+      if (ok) return cb();
+      if (++n>120) { console.warn('[paypal-init] PAYPAL_CLIENT_ID vacío'); return; }
+      setTimeout(loop, 100);
     })();
   }
   waitForEnv(function(){
-    const env = (window.IBG_ENV||{});
-    const CID = (env.PAYPAL_CLIENT_ID||'').trim();
+    const CID = String(window.IBG_ENV.PAYPAL_CLIENT_ID||'').trim();
     if (!CID) { console.warn('[paypal-init] PAYPAL_CLIENT_ID vacío'); return; }
     if (window.__paypal_sdk_loading__) return;
     window.__paypal_sdk_loading__ = true;

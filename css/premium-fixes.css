@@ -14,8 +14,3 @@
 #ad-left,#ad-right{position:fixed;top:90px;width:160px;height:600px;z-index:40}
 #ad-left{left:10px}#ad-right{right:10px}
 @media (max-width:1400px){#ad-left,#ad-right{display:none!important}}
-#ibg-pp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:50}
-#ibg-pp-overlay.show{display:flex}
-#ibg-pp-overlay .ibg-pp-modal{width:min(900px,95vw);background:#0f0f11;border:1px solid #222;border-radius:14px;padding:16px;color:#eee;position:relative;display:grid;grid-template-columns:1fr 320px;gap:16px}
-#ibg-pp-overlay .close{position:absolute;right:10px;top:6px;background:none;color:#999;border:0;font-size:28px;cursor:pointer}
-#ibg-pp-overlay .thumb-preview img{width:100%;height:auto;display:block;border-radius:10px}
