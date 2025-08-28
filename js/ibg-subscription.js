@@ -1,71 +1,60 @@
-(() => {
-  const ENV = (window.__ENV || {});
-  console.log("[subscription] ENV", ENV);
-  const CID = ENV.PAYPAL_CLIENT_ID || "";
-  if (!CID) { console.error("[subscription] PAYPAL_CLIENT_ID vacío"); return; }
+(function(){
+  const ENV = window.__ENV || {};
+  console.log('[subscription] ENV', ENV);
+  const CID = ENV.PAYPAL_CLIENT_ID || '';
+  if(!CID){ console.error('[subscription] PAYPAL_CLIENT_ID vacío'); return; }
 
-  let sdkLoading = null;
-  const loadSDK = (params) => {
-    if (sdkLoading) return sdkLoading;
-    sdkLoading = new Promise((res, rej) => {
-      const s = document.createElement("script");
-      s.src = "https://www.paypal.com/sdk/js?" + new URLSearchParams(params).toString();
-      s.onload = () => res(window.paypal);
-      s.onerror = rej;
-      document.head.appendChild(s);
-    });
-    return sdkLoading;
-  };
+  const qs = new URLSearchParams({
+    'client-id': CID,
+    currency: 'EUR',
+    components: 'buttons',
+    vault: 'true'
+  });
+  const sdkUrl = `https://www.paypal.com/sdk/js?${qs.toString()}`;
 
-  const ensureDiv = (sel) => {
-    const el = document.querySelector(sel);
-    if (!el) return null;
-    if (el.tagName.toLowerCase() !== "div") {
-      const d = document.createElement("div");
-      d.className = el.className; d.id = el.id; el.replaceWith(d);
-      return d;
+  function onceLoadSDK(cb){
+    if(document.querySelector('script[src^="https://www.paypal.com/sdk/js"]')){
+      if(window.paypal && window.paypal.Buttons){ cb(); }
+      else { const t=setInterval(()=>{ if(window.paypal&&window.paypal.Buttons){ clearInterval(t); cb(); }},50); }
+      return;
     }
-    return el;
-  };
+    const s=document.createElement('script');
+    s.src=sdkUrl; s.async=true;
+    s.onload=cb; s.onerror=()=>console.error('[subscription] error cargando SDK');
+    document.head.appendChild(s);
+  }
 
-  // SUBSCRIPTIONS
-  (async () => {
-    try {
-      await loadSDK({ "client-id": CID, currency:"EUR", components:"buttons", vault:"true" });
-      const m = ensureDiv("#pp-sub-monthly");
-      const a = ensureDiv("#pp-sub-annual");
-      if (m && ENV.PAYPAL_PLAN_ID_MONTHLY && window.paypal) {
-        window.paypal.Buttons({
-          style:{ layout:"horizontal" },
-          createSubscription: (_, actions) => actions.subscription.create({ plan_id: ENV.PAYPAL_PLAN_ID_MONTHLY }),
-          onApprove: () => location.reload()
-        }).render(m);
-      }
-      if (a && ENV.PAYPAL_PLAN_ID_ANNUAL && window.paypal) {
-        window.paypal.Buttons({
-          style:{ layout:"horizontal" },
-          createSubscription: (_, actions) => actions.subscription.create({ plan_id: ENV.PAYPAL_PLAN_ID_ANNUAL }),
-          onApprove: () => location.reload()
-        }).render(a);
-      }
-    } catch(e){ console.error(e); }
-  })();
+  function render(selector, opts){
+    const host=document.querySelector(selector);
+    if(!host) return;
+    if(host.tagName.toLowerCase()==='button'){ const d=document.createElement('div'); d.id=host.id; host.replaceWith(d); }
+    window.paypal.Buttons(opts).render(selector);
+  }
 
-  // ONE-SHOT
-  (async () => {
-    try {
-      await loadSDK({ "client-id": CID, currency:"EUR", components:"buttons" });
-      const one = ensureDiv("#pp-oneshot");
-      if (one && window.paypal) {
-        window.paypal.Buttons({
-          style:{ layout:"horizontal" },
-          createOrder: (_, actions) => {
-            const value = ENV.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME || ENV.PAYPAL_ONESHOT_PRICE_EUR_IMAGE || "1.00";
-            return actions.order.create({ purchase_units:[{ amount:{ currency_code:"EUR", value } }]});
-          },
-          onApprove: (_, actions) => actions.order.capture().then(() => location.reload())
-        }).render(one);
+  function renderAll(){
+    const targets = [
+      {sel:'#pp-monthly', plan: ENV.PAYPAL_PLAN_ID_MONTHLY},
+      {sel:'#pp-annual',  plan: ENV.PAYPAL_PLAN_ID_ANNUAL},
+      {sel:'#pp-image',   price: ENV.PAYPAL_ONESHOT_PRICE_EUR_IMAGE},
+      {sel:'#pp-video',   price: ENV.PAYPAL_ONESHOT_PRICE_EUR_VIDEO},
+      {sel:'#pp-lifetime',price: ENV.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME}
+    ];
+    targets.forEach(t=>{
+      if(t.plan){
+        render(t.sel,{
+          style:{layout:'vertical',shape:'pill',label:'subscribe'},
+          createSubscription: (_,actions)=>actions.subscription.create({plan_id:String(t.plan)}),
+          onApprove: d=>{ console.log('[subscription] OK',d); localStorage.setItem('ibg_paid','1'); }
+        });
+      } else if(t.price){
+        render(t.sel,{
+          style:{layout:'vertical',shape:'pill',label:'pay'},
+          createOrder:(_,actions)=>actions.order.create({purchase_units:[{amount:{currency_code:'EUR',value:String(t.price)}}]}),
+          onApprove:d=>{ console.log('[oneshot] OK',d); localStorage.setItem('ibg_paid','1'); }
+        });
       }
-    } catch(e){ console.error(e); }
-  })();
+    });
+  }
+
+  onceLoadSDK(renderAll);
 })();
