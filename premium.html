@@ -36,39 +36,29 @@
     <aside class="premium-aside" id="ad-right"></aside>
   </div>
 
-  <!-- PayPal SDK: one-shot (intent=capture) -->
-  <script
-    src="https://www.paypal.com/sdk/js?client-id=&currency=EUR&components=buttons&intent=capture"
-    data-namespace="paypal_buy"
-  ></script>
-
-  <!-- PayPal SDK: subscriptions (intent=subscription) -->
-  <script
-    src="https://www.paypal.com/sdk/js?client-id=&currency=EUR&components=buttons&intent=subscription&vault=true"
-    data-namespace="paypal_subs"
-  ></script>
+  <!-- Carga condicional de SDKs PayPal (evita 400 cuando no hay client-id) -->
+  <script>
+    (function loadPayPalSDKs(){
+      const ENV = window.__ENV || {};
+      const cid = (ENV.PAYPAL_CLIENT_ID||"").trim();
+      if(!cid){
+        console.warn("[paypal] PAYPAL_CLIENT_ID vacío — no se cargan SDKs");
+        return;
+      }
+      function inject(src, ns){
+        var s=document.createElement('script');
+        s.src=src.replace("client-id=","client-id="+encodeURIComponent(cid));
+        if(ns) s.setAttribute("data-namespace", ns);
+        document.body.appendChild(s);
+      }
+      // one-shot (intent=capture)
+      inject("https://www.paypal.com/sdk/js?client-id=&currency=EUR&components=buttons&intent=capture","paypal_buy");
+      // subscriptions (intent=subscription)
+      inject("https://www.paypal.com/sdk/js?client-id=&currency=EUR&components=buttons&intent=subscription&vault=true","paypal_subs");
+    })();
+  </script>
 
   <script src="/js/ibg-subscription.js" defer></script>
   <script src="/js/premium-thumbs.js" defer></script>
-
-  <script>
-    // Rellena client-id en runtime si existe
-    (function(){
-      try{
-        if(window.__ENV && window.__ENV.PAYPAL_CLIENT_ID){
-          const cid = encodeURIComponent(window.__ENV.PAYPAL_CLIENT_ID);
-          for(const s of document.querySelectorAll('script[src*="paypal.com/sdk/js"]')){
-            if(s.src.includes("client-id=") && !s.src.includes("client-id="+cid)){
-              const u = new URL(s.src);
-              u.searchParams.set("client-id", cid);
-              s.src = u.toString();
-            }
-          }
-        } else {
-          console.warn("[paypal] PAYPAL_CLIENT_ID vacío");
-        }
-      }catch(e){console.warn(e);}
-    })();
-  </script>
 </body>
 </html>
