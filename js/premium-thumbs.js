@@ -1,65 +1,48 @@
-(async () => {
-  const log = (...a)=>console.log('[premium-thumbs]', ...a);
-  const env = await (await fetch('/api/env')).json();
-  const BASE = env.BASE || '';
-  if (!BASE) { console.warn('BASE vacío'); }
+/* Render de thumbnails premium con blur permanente (hasta desbloqueo)
+   - Evita doble .webp
+   - Intenta /uncensored/ y cae a /full/ si hay 403/404
+   - Quita referrer para evitar bloqueos por hotlink
+*/
+(() => {
+  const BASE = (window.__ENV && window.__ENV.BASE) || "https://ibizagirl.pics";
+  const grid = document.querySelector('.ibg-premium-grid');
+  if (!grid) return;
 
-  // Carga pools globales ya existentes
-  const list = (window.PREMIUM_IMAGES_PART1||[]).concat(window.PREMIUM_IMAGES_PART2||[]);
-  const chosen = list.slice(0, 100);
+  // content-data3/4 definen window.PREMIUM_PART1 / PREMIUM_PART2 (nombres de archivo)
+  const L = (window.PREMIUM_PART1||[]).concat(window.PREMIUM_PART2||[]);
+  const ensureWebp = (n) => (n||"").replace(/\.(jpe?g|png|gif|webp)$/i,'') + '.webp';
 
-  const grid = document.querySelector('#premium-grid');
-  const frag = document.createDocumentFragment();
+  function url(folder, name){ return `${BASE}/${folder}/${ensureWebp(name)}`; }
 
-  chosen.forEach((name)=>{
-    const url = BASE.replace(/\/$/,'') + '/uncensored/' + name + '.webp';
-    const card = document.createElement('div'); card.className='card';
+  function card(name){
+    const wrap = document.createElement('div');
+    wrap.className = 'ibg-card';
 
-    const img = document.createElement('img'); img.loading='lazy'; img.decoding='async'; img.src=url;
-    const lock = document.createElement('div'); lock.className='lock'; lock.textContent='Bloqueado';
-    const pp = document.createElement('div'); pp.className='pp'; pp.setAttribute('data-pp','thumb'); pp.dataset.id=name;
-    const btn = document.createElement('button'); btn.className='pp-btn'; btn.innerHTML='<img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-mark-color.svg" alt=""> Comprar';
-    pp.appendChild(btn);
+    const img = document.createElement('img');
+    img.alt = '';
+    img.loading = 'lazy';
+    img.referrerPolicy = 'no-referrer';
+    img.src = url('uncensored', name);
+    img.onerror = () => { if (img.src.includes('/uncensored/')) img.src = url('full', name); };
+    wrap.appendChild(img);
 
-    card.appendChild(img); card.appendChild(lock); card.appendChild(pp);
-    frag.appendChild(card);
-  });
+    const lock = document.createElement('div');
+    lock.className = 'lock';
+    lock.textContent = 'Bloqueado';
+    wrap.appendChild(lock);
 
-  grid.innerHTML=''; grid.appendChild(frag);
-  log('render:', chosen.length, 'base:', BASE);
-})();
-// [ibg] fix-doble-ext
-(function(){
-  function fixOne(urlStr){
-    try{
-      const u = new URL(urlStr, location.origin);
-      // quita .webp.webp y .jpg.webp, .jpeg.webp, .png.webp, etc
-      u.pathname = u.pathname
-        .replace(/\.webp\.webp$/i, '.webp')
-        .replace(/\.(jpg|jpeg|png|gif)\.webp$/i, '.$1');
-      return u.toString();
-    }catch(e){ return urlStr; }
+    const pp = document.createElement('div');
+    pp.className = 'pp-buy';
+    pp.dataset.paypal = 'subscription';
+    pp.dataset.planId = (window.__ENV && window.__ENV.PAYPAL_PLAN_ID_MONTHLY) || '';
+    wrap.appendChild(pp);
+
+    return wrap;
   }
-  function fixThumbSrcs(){
-    document.querySelectorAll('.ibg-card img, img[data-ibg]').forEach(img=>{
-      const fixed = fixOne(img.src || img.getAttribute('data-src') || '');
-      if (fixed && fixed !== img.src) img.src = fixed;
-    });
-  }
-  // ejecutar varias veces por si el grid se renderiza tarde
-  window.addEventListener('load', fixThumbSrcs);
-  document.addEventListener('DOMContentLoaded', ()=>{ setTimeout(fixThumbSrcs, 500); setTimeout(fixThumbSrcs, 2000); });
-})();
 
-/** runtime fix: normaliza *.webp.webp -> *.webp */
-(function __ibgFixImgsWebp(){
-  const normalize = (u) => (u||"").replace(/(\.webp)+$/i, ".webp");
-  const patchAll = () => document.querySelectorAll("img").forEach(img => {
-    if (img.src) img.src = normalize(img.src);
-    const dsrc = img.getAttribute("data-src");
-    if (dsrc) img.setAttribute("data-src", normalize(dsrc));
-  });
-  // Una pasada al cargar y otra tras cada mutación
-  document.addEventListener("DOMContentLoaded", () => { patchAll(); setTimeout(patchAll, 50); });
-  new MutationObserver(() => setTimeout(patchAll, 0)).observe(document.documentElement, {childList:true,subtree:true,attributes:true,attributeFilter:["src","data-src"]});
+  // Render
+  grid.innerHTML = '';
+  L.slice(0, 300).forEach(n => grid.appendChild(card(n)));
+
+  console.log('[premium-thumbs] render:', L.length, 'base:', BASE);
 })();
