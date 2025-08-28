@@ -4,61 +4,59 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>IBIZA GIRL — Premium</title>
-  <link rel="preload" href="/decorative-images/Sexy Beachy.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" as="image" href="/decorative-images/paradise-beach.png">
   <link rel="stylesheet" href="/css/premium.css">
-  <script src="/js/env-inline.js"></script>
-  <script defer src="/content-data1.js"></script>
-  <script defer src="/content-data2.js"></script>
-  <script defer src="/content-data3.js"></script>
-  <script defer src="/content-data4.js"></script>
-  <script defer src="/content-data5.js"></script>
 </head>
-<body class="premium">
-  <div class="premium-wrap">
-    <aside class="premium-aside" id="ad-left"></aside>
+<body>
+  <div id="ad-left"></div>
+  <div id="ad-right"></div>
 
-    <main>
-      <header id="premium-toolbar">
-        <span class="brand badge">IBIZA GIRL — <strong>Premium</strong></span>
+  <header class="topbar">
+    <div class="menu">
+      <span class="chip" style="font-family:'SexyBeachy', system-ui">Ibiza Girl — <b>Premium</b></span>
+      <a class="chip" href="/">Home</a>
+      <button class="chip" data-pack="images10">Pack 10 imágenes · €0.99</button>
+      <button class="chip" data-pack="videos5">Pack 5 vídeos · €1.49</button>
+      <button class="chip primary" id="sub-month">Mensual · €14.99</button>
+      <button class="chip" id="sub-year">Anual · €49.99</button>
+      <button class="chip strong" id="lifetime">Lifetime · €49.99</button>
+    </div>
+  </header>
 
-        <nav id="plans">
-          <button class="plan" id="btn-pack-10">Pack 10 imágenes · €0.99</button>
-          <button class="plan" id="btn-pack-5v">Pack 5 vídeos · €1.49</button>
-          <button class="plan" id="btn-monthly">Mensual · €14.99</button>
-          <button class="plan" id="btn-annual">Anual · €49.99</button>
-          <button class="plan" id="btn-life">Lifetime · €49.99</button>
-        </nav>
-      </header>
+  <main class="wrap">
+    <section id="premium-grid" class="grid" aria-label="Premium grid (100)"></section>
+  </main>
 
-      <section id="premium-grid" class="grid"></section>
-    </main>
+  <!-- ENV primero -->
+  <script src="/js/env-inline.js"></script>
 
-    <aside class="premium-aside" id="ad-right"></aside>
-  </div>
-
-  <!-- Carga condicional de SDKs PayPal (evita 400 cuando no hay client-id) -->
+  <!-- SDK PayPal solo si hay CLIENT_ID -->
   <script>
-    (function loadPayPalSDKs(){
-      const ENV = window.__ENV || {};
-      const cid = (ENV.PAYPAL_CLIENT_ID||"").trim();
-      if(!cid){
-        console.warn("[paypal] PAYPAL_CLIENT_ID vacío — no se cargan SDKs");
-        return;
-      }
-      function inject(src, ns){
-        var s=document.createElement('script');
-        s.src=src.replace("client-id=","client-id="+encodeURIComponent(cid));
-        if(ns) s.setAttribute("data-namespace", ns);
-        document.body.appendChild(s);
-      }
-      // one-shot (intent=capture)
-      inject("https://www.paypal.com/sdk/js?client-id=&currency=EUR&components=buttons&intent=capture","paypal_buy");
-      // subscriptions (intent=subscription)
-      inject("https://www.paypal.com/sdk/js?client-id=&currency=EUR&components=buttons&intent=subscription&vault=true","paypal_subs");
+    (function loadPayPal(){
+      try{
+        var cid = (window.__ENV && window.__ENV.PAYPAL_CLIENT_ID) || "";
+        if(!cid){ console.warn("[paypal] PAYPAL_CLIENT_ID vacío — no se cargan SDKs"); return; }
+        var s1 = document.createElement("script");
+        s1.src = "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(cid)
+                 + "&currency=EUR&components=buttons,hosted-fields&vault=true";
+        s1.async = true;
+        document.head.appendChild(s1);
+      }catch(e){ console.error("[paypal] load error", e); }
     })();
   </script>
 
-  <script src="/js/ibg-subscription.js" defer></script>
-  <script src="/js/premium-thumbs.js" defer></script>
+  <!-- Datos de contenido (orden correcto) -->
+  <script src="/js/content-data1.js"></script>
+  <script src="/js/content-data2.js"></script>
+  <script src="/js/content-data3.js"></script>
+  <script src="/js/content-data4.js"></script>
+  <script src="/js/content-data5.js"></script>
+
+  <!-- Lógica de suscripción y de pagos unitarios -->
+  <script src="/js/ibg-subscription.js"></script>
+  <script src="/js/premium-thumbs.js"></script>
+
+  <!-- Ads (se inyectan desde JS leyendo __ENV) -->
+  <script src="/js/ads-inline.js"></script>
 </body>
 </html>
