@@ -1,16 +1,58 @@
-:root{--card-bg:#0e1b21;--slot-bg:#0b3a53}
-#ibg-premium{padding:10px}
-#ibg-premium .topbar{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
-#ibg-premium .slot{flex:1 1 220px;min-width:220px;background:var(--slot-bg);color:#fff;border-radius:16px;padding:10px 12px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
-#ibg-premium .slot h4{margin:0 0 6px;font-weight:600}
-#ibg-premium .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;padding:6px 0 20px}
-#ibg-premium .card{position:relative;border-radius:14px;overflow:hidden;background:var(--card-bg)}
-#ibg-premium .card img{width:100%;display:block;filter:blur(12px) saturate(1.15);transform:scale(1.02)}
-#ibg-premium .overlay{position:absolute;left:8px;right:8px;bottom:8px}
-#ibg-premium .badge{position:absolute;right:8px;top:8px;background:#ff4d6d;color:#fff;font-weight:700;font-size:12px;padding:4px 7px;border-radius:999px}
-#ibg-premium .ad{grid-column:1/-1;background:#09161c;border-radius:14px;padding:10px}
-#ibg-premium .ad>div{width:100%}
-/* Oculta menús laterales/duplicados comunes */
-#side-menu,.left-menu,.premium-sidebar,.sidebar,nav.side,.menu-left,[data-side="true"], .suscripciones-lateral{display:none!important}
-/* Oculta cualquier “cabecera de subscripciones” duplicada */
-.header-subscriptions,.subscriptions-bar,.premium-header,.premium-menu{display:none!important}
+@font-face{
+  font-family:"Sexy Beachy";
+  src:url("/decorative-images/Sexy Beachy.otf") format("opentype"),
+      url("/decorative-images/Sexy Beachy.ttf") format("truetype");
+  font-display:swap;
+}
+:root{
+  --bg-overlay: rgba(0,0,0,.55);
+  --card-bg: rgba(16,16,18,.85);
+  --border: rgba(255,255,255,.08);
+}
+body.premium {
+  margin:0;
+  background:
+    linear-gradient(var(--bg-overlay),var(--bg-overlay)),
+    url("/decorative-images/paradise-beach.png") center/cover fixed no-repeat;
+  color:#e7e7ea;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+}
+.premium .brand{font-family:"Sexy Beachy",cursive; letter-spacing:.5px;}
+
+.premium-wrap{
+  display:grid;
+  grid-template-columns: 220px 1fr 220px;
+  gap:20px;
+  padding:20px;
+  min-height:100vh;
+}
+.premium-aside{min-height:70vh; border:1px dashed var(--border); border-radius:14px; background:rgba(0,0,0,.25);}
+
+#premium-toolbar{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:0 0 14px 0;
+}
+.badge{
+  border:1px solid var(--border); border-radius:999px; padding:8px 14px; background:var(--card-bg);
+  backdrop-filter: blur(4px);
+}
+.grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px;
+}
+.card{
+  position:relative; overflow:hidden; border-radius:14px; background:var(--card-bg);
+  border:1px solid var(--border);
+}
+.card img{ width:100%; height:180px; object-fit:cover; display:block; filter:blur(11px) saturate(0.6); transform:scale(1.02);}
+.card.unlocked img{ filter:none; transform:none; }
+.card .price{
+  position:absolute; left:8px; top:8px; font-size:.86rem; padding:6px 10px; border-radius:999px;
+  background:rgba(0,0,0,.6); border:1px solid var(--border);
+  display:flex; gap:6px; align-items:center; cursor:pointer; user-select:none;
+}
+.card .price svg{width:16px; height:16px}
+.card .pill{
+  position:absolute; right:8px; bottom:8px; font-size:.78rem; padding:6px 10px; border-radius:999px;
+  background:rgba(0,0,0,.55); border:1px solid var(--border);
+}
+#plans{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 12px 0;}
+.plan{border:1px solid var(--border); background:var(--card-bg); border-radius:999px; padding:10px 14px;}

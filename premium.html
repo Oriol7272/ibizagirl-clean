@@ -1,79 +1,74 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>IBIZA GIRL — Premium</title>
-  <style>
-    @font-face{
-      font-family:'Sexy Beachy';
-      src:url('./decorative-images/Sexy Beachy.otf') format('opentype'),
-          url('./decorative-images/Sexy Beachy.ttf') format('truetype');
-      font-display:swap;
-    }
-    :root{--bg:#0b0c10;--card:#111317;--border:#1f232b;--text:#e6e7eb;--muted:#9aa0aa;--pill:#111927}
-    *{box-sizing:border-box}html,body{height:100%}
-    body{margin:0;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,'Sexy Beachy',sans-serif;
-      background:var(--bg) url('./decorative-images/paradise-beach.png') center/cover fixed no-repeat;
-      backdrop-filter:blur(2px)}
-    header.top{position:sticky;top:0;z-index:10;display:flex;gap:.5rem;align-items:center;padding:.75rem 1rem;
-      background:rgba(0,0,0,.55);border-bottom:1px solid var(--border);backdrop-filter:blur(6px)}
-    header .brand{font-weight:700;padding:.35rem .6rem;background:var(--pill);border-radius:999px}
-    .menu{display:flex;gap:.5rem;flex-wrap:wrap;margin-left:.75rem}
-    .btn{padding:.4rem .7rem;border:1px solid var(--border);background:var(--pill);border-radius:999px;color:#cfe3ff;text-decoration:none;font-size:.9rem}
-    .btn.primary{background:#0b1730;border-color:#123}
-    .btn.gold{background:#2a2100;border-color:#4a3b00;color:#ffeaa6}
-    .layout{display:grid;grid-template-columns:220px minmax(0,1fr) 220px;gap:14px;padding:14px}
-    .ad-col{min-height:80vh;border:1px dashed var(--border);background:rgba(0,0,0,.35);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
-    .panel{background:rgba(0,0,0,.55);border:1px solid var(--border);border-radius:16px;padding:10px;backdrop-filter:blur(4px)}
-    #premium-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
-    .card{position:relative;overflow:hidden;border-radius:12px;background:var(--card);border:1px solid var(--border);aspect-ratio:1/1}
-    .card img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.1) contrast(1.02)}
-    .buy{position:absolute;right:6px;bottom:6px;display:inline-flex;align-items:center;gap:6px;border:none;border-radius:999px;padding:.28rem .5rem;background:#2a2100;color:#ffeaa6;cursor:pointer;font-weight:600;font-size:.86rem;box-shadow:0 2px 10px rgba(0,0,0,.4);outline:1px solid rgba(255,215,0,.15)}
-    .buy svg{width:16px;height:16px}
-  </style>
+  <link rel="preload" href="/decorative-images/Sexy Beachy.otf" as="font" type="font/otf" crossorigin>
+  <link rel="stylesheet" href="/css/premium.css">
+  <script src="/js/env-inline.js"></script>
+  <script defer src="/content-data1.js"></script>
+  <script defer src="/content-data2.js"></script>
+  <script defer src="/content-data3.js"></script>
+  <script defer src="/content-data4.js"></script>
+  <script defer src="/content-data5.js"></script>
 </head>
-<body>
-  <header class="top">
-    <span class="brand">IBIZA GIRL — <span style="color:#9bdcff">Premium</span></span>
-    <nav class="menu">
-      <a class="btn" href="./">Home</a>
-      <a class="btn" id="pack10">Pack 10 imágenes · €0.99</a>
-      <a class="btn" id="pack5v">Pack 5 videos · €1.49</a>
-      <a class="btn primary" id="plan-monthly">Mensual · €14.99</a>
-      <a class="btn" id="plan-annual">Anual · €49.99</a>
-      <a class="btn gold" id="plan-life">Lifetime · €49.99</a>
-    </nav>
-  </header>
+<body class="premium">
+  <div class="premium-wrap">
+    <aside class="premium-aside" id="ad-left"></aside>
 
-  <div class="layout">
-    <aside class="ad-col">Anuncio</aside>
     <main>
-      <section class="panel">
-        <h2 style="margin:10px 0 8px 4px;color:#9aa0aa;font-size:1rem">Contenido premium (100 thumbnails)</h2>
-        <div id="premium-grid" aria-live="polite"></div>
-      </section>
+      <header id="premium-toolbar">
+        <span class="brand badge">IBIZA GIRL — <strong>Premium</strong></span>
+
+        <nav id="plans">
+          <button class="plan" id="btn-pack-10">Pack 10 imágenes · €0.99</button>
+          <button class="plan" id="btn-pack-5v">Pack 5 vídeos · €1.49</button>
+          <button class="plan" id="btn-monthly">Mensual · €14.99</button>
+          <button class="plan" id="btn-annual">Anual · €49.99</button>
+          <button class="plan" id="btn-life">Lifetime · €49.99</button>
+        </nav>
+      </header>
+
+      <section id="premium-grid" class="grid"></section>
     </main>
-    <aside class="ad-col">Anuncio</aside>
+
+    <aside class="premium-aside" id="ad-right"></aside>
   </div>
 
-  <script src="./js/env-inline.js"></script>
-  <script src="./js/content-data1.js"></script>
-  <script src="./js/content-data2.js"></script>
-  <script src="./js/content-data3.js"></script>
-  <script src="./js/content-data4.js"></script>
-  <script src="./js/content-data5.js"></script>
+  <!-- PayPal SDK: one-shot (intent=capture) -->
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=&currency=EUR&components=buttons&intent=capture"
+    data-namespace="paypal_buy"
+  ></script>
+
+  <!-- PayPal SDK: subscriptions (intent=subscription) -->
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=&currency=EUR&components=buttons&intent=subscription&vault=true"
+    data-namespace="paypal_subs"
+  ></script>
+
+  <script src="/js/ibg-subscription.js" defer></script>
+  <script src="/js/premium-thumbs.js" defer></script>
 
   <script>
+    // Rellena client-id en runtime si existe
     (function(){
-      var cid=(window.__ENV&&window.__ENV.PAYPAL_CLIENT_ID)||"";
-      if(!cid){console.warn("[paypal] PAYPAL_CLIENT_ID vacío");return;}
-      var s=document.createElement('script');
-      s.src="https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(cid)+"&currency=EUR&components=buttons&vault=true&intent=subscription";
-      s.async=true;document.head.appendChild(s);
+      try{
+        if(window.__ENV && window.__ENV.PAYPAL_CLIENT_ID){
+          const cid = encodeURIComponent(window.__ENV.PAYPAL_CLIENT_ID);
+          for(const s of document.querySelectorAll('script[src*="paypal.com/sdk/js"]')){
+            if(s.src.includes("client-id=") && !s.src.includes("client-id="+cid)){
+              const u = new URL(s.src);
+              u.searchParams.set("client-id", cid);
+              s.src = u.toString();
+            }
+          }
+        } else {
+          console.warn("[paypal] PAYPAL_CLIENT_ID vacío");
+        }
+      }catch(e){console.warn(e);}
     })();
   </script>
-
-  <script src="./js/premium-thumbs.js"></script>
-  <script src="./js/ibg-subscription.js"></script>
 </body>
 </html>
