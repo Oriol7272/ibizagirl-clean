@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  // Crear rotador si no existe, y garantizar 2 slides
   let rot = document.getElementById('banner-rotator');
   if(!rot){
     const host = document.querySelector('.banner') || document.body;
@@ -15,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   let slides = ensureSlides();
 
-  // Banner: usa /decorative-images.json generado en build; si no existe, cae a 'full'
   const full = IBG.getFullList();
   async function getBannerList(){
     try{
@@ -28,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let i = 0;
   function setSlide(idx){
-    slides = ensureSlides(); // por si el DOM cambió
+    slides = ensureSlides();
     if (!slides.length || !bannerImages.length) { rot.classList.add('hidden'); return; }
     const curr = slides[idx % slides.length];
     const next = slides[(idx+1) % slides.length];
@@ -39,7 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   setSlide(0);
   setInterval(()=>{ i = (i+1) % Math.max(1, bannerImages.length); setSlide(i); }, 4000);
 
-  // Carousel (14 aleatorias)
   const track = document.getElementById('carousel-track');
   const items = IBG.pickRandom(full, Math.min(14, full.length));
   for(const it of items){
@@ -52,7 +49,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('carousel-prev').addEventListener('click', ()=> track.scrollBy({left:-600, behavior:'smooth'}));
   document.getElementById('carousel-next').addEventListener('click', ()=> track.scrollBy({left: 600, behavior:'smooth'}));
 
-  // Galería (36 aleatorias)
   const grid = document.getElementById('gallery-grid');
   const gitems = IBG.pickRandom(full, Math.min(36, full.length));
   for(const it of gitems){

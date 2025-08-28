@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 mkdir -p js
-# Generar env.js con EXACTAS variables existentes en Vercel (ibg-report.txt)
 cat > js/env.js <<'EOT'
 window.ENV = {
   CRISP_WEBSITE_ID: "${CRISP_WEBSITE_ID:-}",
@@ -28,25 +27,17 @@ window.ENV = {
 };
 EOT
 
-# Manifest del banner: escanea /decorative-images/*.(jpg|jpeg|png|webp|gif)
-jqbin="$(command -v jq || true)"
-tmpjson="$(mktemp)"
-: > "$tmpjson"
+# Generar decorative-images.json con la lista de imágenes del banner si existen archivos
 if ls decorative-images/* >/dev/null 2>&1; then
-  if command -v python3 >/dev/null 2>&1; then
-    python3 - "$PWD" <<'PY'
-import os, json, sys, glob
-ex=("*.jpg","*.jpeg","*.png","*.webp","*.gif")
+  python3 - <<'PY'
+import os, json, glob
 files=[]
-for pat in ex:
+for pat in ("*.jpg","*.jpeg","*.png","*.webp","*.gif"):
   files+=glob.glob(os.path.join("decorative-images", pat))
 files=[f.replace("\\","/") for f in files]
 print(json.dumps(files, ensure_ascii=False))
 PY
-  else
-    echo "[]" 
-  fi > decorative-images.json
 else
-  echo "[]" > decorative-images.json
-fi
-echo "OK"
+  echo "[]"
+fi > decorative-images.json
+echo OK
