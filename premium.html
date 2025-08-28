@@ -1,56 +1,52 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>IBIZA GIRL — Premium</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0b0b0c;--fg:#e9eef5;--muted:#a8b2bd;--card:#131417;--ring:#2a2e35;--accent:#8ab4f8}
+    *{box-sizing:border-box}html,body{height:100%}
+    body{margin:0;background:radial-gradient(1200px 600px at 10% -20%,#11151b,transparent),#0b0b0c;color:var(--fg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    header,nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.75);backdrop-filter:blur(8px)}
+    .ibg-container{max-width:1280px;margin:0 auto;padding:16px}
+    .ibg-premium-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin:16px}
+    .ibg-card{position:relative;background:var(--card);border-radius:16px;overflow:hidden;min-height:180px;box-shadow:0 0 0 1px var(--ring) inset}
+    .ibg-card img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(16px) brightness(.72);transform:scale(1.04)}
+    .ibg-card img.unlocked{filter:none;transform:none}
+    .ibg-card .lock{position:absolute;left:8px;top:8px;background:rgba(0,0,0,.55);border:1px solid #2a2e35;color:#dfe6ef;border-radius:999px;padding:4px 8px;font-size:13px}
+    .pp-buy{position:absolute;right:8px;bottom:8px}
+    .adbox{height:250px;border:1px dashed #333;border-radius:12px;background:#0f1114;color:#66707a;display:flex;align-items:center;justify-content:center;margin:16px}
+  </style>
+
+  <!-- ENV primero -->
   <script src="js/env-inline.js"></script>
-  <link rel="stylesheet" href="css/ibg-premium.css">
 </head>
 <body>
-  <!-- ÚNICO NAV -->
-  <header>
-    <nav class="nav">
-      <div class="brand">IBIZA GIRL — <span style="opacity:.7">Premium</span></div>
-      <a class="pill" href="/packs-10">Pack 10 imágenes · <span id="p10">€0.99</span></a>
-      <a class="pill" href="/packs-5">Pack 5 vídeos · <span id="p5">€1.49</span></a>
-      <div class="pill primary" data-pp="sub-monthly">Mensual · €14.99</div>
-      <div class="pill" data-pp="sub-annual">Anual · €49.99</div>
-      <a class="pill" href="/lifetime">Lifetime · €49.99</a>
-    </nav>
+  <header class="ibg-container">
+    <strong>IBIZA GIRL — <span style="color:var(--accent)">Premium</span></strong>
+    <div class="adbox">Anuncio</div>
   </header>
 
-  <main>
-    <aside class="aside">
-      <div class="adbox" id="ad-left">Anuncio</div>
-    </aside>
+  <main class="ibg-container">
+    <div class="tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px">
+      <div class="pp-buy" data-paypal="oneshot" data-amount=""></div>
+      <div class="pp-buy" data-paypal="subscription" data-plan-id=""></div>
+      <div class="pp-buy" data-paypal="subscription" data-plan-id=""></div>
+    </div>
 
-    <section>
-      <div id="premium-grid" class="grid"></div>
-      <p class="footer-note">Las miniaturas están difuminadas. Se desbloquean tras el pago individual, pack o suscripción.</p>
-    </section>
-
-    <aside class="aside">
-      <div class="adbox" id="ad-right">Anuncio</div>
-    </aside>
+    <section class="ibg-premium-grid"></section>
   </main>
 
-  <!-- DATASETS existentes -->
-  <script src="js/content-data1.js"></script>
-  <script src="js/content-data2.js"></script>
-  <script src="js/content-data3.js"></script>
-  <script src="js/content-data4.js"></script>
-  <script src="js/content-data5.js"></script>
-
-  <!-- App -->
-  <script src="js/premium-thumbs.js" defer></script>
+  <!-- Scripts de funcionalidad -->
   <script src="js/ibg-subscription.js" defer></script>
-  <script src="js/fix-webp-thumbs.js" defer></script>
+  <script src="js/content-data1.js" defer></script>
+  <script src="js/content-data2.js" defer></script>
+  <script src="js/content-data3.js" defer></script>
+  <script src="js/content-data4.js" defer></script>
+  <script src="js/content-data5.js" defer></script>
+  <script src="js/premium-thumbs.js" defer></script>
 </body>
 </html>
-<div class="pp-wrap"><div id="pp-sub-monthly" class="pp-buy"></div></div>
-<div class="pp-wrap"><div id="pp-sub-annual"  class="pp-buy"></div></div>
-<div class="pp-wrap"><div id="pp-oneshot"     class="pp-buy"></div></div>
