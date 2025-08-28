@@ -1,16 +1,18 @@
-;(function(){
-  const raw = {
-    IBG_ASSETS_BASE_URL: (typeof process!=='undefined' && process.env && process.env.IBG_ASSETS_BASE_URL) || 'https://ibizagirl.pics',
-    PAYPAL_CLIENT_ID: (typeof process!=='undefined' && process.env && process.env.PAYPAL_CLIENT_ID) || '',
-    PAYPAL_PLAN_ID_MONTHLY: (process?.env?.PAYPAL_PLAN_ID_MONTHLY)||'',
-    PAYPAL_PLAN_ID_ANNUAL:  (process?.env?.PAYPAL_PLAN_ID_ANNUAL)||'',
-    PAYPAL_PLAN_ID_LIFETIME:(process?.env?.PAYPAL_PLAN_ID_LIFETIME)||'',
-    PAYPAL_PLAN_PRICE_EUR_MONTHLY: (process?.env?.PAYPAL_PLAN_PRICE_EUR_MONTHLY)||'',
-    PAYPAL_PLAN_PRICE_EUR_ANNUAL:  (process?.env?.PAYPAL_PLAN_PRICE_EUR_ANNUAL)||'',
-    PAYPAL_ONESHOT_PRICE_EUR_IMAGE:(process?.env?.PAYPAL_ONESHOT_PRICE_EUR_IMAGE)||'',
+(() => {
+  window.__ENV = {
+    BASE: "https://ibizagirl.pics",
+    PAYPAL_CLIENT_ID: "AfQEdiielw5fm3wF08p9pcxwqR3gPz82YRNUTKY4A8WNG9AktiGsDNyr2i7BsjVzSwwpeCwR7Tt7DPq5",
+    PAYPAL_PLAN_ID_MONTHLY: "P-3WE8037612641383DNCUKNJI",
+    PAYPAL_PLAN_ID_ANNUAL:  "P-43K261214Y571983RNCUKN7I",
+    PAYPAL_ONESHOT_PRICE_EUR_IMAGE:   "0.10",
+    PAYPAL_ONESHOT_PRICE_EUR_VIDEO:   "0.30",
+    PAYPAL_ONESHOT_PRICE_EUR_LIFETIME:"100.00",
+    # Ads (opcionales)
+    EXOCLICK_ZONE: "5696328",
+    JUICYADS_ZONE: "$    JUIDS_ZONE:-}",
+    EROADVERTISING_ZONE: "8177575",
+    POPADS_ENABLE: "true",
+    POPADS_SITE_ID: "e494ffb82839a29122608e933394c091"
   };
-  const clean = Object.fromEntries(Object.entries(raw).map(([k,v])=>[k,String(v??'').trim().replace(/^"|"$/g,'')]));
-  clean.IBG_ASSETS_BASE_URL = clean.IBG_ASSETS_BASE_URL.replace(/\/+$/,'');
-  window.IBG_ENV = Object.freeze(clean);
-  console.log('[env-inline] BASE:', window.IBG_ENV.IBG_ASSETS_BASE_URL);
+  console.info("[env-inline] window.__ENV", window.__ENV);
 })();
