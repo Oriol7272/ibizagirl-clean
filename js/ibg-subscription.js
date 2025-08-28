@@ -1,29 +1,49 @@
 (function(){
-  const ENV = window.__ENV || {};
-  const PLAN_MONTH = ENV.PAYPAL_PLAN_ID_MONTHLY || "";
-  const PLAN_YEAR  = ENV.PAYPAL_PLAN_ID_ANNUAL  || "";
-  const CID = (ENV.PAYPAL_CLIENT_ID||"").trim();
+  const ENV = (window.__ENV||{});
   console.log("[subscription] ENV", ENV);
 
-  function mountBtn(selector, planId){
-    const el = document.querySelector(selector);
-    if(!el) return;
-    if(!CID || !planId || !(window.paypal_subs && paypal_subs.Buttons)){
-      el.addEventListener('click', ()=>alert("Activa el pago (PAYPAL_CLIENT_ID/plan) para suscribirte."), {once:true});
-      return;
-    }
-    paypal_subs.Buttons({
-      style:{layout:'horizontal',color:'gold',shape:'pill',label:'subscribe'},
-      createSubscription: (data, actions)=>actions.subscription.create({ plan_id: planId }),
-      onApprove: (data)=>alert("¡Suscripción activa! ID: "+data.subscriptionID)
-    }).render(el);
+  function ensureSDK(cb){
+    if (window.paypal && window.paypal.Buttons){ cb(); return; }
+    const iv = setInterval(()=>{ if(window.paypal && window.paypal.Buttons){ clearInterval(iv); cb(); } }, 100);
+    setTimeout(()=>clearInterval(iv), 10000);
   }
 
-  function init(){
-    mountBtn("#btn-monthly", PLAN_MONTH);
-    mountBtn("#btn-annual",  PLAN_YEAR);
+  function mountPlan(buttonId, planId){
+    const el = document.getElementById(buttonId);
+    if(!el || !planId){ return; }
+    ensureSDK(() => {
+      try{
+        window.paypal.Buttons({
+          style:{ layout:"horizontal", color:"gold", shape:"pill", height: 40 },
+          createSubscription: function(data, actions){
+            return actions.subscription.create({ plan_id: planId });
+          },
+          onApprove: function(data){ alert("¡Gracias! Suscripción "+data.subscriptionID); },
+        }).render("#"+buttonId);
+      }catch(e){ console.error("[subscription] render error", e); }
+    });
   }
 
-  if(document.readyState !== "loading") init();
-  else document.addEventListener("DOMContentLoaded", init);
+  // Botones del menú superior (suscripciones)
+  document.getElementById('sub-month')?.addEventListener('click', () => {
+    const plan = ENV.PAYPAL_PLAN_ID_MONTHLY || "";
+    if(!plan){ alert("Plan mensual no configurado"); return; }
+    const id = "paypal-sub-month";
+    let h = document.getElementById(id);
+    if(!h){ h = document.createElement("div"); h.id=id; h.style.position="fixed"; h.style.top="12px"; h.style.right="12px"; document.body.appendChild(h); }
+    mountPlan(id, plan);
+  });
+
+  document.getElementById('sub-year')?.addEventListener('click', () => {
+    const plan = ENV.PAYPAL_PLAN_ID_ANNUAL || "";
+    if(!plan){ alert("Plan anual no configurado"); return; }
+    const id = "paypal-sub-year";
+    let h = document.getElementById(id);
+    if(!h){ h = document.createElement("div"); h.id=id; h.style.position="fixed"; h.style.top="64px"; h.style.right="12px"; document.body.appendChild(h); }
+    mountPlan(id, plan);
+  });
+
+  document.getElementById('lifetime')?.addEventListener('click', () => {
+    alert("El pago 'Lifetime' se ofrece como compra única en cada tarjeta.");
+  });
 })();
