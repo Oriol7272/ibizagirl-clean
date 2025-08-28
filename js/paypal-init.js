@@ -1,9 +1,7 @@
-// js/paypal-init.js
 ;(function () {
   const env = (window.IBG_ENV||{});
   const CID = (env.PAYPAL_CLIENT_ID||'').trim();
   if (!CID) { console.warn('[paypal-init] PAYPAL_CLIENT_ID vacío'); return; }
-
   if (window.__paypal_sdk_loading__) return;
   window.__paypal_sdk_loading__ = true;
 
@@ -18,10 +16,7 @@
     const s = document.createElement('script');
     s.src = `https://www.paypal.com/sdk/js?${qs}`;
     s.async = true;
-    s.onload = () => {
-      console.log('[paypal-init] SDK listo');
-      resolve(window.paypal);
-    };
+    s.onload  = () => { console.log('[paypal-init] SDK listo'); resolve(window.paypal); };
     s.onerror = (e) => reject(e);
     document.head.appendChild(s);
   });

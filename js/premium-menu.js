@@ -1,4 +1,3 @@
-// js/premium-menu.js
 ;(function(){
   const env = (window.IBG_ENV||{});
   const PRICE = {
@@ -11,18 +10,15 @@
     LIFETIME:   env.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME || '4.99'
   };
 
-  const el = document.getElementById('premium-topbar') || (function(){
-    const nav = document.createElement('div');
-    nav.id = 'premium-topbar';
-    document.body.prepend(nav);
-    return nav;
-  })();
-
-  el.innerHTML = `
+  let bar = document.getElementById('premium-topbar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'premium-topbar';
+    document.body.prepend(bar);
+  }
+  bar.innerHTML = `
     <div class="ibg-premium-nav">
-      <div class="left">
-        <strong>IBIZA GIRL — Premium</strong>
-      </div>
+      <div class="left"><strong>IBIZA GIRL — Premium</strong></div>
       <div class="right">
         <button class="ibg-btn" data-action="pack10">Pack 10 imágenes · €${PRICE.PACK10}</button>
         <button class="ibg-btn" data-action="pack5v">Pack 5 vídeos · €${PRICE.PACK5V}</button>
@@ -32,11 +28,4 @@
       </div>
     </div>
   `;
-
-  el.addEventListener('click', async (ev)=>{
-    const a = ev.target.closest('[data-action]');
-    if (!a) return;
-    const action = a.dataset.action;
-    window.openPremiumCheckout?.(action);
-  });
 })();
