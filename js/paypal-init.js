@@ -1,29 +1,32 @@
-;(function () {
-  function waitForEnv(cb){
-    let n=0; (function loop(){
-      const ok = !!(window.IBG_ENV && window.IBG_ENV.PAYPAL_CLIENT_ID);
-      if (ok) return cb();
-      if (++n>120) { console.warn('[paypal-init] PAYPAL_CLIENT_ID vacío'); return; }
-      setTimeout(loop, 100);
-    })();
+;(function(){
+  let _resolve; window.paypalReady = new Promise(r=>_resolve=r);
+  async function waitEnv(){
+    return new Promise((res,rej)=>{
+      let n=0;(function loop(){
+        const cid = window?.IBG_ENV?.PAYPAL_CLIENT_ID;
+        if (cid && String(cid).trim().length>10) return res(cid);
+        if (++n>400) return rej(new Error('PAYPAL_CLIENT_ID vacío'));
+        setTimeout(loop,50);
+      })();
+    });
   }
-  waitForEnv(function(){
-    const CID = String(window.IBG_ENV.PAYPAL_CLIENT_ID||'').trim();
-    if (!CID) { console.warn('[paypal-init] PAYPAL_CLIENT_ID vacío'); return; }
-    if (window.__paypal_sdk_loading__) return;
-    window.__paypal_sdk_loading__ = true;
-
-    const qs = new URLSearchParams({
-      'client-id': CID, components: 'buttons', currency: 'EUR', vault: 'true'
-    }).toString();
-
-    window.paypalReady = new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = `https://www.paypal.com/sdk/js?${qs}`;
-      s.async = true;
-      s.onload  = () => { console.log('[paypal-init] SDK listo'); resolve(window.paypal); };
-      s.onerror = (e) => reject(e);
+  function loadSDK(cid){
+    return new Promise((res,rej)=>{
+      if (window.paypal) return res(window.paypal);
+      const s=document.createElement('script');
+      s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(cid)}&components=buttons&currency=EUR&intent=capture`;
+      s.async=true; s.onload=()=> res(window.paypal); s.onerror=()=> rej(new Error('paypal sdk load error'));
       document.head.appendChild(s);
     });
-  });
+  }
+  (async ()=>{
+    try{
+      const cid = await waitEnv();
+      const pp = await loadSDK(cid);
+      _resolve(pp);
+      console.log('[paypal-init] listo');
+    }catch(e){
+      console.warn('[paypal-init] error', e.message||e);
+    }
+  })();
 })();
