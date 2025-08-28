@@ -50,3 +50,16 @@
   window.addEventListener('load', fixThumbSrcs);
   document.addEventListener('DOMContentLoaded', ()=>{ setTimeout(fixThumbSrcs, 500); setTimeout(fixThumbSrcs, 2000); });
 })();
+
+/** runtime fix: normaliza *.webp.webp -> *.webp */
+(function __ibgFixImgsWebp(){
+  const normalize = (u) => (u||"").replace(/(\.webp)+$/i, ".webp");
+  const patchAll = () => document.querySelectorAll("img").forEach(img => {
+    if (img.src) img.src = normalize(img.src);
+    const dsrc = img.getAttribute("data-src");
+    if (dsrc) img.setAttribute("data-src", normalize(dsrc));
+  });
+  // Una pasada al cargar y otra tras cada mutación
+  document.addEventListener("DOMContentLoaded", () => { patchAll(); setTimeout(patchAll, 50); });
+  new MutationObserver(() => setTimeout(patchAll, 0)).observe(document.documentElement, {childList:true,subtree:true,attributes:true,attributeFilter:["src","data-src"]});
+})();
