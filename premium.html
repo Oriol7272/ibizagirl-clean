@@ -1,48 +1,85 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>IBIZA GIRL — Premium</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root{--bg:#0b0b0c;--fg:#e9eef5;--muted:#a8b2bd;--card:#131417;--ring:#2a2e35;--accent:#8ab4f8}
-    *{box-sizing:border-box}html,body{height:100%}
-    body{margin:0;background:radial-gradient(1200px 600px at 10% -20%,#11151b,transparent),#0b0b0c;color:var(--fg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    header{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.75);backdrop-filter:blur(8px)}
-    .ibg-container{max-width:1280px;margin:0 auto;padding:16px}
-    .ibg-premium-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin:16px 0}
-    .ibg-card{position:relative;background:var(--card);border-radius:16px;overflow:hidden;min-height:180px;box-shadow:0 0 0 1px var(--ring) inset}
-    .ibg-card img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(16px) brightness(.72);transform:scale(1.04)}
-    .ibg-card img.unlocked{filter:none;transform:none}
-    .ibg-card .lock{position:absolute;left:8px;top:8px;background:rgba(0,0,0,.55);border:1px solid #2a2e35;color:#dfe6ef;border-radius:999px;padding:4px 8px;font-size:13px}
-    .pp-buy{position:absolute;right:8px;bottom:8px}
-    .adbox{height:250px;border:1px dashed #333;border-radius:12px;background:#0f1114;color:#66707a;display:flex;align-items:center;justify-content:center;margin:16px 0}
-  </style>
-  <script src="js/env-inline.js"></script>
-  <link rel="stylesheet" href="css/styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IBIZA GIRL — Premium</title>
+<link rel="preconnect" href="https://www.paypal.com">
+<link rel="stylesheet" href="styles.css">
+<style>
+  :root { --bg:url("decorative/paradise-beach.jpg"); }
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;background:#0b0f14;color:#e6e6e6;}
+  .hero{position:relative;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.75)),var(--bg) center/cover;min-height:200px;border-bottom:1px solid #1f2833;}
+  .bar{display:flex;gap:.5rem;align-items:center;justify-content:center;padding:14px 10px;flex-wrap:wrap}
+  .pill{background:#111827;border:1px solid #243041;color:#cbd5e1;border-radius:999px;padding:8px 14px;font-weight:600;cursor:pointer}
+  .pill.active{background:#2563eb;border-color:#2563eb;color:white}
+  .wrap{max-width:1200px;margin:0 auto;padding:18px}
+  #premium-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+  .premium-card{position:relative;background:#0f172a;border-radius:14px;overflow:hidden;border:1px solid #1f2937}
+  .premium-card img{display:block;width:100%;height:180px;object-fit:cover;background:#0b1220;filter:blur(0);transform:scale(1.01)}
+  .premium-card .overlay{position:absolute;inset:auto 8px 8px auto;background:rgba(0,0,0,.65);backdrop-filter:saturate(120%) blur(4px);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:4px 8px;font-size:12px}
+  .premium-card .pp{display:inline-flex;gap:6px;align-items:center}
+  .ads{display:grid;grid-template-columns:240px 1fr 240px;gap:16px}
+  .adbox{height:120px;border:1px dashed #334155;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#94a3b8}
+  @media(max-width:1100px){.ads{grid-template-columns:1fr}}
+</style>
+<script src="js/env-inline.js"></script>
 </head>
 <body>
-  <header class="ibg-container">
-    <strong>IBIZA GIRL — <span style="color:var(--accent)">Premium</span></strong>
-    <div class="adbox">Anuncio</div>
-  </header>
+<header class="hero">
+  <nav class="bar wrap">
+    <button class="pill" id="btn-pack10">Pack 10 imágenes · €0,99</button>
+    <button class="pill" id="btn-pack5v">Pack 5 vídeos · €1,49</button>
+    <button class="pill active" id="btn-month">Mensual · €14,99</button>
+    <button class="pill" id="btn-year">Anual · €49,99</button>
+    <button class="pill" id="btn-life">Lifetime · €49,99</button>
+  </nav>
+</header>
 
-  <main class="ibg-container">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px">
-      <div class="pp-buy" data-paypal="oneshot"></div>
-      <div class="pp-buy" data-paypal="subscription"></div>
+<main class="wrap">
+  <section class="ads">
+    <div class="adbox" id="ad-left">Anuncio</div>
+    <div>
+      <div id="paypal-subscriptions" style="margin-bottom:14px"></div>
+      <div id="premium-grid"></div>
     </div>
-    <section class="ibg-premium-grid"></section>
-  </main>
+    <div class="adbox" id="ad-right">Anuncio</div>
+  </section>
+</main>
 
-  <script src="js/ibg-subscription.js" defer></script>
-  <script src="js/content-data1.js" defer></script>
-  <script src="js/content-data2.js" defer></script>
-  <script src="js/content-data3.js" defer></script>
-  <script src="js/content-data4.js" defer></script>
-  <script src="js/content-data5.js" defer></script>
-  <script src="js/premium-thumbs.js" defer></script>
+<script src="content-data1.js"></script>
+<script src="content-data2.js"></script>
+<script src="content-data3.js"></script>
+<script src="content-data4.js"></script>
+<script src="content-data5.js"></script>
+<script src="js/premium-thumbs.js"></script>
+
+<script src="https://www.paypal.com/sdk/js?client-id=%20&currency=EUR&components=buttons,hosted-fields,subscriptions&vault=true" data-namespace="paypal_sdk"></script>
+<script>
+(function(){
+  const CID=(window.__ENV&&window.__ENV.PAYPAL_CLIENT_ID)||'';
+  if(!CID){ console.warn('[subscription] PAYPAL_CLIENT_ID vacío'); }
+  const s=document.currentScript;
+  if(CID && s && s.src.includes('client-id=%20')){ s.src=s.src.replace('client-id=%20','client-id='+encodeURIComponent(CID)); }
+
+  function mountSubs(el,planId){
+    if(!window.paypal_sdk||!planId) return;
+    window.paypal_sdk.Buttons({
+      style:{layout:'horizontal',color:'gold',shape:'pill',tagline:true,height:45},
+      fundingSource: window.paypal_sdk.FUNDING.PAYPAL,
+      createSubscription: function(data, actions){ return actions.subscription.create({ plan_id: planId }); },
+      onApprove: function(){ alert('¡Suscripción activada!'); }
+    }).render(el);
+  }
+
+  const planM=(window.__ENV&&window.__ENV.PAYPAL_PLAN_ID_MONTHLY)||'';
+  const planY=(window.__ENV&&window.__ENV.PAYPAL_PLAN_ID_ANNUAL)||'';
+  const node=document.getElementById('paypal-subscriptions');
+  if(node){ mountSubs(node, planM || planY); }
+
+  document.getElementById('btn-month')?.addEventListener('click',()=>{ if(node){ node.innerHTML=''; mountSubs(node, planM); } });
+  document.getElementById('btn-year')?.addEventListener('click',()=>{ if(node){ node.innerHTML=''; mountSubs(node, planY); } });
+})();
+</script>
 </body>
 </html>
