@@ -2,60 +2,49 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>IBIZA GIRL — Premium</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/assets/style.css">
-
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/assets/style.css">
-  <link rel="stylesheet" href="/css/premium-fixes.css">
-  <style id="premium-fixes-css">
-  :root{--bg:#0b0b0c;--fg:#e9e9e9;--muted:#9aa3ad;--card:#141417;--accent:#8ab4f8}
-  *{box-sizing:border-box}html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-  a{color:var(--accent);text-decoration:none}
-  header,nav{background:rgba(0,0,0,.6);backdrop-filter:saturate(120%) blur(6px)}
-  .ibg-container{max-width:1200px;margin:0 auto;padding:16px}
-  .ibg-topnav{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 16px}
-  .ibg-topnav a{padding:8px 12px;border-radius:10px;background:#1a1c21;color:#dfe6ef}
-  .ibg-topnav a:hover{background:#222632}
-  .ibg-topnav:nth-of-type(n+2), nav.topnav:nth-of-type(n+2){display:none!important}
-  .ibg-layout{display:grid;grid-template-columns:200px 1fr 200px;gap:16px}
-  @media (max-width:1024px){.ibg-layout{grid-template-columns:1fr}}
-  .aside-ads{position:sticky;top:12px}
-  .ibg-premium-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:16px}
-  .ibg-card{position:relative;background:var(--card);border-radius:14px;overflow:hidden;min-height:160px}
-  .ibg-card img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(14px);transition:filter .25s ease}
-  .ibg-card img.loaded{filter:blur(0)}
-  .ibg-card .pp-buy{position:absolute;right:8px;bottom:8px;border:0;border-radius:10px;padding:6px 8px;background:#fff;cursor:pointer}
-  .ibg-card .pp-buy img{height:14px;display:block}
-  </style>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="premium-topbar"></div>
-  <div id="premium-root"></div>
+  <!-- ÚNICO NAV -->
+  <header>
+    <nav class="nav">
+      <div class="brand">IBIZA GIRL — <span style="opacity:.7">Premium</span></div>
+      <a class="pill" href="/packs-10">Pack 10 imágenes · <span id="p10">€0.99</span></a>
+      <a class="pill" href="/packs-5">Pack 5 vídeos · <span id="p5">€1.49</span></a>
+      <button class="pill primary" data-pp="sub-monthly">Mensual · €14.99</button>
+      <button class="pill" data-pp="sub-annual">Anual · €49.99</button>
+      <a class="pill" href="/lifetime">Lifetime · €49.99</a>
+    </nav>
+  </header>
 
-  <!-- ENV (tus claves y base) -->
-  <script src="/js/env.js" defer></script>
-  <script src="/js/env-inline.js" defer></script>
+  <main>
+    <aside class="aside">
+      <div class="adbox" id="ad-left">Anuncio</div>
+    </aside>
 
-  <!-- Pools de contenido (cargar UNA sola vez) -->
-  <script src="/js/content-data1.js" defer></script>
-  <script src="/js/content-data2.js" defer></script>
-  <script src="/js/content-data3.js" defer></script>
-  <script src="/js/content-data4.js" defer></script>
-  <script src="/js/content-data5.js" defer></script>
+    <section>
+      <div id="premium-grid" class="grid"></div>
+      <p class="footer-note">Las miniaturas están difuminadas. Se desbloquean tras el pago individual, pack o suscripción.</p>
+    </section>
 
-  <!-- PayPal y UI premium -->
-  <script src="/js/paypal-init.js" defer></script>
-  <script src="/js/premium-menu.js" defer></script>
-  <script src="/js/premium-thumbs.js" defer></script>
+    <aside class="aside">
+      <div class="adbox" id="ad-right">Anuncio</div>
+    </aside>
+  </main>
+
+  <!-- DATASETS existentes -->
+  <script src="js/content-data1.js"></script>
+  <script src="js/content-data2.js"></script>
+  <script src="js/content-data3.js"></script>
+  <script src="js/content-data4.js"></script>
+  <script src="js/content-data5.js"></script>
+
+  <!-- App -->
+  <script src="js/premium-thumbs.js" defer></script>
+  <script src="js/ibg-subscription.js" defer></script>
 </body>
 </html>
