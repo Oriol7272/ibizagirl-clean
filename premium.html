@@ -5,18 +5,36 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>IBIZA GIRL — Premium</title>
-  <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/assets/style.css">
 
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/assets/style.css">
   <link rel="stylesheet" href="/css/premium-fixes.css">
+  <style id="premium-fixes-css">
+  :root{--bg:#0b0b0c;--fg:#e9e9e9;--muted:#9aa3ad;--card:#141417;--accent:#8ab4f8}
+  *{box-sizing:border-box}html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  header,nav{background:rgba(0,0,0,.6);backdrop-filter:saturate(120%) blur(6px)}
+  .ibg-container{max-width:1200px;margin:0 auto;padding:16px}
+  .ibg-topnav{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 16px}
+  .ibg-topnav a{padding:8px 12px;border-radius:10px;background:#1a1c21;color:#dfe6ef}
+  .ibg-topnav a:hover{background:#222632}
+  .ibg-topnav:nth-of-type(n+2), nav.topnav:nth-of-type(n+2){display:none!important}
+  .ibg-layout{display:grid;grid-template-columns:200px 1fr 200px;gap:16px}
+  @media (max-width:1024px){.ibg-layout{grid-template-columns:1fr}}
+  .aside-ads{position:sticky;top:12px}
+  .ibg-premium-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:16px}
+  .ibg-card{position:relative;background:var(--card);border-radius:14px;overflow:hidden;min-height:160px}
+  .ibg-card img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(14px);transition:filter .25s ease}
+  .ibg-card img.loaded{filter:blur(0)}
+  .ibg-card .pp-buy{position:absolute;right:8px;bottom:8px;border:0;border-radius:10px;padding:6px 8px;background:#fff;cursor:pointer}
+  .ibg-card .pp-buy img{height:14px;display:block}
+  </style>
 </head>
 <body>
   <div id="premium-topbar"></div>

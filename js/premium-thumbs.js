@@ -4,18 +4,18 @@
       let n=0;(function loop(){try{if(check())return resolve(true);}catch{};if(++n>=tries)return reject(new Error('timeout waiting deps'));setTimeout(loop,delay);})();
     });
   }
-  // prueba varias carpetas en origen: /uncensored -> /uncensored-images -> /premium
-  const DIRS = ['/uncensored','/uncensored-images','/premium'];
 
-  function tryLoad(img, base, stem){
-    let i=0;
-    function next(){
-      if(i>=DIRS.length){ img.dataset.omitted='1'; return; }
-      img.src = `${base}${DIRS[i++]}/${stem}.webp`;
-    }
-    img.onerror = next;
-    img.onload = ()=> img.classList.add('loaded');
-    next();
+  function makeURL(base, entry){
+    let s = String(entry || '').trim();
+    if (!s) return '';
+    // Si ya viene con carpeta (tiene "/"), no añadimos "uncensored/"
+    const hasSlash = s.includes('/');
+    // ¿Tiene extensión ya?
+    const hasExt = /\.(webp|jpg|jpeg|png)$/i.test(s);
+    if (!hasSlash) s = 'uncensored/' + s;
+    if (!hasExt) s = s + '.webp';
+    // evita dobles barras
+    return (base.replace(/\/+$/,'') + '/' + s.replace(/^\/+/, ''));
   }
 
   async function boot(){
@@ -27,7 +27,7 @@
     const names = (window.PREMIUM_IMAGES_PART1||[]).concat(window.PREMIUM_IMAGES_PART2||[]).slice(0,100);
     if (!names.length) { console.warn('[premium-thumbs] sin fuentes'); return; }
 
-    // contenedor central (con laterales para anuncios como en home)
+    // contenedor
     let root = document.getElementById('premium-root');
     if (!root) { root = document.createElement('div'); root.id='premium-root'; document.body.appendChild(root); }
     root.className='ibg-container';
@@ -37,13 +37,15 @@
     const right = document.createElement('aside'); right.className='aside-ads'; right.innerHTML='<div id="ad-right"></div>'; layout.appendChild(right);
 
     const grid = document.createElement('div'); grid.className='ibg-premium-grid'; main.appendChild(grid);
-
     const PP_MARK='https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-mark-blue.svg';
+
     for (const raw of names) {
-      const stem = String(raw).replace(/\.(webp|jpg|jpeg|png)$/i,''); // todos vienen con extensión: nos quedamos con el stem
+      const url = makeURL(base, raw);
       const card=document.createElement('article'); card.className='ibg-card';
       const img=document.createElement('img'); img.loading='lazy'; img.decoding='async';
-      tryLoad(img, base, stem);
+      img.src = url;
+      img.onload = ()=> img.classList.add('loaded');
+      img.onerror = ()=> { card.dataset.err='1'; };
 
       const buy=document.createElement('button'); buy.className='pp-buy'; buy.title='Comprar';
       buy.innerHTML = `<img src="${PP_MARK}" alt="PayPal">`;
