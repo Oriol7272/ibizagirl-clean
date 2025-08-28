@@ -17,8 +17,7 @@
     return [];
   }
   function detect(folder){
-    const u = fromUnified(folder);
-    if(u.length) return u;
+    const u=fromUnified(folder); if(u.length) return u;
     const keys=[`CONTENT_${folder.toUpperCase()}`,folder.toUpperCase(),folder.toLowerCase(),`PUBLIC_${folder.toUpperCase()}`,`IBG_${folder.toUpperCase()}`,`CONTENT_DATA_${folder.toUpperCase()}`];
     for(const k of keys){if(Array.isArray(window[k]))return normalize(window[k],folder)}
     const cands=[];

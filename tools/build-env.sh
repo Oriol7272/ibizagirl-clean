@@ -27,7 +27,7 @@ window.ENV = {
 };
 EOT
 
-# Generar decorative-images.json con la lista de imágenes del banner si existen archivos
+# generar decorative-images.json si hay archivos en ./decorative-images
 if ls decorative-images/* >/dev/null 2>&1; then
   python3 - <<'PY'
 import os, json, glob
