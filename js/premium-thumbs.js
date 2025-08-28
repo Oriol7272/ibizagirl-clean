@@ -1,20 +1,18 @@
-/* Render de thumbnails premium con blur permanente (hasta desbloqueo)
-   - Evita doble .webp
-   - Intenta /uncensored/ y cae a /full/ si hay 403/404
-   - Quita referrer para evitar bloqueos por hotlink
-*/
 (() => {
   const BASE = (window.__ENV && window.__ENV.BASE) || "https://ibizagirl.pics";
   const grid = document.querySelector('.ibg-premium-grid');
   if (!grid) return;
 
-  // content-data3/4 definen window.PREMIUM_PART1 / PREMIUM_PART2 (nombres de archivo)
-  const L = (window.PREMIUM_PART1||[]).concat(window.PREMIUM_PART2||[]);
-  const ensureWebp = (n) => (n||"").replace(/\.(jpe?g|png|gif|webp)$/i,'') + '.webp';
+  const L = (window.PREMIUM_PART1 || []).concat(window.PREMIUM_PART2 || []);
 
-  function url(folder, name){ return `${BASE}/${folder}/${ensureWebp(name)}`; }
+  function ensureWebp(name) {
+    if (!name) return "";
+    if (/\.webp$/i.test(name)) return name;
+    return name.replace(/\.(jpe?g|png|gif)$/i, "") + ".webp";
+  }
+  const u = (folder, name) => `${BASE}/${folder}/${ensureWebp(name)}`;
 
-  function card(name){
+  function card(name) {
     const wrap = document.createElement('div');
     wrap.className = 'ibg-card';
 
@@ -22,8 +20,8 @@
     img.alt = '';
     img.loading = 'lazy';
     img.referrerPolicy = 'no-referrer';
-    img.src = url('uncensored', name);
-    img.onerror = () => { if (img.src.includes('/uncensored/')) img.src = url('full', name); };
+    img.src = u('uncensored', name);
+    img.onerror = () => { if (img.src.includes('/uncensored/')) img.src = u('full', name); };
     wrap.appendChild(img);
 
     const lock = document.createElement('div');
@@ -34,15 +32,14 @@
     const pp = document.createElement('div');
     pp.className = 'pp-buy';
     pp.dataset.paypal = 'subscription';
-    pp.dataset.planId = (window.__ENV && window.__ENV.PAYPAL_PLAN_ID_MONTHLY) || '';
+    // plan lo obtiene ibg-subscription.js de window.__ENV si está vacío
     wrap.appendChild(pp);
 
     return wrap;
   }
 
-  // Render
   grid.innerHTML = '';
-  L.slice(0, 300).forEach(n => grid.appendChild(card(n)));
+  L.forEach(n => grid.appendChild(card(n)));
 
   console.log('[premium-thumbs] render:', L.length, 'base:', BASE);
 })();
