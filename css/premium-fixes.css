@@ -1,7 +1,6 @@
 #premium-topbar{position:sticky;top:0;z-index:30;background:#0b0b0c;color:#fff;border-bottom:1px solid #222;padding:.5rem}
 #premium-topbar .ibg-premium-nav{display:flex;justify-content:space-between;align-items:center;gap:.5rem;max-width:1200px;margin:0 auto}
 #premium-topbar .ibg-btn{background:#1e1e22;color:#fff;border:1px solid #333;padding:.4rem .6rem;border-radius:8px;cursor:pointer}
-#premium-topbar .ibg-btn:hover{background:#2a2a30}
 #premium-root{max-width:1200px;margin:1rem auto;position:relative}
 .ibg-premium-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
 @media (max-width:1200px){.ibg-premium-grid{grid-template-columns:repeat(4,1fr)}}

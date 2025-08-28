@@ -9,13 +9,8 @@
     ANNUAL:     '49.99',
     LIFETIME:   env.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME || '4.99'
   };
-
   let bar = document.getElementById('premium-topbar');
-  if (!bar) {
-    bar = document.createElement('div');
-    bar.id = 'premium-topbar';
-    document.body.prepend(bar);
-  }
+  if (!bar) { bar=document.createElement('div'); bar.id='premium-topbar'; document.body.prepend(bar); }
   bar.innerHTML = `
     <div class="ibg-premium-nav">
       <div class="left"><strong>IBIZA GIRL — Premium</strong></div>
