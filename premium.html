@@ -1,244 +1,45 @@
-<!doctype html><html lang="es"><head>
-<script>(function(){try{window.__PREMIUM_HTML_LOADED=true;console.log("[premium.html] HTML cargado");}catch(e){console.error("[premium.html] logger error",e);}})();</script>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IBIZAGIRL.PICS — Premium</title>
-<link rel="stylesheet" href="/css/ibg.css">
-<script src="/ibg-env.js"></script>
-<script src="/content-data1.js"></script>
-<script src="/content-data2.js"></script>
-<script src="/content-data3.js"></script>
-<script src="/content-data4.js"></script>
-<script src="/content-data5.js"></script>
-<script src="/content-data6.js"></script>
-  
-  <script>
-(() => {
-  const log=(...a)=>console.log('[IBG-Pay]',...a);
-  const GrantStore={
-    key:'ibg_grants',
-    get(){ try{ return JSON.parse(localStorage.getItem(this.key)||'[]'); }catch{ return []; } },
-    set(a){ localStorage.setItem(this.key, JSON.stringify(a)); },
-    add(grant){ if(!grant) return; const a=this.get().filter(g=>g.exp> Date.now()/1000); a.push(grant); this.set(a); },
-    hasValidForItem(item){
-      const now=Math.floor(Date.now()/1000);
-      const b64uToStr=s=>atob(s.replace(/-/g,'+').replace(/_/g,'/'));
-      for(const tok of this.get()){ const p=String(tok).split('.'); if(p.length!==3) continue;
-        try{ const pl=JSON.parse(b64uToStr(p[1]));
-          if(pl.typ==='grant' && pl.exp>now && (pl.scope==='all' || (pl.scope==='item' && pl.item===item))) return true;
-        }catch{}
-      }
-      return false;
-    }
-  };
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IbizaGirl — Premium</title>
+  <link rel="stylesheet" href="./css/ibg.css" />
+</head>
+<body class="ibg">
+  <header class="topbar">
+    <div class="brand">IbizaGirl.pics</div>
+    <nav class="menu">
+      <a href="./index.html">Home</a>
+      <a href="./premium.html" aria-current="page">Premium</a>
+    </nav>
+  </header>
 
-  const IBG_Payments={
-    _sdkLoaded:false, _currency:'EUR',
-    async loadSdk(){
-      if(this._sdkLoaded && window.paypal) return window.paypal;
-      const cfg=await fetch('/api/paypal/config').then(r=>r.json()).catch(()=>({ok:false}));
-      if(!cfg?.ok || !cfg.clientId) throw new Error('paypal config');
-      this._currency=cfg.currency||'EUR';
-      await new Promise((res,rej)=>{
-        const s=document.createElement('script');
-        s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(cfg.clientId)}&currency=${this._currency}&intent=capture&components=buttons`;
-        s.onload=res; s.onerror=rej; document.head.appendChild(s);
-      });
-      this._sdkLoaded=true; return window.paypal;
-    },
+  <main class="layout">
+    <aside class="ads left"><div id="ad-left" class="ad-slot"></div></aside>
 
-    async checkoutPpv(itemName){
-      const paypal=await this.loadSdk();
-      let modal=document.getElementById('ibg-pay-modal');
-      if(!modal){
-        modal=document.createElement('div'); modal.id='ibg-pay-modal';
-        modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:99999;';
-        modal.innerHTML='<div style="background:#111;padding:16px;border-radius:12px;max-width:420px;width:100%"><div id="ibg-paypal-buttons"></div><button id="ibg-pay-close" style="margin-top:12px;width:100%;padding:10px;border-radius:8px;background:#333;color:#fff;border:0">Cancelar</button></div>';
-        document.body.appendChild(modal);
-        modal.querySelector('#ibg-pay-close').onclick=()=>modal.remove();
-      }else{
-        modal.style.display='flex';
-        modal.querySelector('#ibg-paypal-buttons').innerHTML='';
-      }
+    <section class="content">
+      <section class="plans">
+        <div class="section-title">💎 Opciones Premium</div>
+        <div id="plans-bar" class="plans-bar"></div>
+      </section>
 
-      paypal.Buttons({
-        style:{layout:'horizontal',color:'black',shape:'rect',label:'pay'},
-        createOrder: async ()=>{
-          const r=await fetch('/api/paypal/create-order',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({sku:'ppv_1'})});
-          const j=await r.json(); if(!j.ok) throw new Error('create-order failed');
-          log('order CREATED', j.id); return j.id;
-        },
-        onApprove: async ({orderID})=>{
-          try{
-            const r=await fetch('/api/paypal/capture',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({orderId:orderID,sku:'ppv_1',item:itemName})});
-            const j=await r.json(); if(!j.ok){ console.error('capture error', j); alert('No se pudo capturar el pago.'); return; }
-            log('capture COMPLETED', j); GrantStore.add(j.grant);
-            document.querySelector(`[data-ibg-name="${CSS.escape(itemName)}"]`)?.classList.remove('ibg-locked');
-            modal.remove();
-            alert('¡Pago completado! Acceso concedido durante 24h.');
-          }catch(e){ console.error('onApprove error',e); alert('Error durante la confirmación.'); }
-        },
-        onError:(err)=>{ console.error('PayPal Buttons error',err); alert('Error con PayPal.'); }
-      }).render('#ibg-paypal-buttons');
-    },
+      <section class="premium-grid-wrap">
+        <div class="section-title">🔒 100 fotos premium (blurred) — 30% nuevas</div>
+        <div id="premium-grid" class="grid premium"></div>
+        <div class="legend">
+          <span class="badge new">Nuevo</span> indica actualizaciones simuladas del día.
+        </div>
+      </section>
+    </section>
 
-    enableThumbHandlers(){
-      document.addEventListener('click',ev=>{
-        let btn=ev.target.closest('[data-ibg-ppv]'); let item=btn?.getAttribute('data-ibg-ppv')||null;
-        if(!item){ const fb=ev.target.closest('.ibg-ppv-btn,[data-ppv="1"]'); if(fb){ const wrap=fb.closest('[data-ibg-name]'); item=wrap?.getAttribute('data-ibg-name')||null; btn=fb; } }
-        if(!item) return; ev.preventDefault(); this.checkoutPpv(item);
-      });
-    },
+    <aside class="ads right"><div id="ad-right" class="ad-slot"></div></aside>
+  </main>
 
-    markLockedThumbs(){
-      document.querySelectorAll('[data-ibg-name]').forEach(el=>{
-        const name=el.getAttribute('data-ibg-name');
-        if(!GrantStore.hasValidForItem(name)) el.classList.add('ibg-locked');
-      });
-    }
-  };
-
-  window.addEventListener('DOMContentLoaded',()=>{ IBG_Payments.enableThumbHandlers(); IBG_Payments.markLockedThumbs(); });
-  window.IBG_Payments=IBG_Payments;
-})();</script><script src="/js/premium-gallery.js" defer></script>
-
-<link rel="stylesheet" href="/css/premium.css">
-  <link rel="stylesheet" href="/css/premium-fixes.css">
-  <link rel="stylesheet" href="/css/ads-laterales.css">
-</head><body>
-<div id="premium-topbar"></div>
-<aside id="ad-left" class="side-ad left"></aside>
-<aside id="ad-right" class="side-ad right"></aside>
-<div class="page-shell"><div id="app"></div></div>
-<script type="module" src="/js/i18n.js"></script>
-<script type="module" src="/js/bootstrap-ibg.js?v=1756068653"></script>
-<div id="premium-root" style="padding:16px;font:14px/1.4 system-ui,Arial;">
-  <div id="premium-status">🔎 Cargando premium…</div>
-</div>
-
-<script src="premium.js" defer></script>
-<script>(function(){var el=document.getElementById("premium-status");if(!el)return;try{var cid=(window.__ENV&&window.__ENV.PAYPAL_CLIENT_ID)||"(vacío)";console.log("[premium] ready, PAYPAL_CLIENT_ID len:", (cid||"").length);el.textContent="✅ premium listo • PAYPAL_CLIENT_ID: "+(cid?"•••"+cid.slice(-6):"(vacío)");}catch(e){console.error("[premium] post-load error",e);el.textContent="⚠️ premium error: "+e;}})();</script>
-<section id="premium-plans" style="padding:16px;max-width:1100px;margin:0 auto;">
-  <h2 style="font:600 24px system-ui,Arial;margin:0 0 12px;">Suscripciones Premium</h2>
-  <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
-    <div style="border:1px solid #ddd;border-radius:12px;padding:16px;"><div style="font-weight:600;margin-bottom:4px;">Mensual</div><div id="paypal-monthly"></div></div>
-    <div style="border:1px solid #ddd;border-radius:12px;padding:16px;"><div style="font-weight:600;margin-bottom:4px;">Anual</div><div id="paypal-yearly"></div></div>
-    <div style="border:1px solid #ddd;border-radius:12px;padding:16px;"><div style="font-weight:600;margin-bottom:4px;">Lifetime</div><div id="paypal-lifetime"></div></div>
-  </div><div id="paypal-status" style="margin-top:10px;font:12px system-ui,Arial;opacity:.8;"></div>
-</section>
-
-
-
-
-
-
-
-
-
-
-<script src="env.js"></script><section class="pricing" id="pricing-paypal">
-    <h2>Suscripciones</h2>
-    <div id="btn-monthly"></div><div id="status-monthly" class="status"></div>
-    <div id="btn-yearly"></div><div id="status-yearly" class="status"></div>
-    <h2>Pagos sueltos</h2>
-    <div id="btn-img"></div><div id="status-img" class="status"></div>
-    <div id="btn-video"></div><div id="status-video" class="status"></div>
-    <h2>Lifetime</h2>
-    <div id="btn-lifetime"></div><div id="status-lifetime" class="status"></div>
-  </section>
-  <section id="ibg-payments" class="payments">
-    <h2>Suscripciones Premium</h2>
-    <div class="grid">
-      <div><h3>Mensual</h3><div id="btn-monthly"></div><div id="status-monthly" class="status"></div></div>
-      <div><h3>Anual</h3><div id="btn-annual"></div><div id="status-annual" class="status"></div></div>
-    </div>
-    <h2>Pagos sueltos</h2>
-    <div class="grid">
-      <div><h3>Imagen</h3><div id="btn-img"></div><div id="status-img" class="status"></div></div>
-      <div><h3>Vídeo</h3><div id="btn-video"></div><div id="status-video" class="status"></div></div>
-      <div><h3>Lifetime</h3><div id="btn-lifetime"></div><div id="status-lifetime" class="status"></div></div>
-    </div>
-  </section>
-  <section id="ibg-payments">
-    <div class="menu">
-      <span class="pay-chip">💠 Imagen (one-shot) <strong>€</strong><span id="price-img"></span></span>
-      <span class="pay-chip">🎬 Vídeo (one-shot) <strong>€</strong><span id="price-video"></span></span>
-      <span class="pay-chip">🗓️ Mensual</span>
-      <span class="pay-chip">📆 Anual</span>
-      <span class="pay-chip">♾️ Lifetime (sin anuncios)</span>
-      <span class="pay-chip">📦 Pack 10 imágenes <strong>€</strong><span id="price-pack10"></span></span>
-      <span class="pay-chip">📦 Pack 5 vídeos <strong>€</strong><span id="price-pack5v"></span></span>
-    </div>
-    <div class="pay-row">
-      <div class="pay-block"><h3>Mensual</h3><div id="btn-monthly"></div><div id="status-monthly" class="status"></div></div>
-      <div class="pay-block"><h3>Anual</h3><div id="btn-annual"></div><div id="status-annual" class="status"></div></div>
-      <div class="pay-block"><h3>Imagen</h3><div id="btn-img"></div><div id="status-img" class="status"></div></div>
-      <div class="pay-block"><h3>Vídeo</h3><div id="btn-video"></div><div id="status-video" class="status"></div></div>
-      <div class="pay-block"><h3>Lifetime</h3><div id="btn-lifetime"></div><div id="status-lifetime" class="status"></div></div>
-      <div class="pay-block"><h3>Pack 10 img</h3><div id="btn-pack10"></div><div id="status-pack10" class="status"></div></div>
-      <div class="pay-block"><h3>Pack 5 vídeos</h3><div id="btn-pack5v"></div><div id="status-pack5v" class="status"></div></div>
-    </div>
-  </section>
-  <section id="premium-thumbs">
-    <h2>Contenido premium</h2>
-    <div id="premium-grid"></div>
-  </section>
-  <script> (function(){const c=(window.ENV||{}); function s(id,v){var el=document.getElementById(id); if(el) el.textContent = (v||"").toString();} s("price-img",c.PAYPAL_ONESHOT_PRICE_EUR_IMAGE); s("price-video",c.PAYPAL_ONESHOT_PRICE_EUR_VIDEO); s("price-pack10",c.PAYPAL_ONESHOT_PACK10_IMAGES_EUR); s("price-pack5v",c.PAYPAL_ONESHOT_PACK5_VIDEOS_EUR);})(); </script>
-  <section id="ibg-payments">
-    <div class="menu">
-      <span class="pay-chip">💠 Imagen (one-shot) <strong>€</strong><span id="price-img"></span></span>
-      <span class="pay-chip">🎬 Vídeo (one-shot) <strong>€</strong><span id="price-video"></span></span>
-      <span class="pay-chip">🗓️ Mensual</span>
-      <span class="pay-chip">📆 Anual</span>
-      <span class="pay-chip">♾️ Lifetime (sin anuncios)</span>
-      <span class="pay-chip">📦 Pack 10 imágenes <strong>€</strong><span id="price-pack10"></span></span>
-      <span class="pay-chip">📦 Pack 5 vídeos <strong>€</strong><span id="price-pack5v"></span></span>
-    </div>
-    <div class="pay-row">
-      <div class="pay-block"><h3>Mensual</h3><div id="btn-monthly"></div><div id="status-monthly" class="status"></div></div>
-      <div class="pay-block"><h3>Anual</h3><div id="btn-annual"></div><div id="status-annual" class="status"></div></div>
-      <div class="pay-block"><h3>Imagen</h3><div id="btn-img"></div><div id="status-img" class="status"></div></div>
-      <div class="pay-block"><h3>Vídeo</h3><div id="btn-video"></div><div id="status-video" class="status"></div></div>
-      <div class="pay-block"><h3>Lifetime</h3><div id="btn-lifetime"></div><div id="status-lifetime" class="status"></div></div>
-      <div class="pay-block"><h3>Pack 10 img</h3><div id="btn-pack10"></div><div id="status-pack10" class="status"></div></div>
-      <div class="pay-block"><h3>Pack 5 vídeos</h3><div id="btn-pack5v"></div><div id="status-pack5v" class="status"></div></div>
-    </div>
-  </section>
-  <section id="premium-thumbs">
-    <h2>Contenido premium</h2>
-    <div id="premium-grid"></div>
-  </section>
-  <script> (function(){const c=(window.ENV||{}); function s(id,v){var el=document.getElementById(id); if(el) el.textContent = (v||"").toString();} s("price-img",c.PAYPAL_ONESHOT_PRICE_EUR_IMAGE); s("price-video",c.PAYPAL_ONESHOT_PRICE_EUR_VIDEO); s("price-pack10",c.PAYPAL_ONESHOT_PACK10_IMAGES_EUR); s("price-pack5v",c.PAYPAL_ONESHOT_PACK5_VIDEOS_EUR);})(); </script>
-  <section id="ibg-payments">
-    <div class="menu">
-      <span class="pay-chip">💠 Imagen (one-shot) <strong>€</strong><span id="price-img"></span></span>
-      <span class="pay-chip">🎬 Vídeo (one-shot) <strong>€</strong><span id="price-video"></span></span>
-      <span class="pay-chip">🗓️ Mensual</span>
-      <span class="pay-chip">📆 Anual</span>
-      <span class="pay-chip">♾️ Lifetime (sin anuncios)</span>
-      <span class="pay-chip">📦 Pack 10 imágenes <strong>€</strong><span id="price-pack10"></span></span>
-      <span class="pay-chip">📦 Pack 5 vídeos <strong>€</strong><span id="price-pack5v"></span></span>
-    </div>
-    <div class="pay-row">
-      <div class="pay-block"><h3>Mensual</h3><div id="btn-monthly"></div><div id="status-monthly" class="status"></div></div>
-      <div class="pay-block"><h3>Anual</h3><div id="btn-annual"></div><div id="status-annual" class="status"></div></div>
-      <div class="pay-block"><h3>Imagen</h3><div id="btn-img"></div><div id="status-img" class="status"></div></div>
-      <div class="pay-block"><h3>Vídeo</h3><div id="btn-video"></div><div id="status-video" class="status"></div></div>
-      <div class="pay-block"><h3>Lifetime</h3><div id="btn-lifetime"></div><div id="status-lifetime" class="status"></div></div>
-      <div class="pay-block"><h3>Pack 10 img</h3><div id="btn-pack10"></div><div id="status-pack10" class="status"></div></div>
-      <div class="pay-block"><h3>Pack 5 vídeos</h3><div id="btn-pack5v"></div><div id="status-pack5v" class="status"></div></div>
-    </div>
-  </section>
-  <section id="premium-thumbs">
-    <h2>Contenido premium</h2>
-    <div id="premium-grid"></div>
-  </section>
-  <script src="/js/premium-flag.js"></script>
-  <script src="/js/env-inline.js" data-env='{"PAYPAL_CLIENT_ID":""AfQEdiielw5fm3wF08p9pcxwqR3gPz82YRNUTKY4A8WNG9AktiGsDNyr2i7BsjVzSwwpeCwR7Tt7DPq5"","PAYPAL_SECRET":""EGeBAStDv-G2iALPalvnyERyNFnInPCI03pgP_rscAKaszgJTKzJwz4kbFQx_XeKfPVS4HLGuhM533Dv"","PAYPAL_WEBHOOK_ID":""7YP450914N8142540"","PAYPAL_PLAN_MONTHLY_1499":""P-3WE8037612641383DNCUKNJI"","PAYPAL_PLAN_ANNUAL_4999":""P-43K261214Y571983RNCUKN7I"","PAYPAL_ONESHOT_PRICE_EUR_LIFETIME":""100.00"","PAYPAL_ONESHOT_PRICE_EUR_VIDEO":""0.30"","PAYPAL_ONESHOT_PRICE_EUR_IMAGE":""0.10"","PAYPAL_ONESHOT_PACK10_IMAGES_EUR":""0.80"","PAYPAL_ONESHOT_PACK5_VIDEOS_EUR":""1.00"","IBG_ASSETS_BASE_URL":""https://ibizagirl-assets.s3.eu-north-1.amazonaws.com"","EXOCLICK_ZONE":""5696328"","JUICYADS_ZONE":""1099637"","EROADVERTISING_ZONE":""8177575"","JUICYADS_SNIPPET_B64":""2093981"","EROADVERTISING_SNIPPET_B64":""2093981"","POPADS_ENABLE":""true"","POPADS_SITE_ID":""e494ffb82839a29122608e933394c091"","CRISP_WEBSITE_ID":""59e184b1-e679-4c93-b3ea-d60b63c1c04c""}'></script>
-  <script src="/js/paypal-init.js"></script>
-  <script src="/js/premium-menu.js"></script>
-  <script src="/js/premium-thumbs.js"></script>
-  <script src="/js/paypal-mark.js"></script>
-  <script src="/js/premium-404-fallbacks.js"></script>
-</body></html>
-
-  
+  <script src="./content-data3.js"></script>
+  <script src="./content-data4.js"></script>
+  <script src="./js/env.js"></script>
+  <script src="./js/ibg-core.js"></script>
+  <script src="./js/premium.js" defer></script>
+</body>
+</html>

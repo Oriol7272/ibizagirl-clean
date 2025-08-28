@@ -1,39 +1,40 @@
-(function(){
-  const { RNG, UCAPI } = window;
-  const POOL = (window.FULL_IMAGES_POOL || window.FULL || []);
-  function select(count){
-    const seed = RNG.seedFrom(new Date().toDateString());
-    const rand = RNG.xorshift32(seed + Math.floor(Math.random()*1e6)); // cambia en recarga
-    return RNG.pickN(POOL, count, rand).map(u=>UCAPI.normalize(u,'image'));
+document.addEventListener('DOMContentLoaded', async () => {
+  const full = IBG.getFullList();
+  let bannerImages = [];
+  try{
+    const r = await fetch('./decorative-images.json',{cache:'no-store'});
+    if(r.ok){ const arr = await r.json(); if(Array.isArray(arr) && arr.length) bannerImages = arr; }
+  }catch(e){}
+  if(!bannerImages.length){ bannerImages = IBG.pickRandom(full.map(x=>x.src), Math.min(6, full.length)); }
+  const slides = document.querySelectorAll('#banner-rotator .banner-slide');
+  let i = 0;
+  function setSlide(idx){
+    slides.forEach((el,k)=>el.classList.toggle('active', k===idx));
+    if (bannerImages[idx]) slides[idx].style.backgroundImage = "url('"+bannerImages[idx]+"')";
+    const other = (idx^1);
+    const nextIdx = (idx+1) % (bannerImages.length||1);
+    if (bannerImages[nextIdx]) slides[other].style.backgroundImage = "url('"+bannerImages[nextIdx]+"')";
   }
-  function renderCarousel(items){
-    const root=document.querySelector('#home-carousel'); if(!root) return;
-    root.innerHTML='';
-    const track=document.createElement('div'); track.className='carousel-track';
-    items.forEach(it=>{
-      const slide=document.createElement('div'); slide.className='slide';
-      const img=document.createElement('img'); img.src=it.thumb; img.loading='lazy'; img.decoding='async';
-      slide.appendChild(img); track.appendChild(slide);
-    });
-    root.appendChild(track);
-    // auto-scroll simple
-    let i=0; setInterval(()=>{ i=(i+1)%items.length; track.style.transform=`translateX(-${i*100}%)`; }, 3000);
+  setSlide(0);
+  setInterval(()=>{ i = (i+1) % Math.max(1, bannerImages.length); setSlide(i); }, 4000);
+  const track = document.getElementById('carousel-track');
+  const items = IBG.pickRandom(full, Math.min(14, full.length));
+  for(const it of items){
+    const card = document.createElement('div');
+    card.className = 'carousel-item';
+    const img = document.createElement('img');
+    img.loading = 'lazy'; img.decoding='async'; img.src = it.src;
+    card.appendChild(img);
+    track.appendChild(card);
   }
-  function renderGrid(items){
-    const grid=document.querySelector('#home-grid'); if(!grid) return;
-    grid.innerHTML='';
-    const frag=document.createDocumentFragment();
-    items.forEach(it=>{
-      const card=UCAPI.createCard(it,{type:'image'});
-      frag.appendChild(card);
-    });
-    grid.appendChild(frag);
+  document.getElementById('carousel-prev').addEventListener('click', ()=> track.scrollBy({left:-600, behavior:'smooth'}));
+  document.getElementById('carousel-next').addEventListener('click', ()=> track.scrollBy({left: 600, behavior:'smooth'}));
+  const grid = document.getElementById('gallery-grid');
+  const gitems = IBG.pickRandom(full, Math.min(36, full.length));
+  for(const it of gitems){
+    const card = document.createElement('div'); card.className = 'card';
+    const img = document.createElement('img'); img.loading = 'lazy'; img.decoding='async'; img.src = it.src;
+    card.appendChild(img); grid.appendChild(card);
   }
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const chosen = select(20);
-    renderCarousel(chosen);
-    renderGrid(chosen);
-    // monta ads laterales si existe contenedor
-    const side=document.querySelector('#side-ads'); if(window.Ads && side) window.Ads.mountSideAds(side);
-  });
-})();
+  IBG.loadAds();
+});

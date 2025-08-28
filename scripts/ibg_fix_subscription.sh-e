@@ -22,7 +22,7 @@ cat > css/ibg-subscription.css <<'CSS'
 .plan .desc{opacity:.85;font-size:14px;margin-bottom:12px}
 .plan button{display:inline-flex;align-items:center;gap:8px;background:#111827;border:1px solid rgba(255,255,255,.18);
   padding:9px 12px;border-radius:10px;font-size:14px;cursor:pointer}
-.plan button .pp{width:20px;height:20px;background:url('/assets/https://www.paypalobjects.com/webstatic/icon/pp258.png') no-repeat center/contain;display:inline-block}
+.plan button .pp{width:20px;height:20px;background:url('/assets/paypal-mark.svg') no-repeat center/contain;display:inline-block}
 .note{opacity:.75;font-size:13px;margin:0 12px 16px}
 CSS
 
