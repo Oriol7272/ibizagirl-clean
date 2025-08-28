@@ -1,0 +1,7 @@
+#thumbs .ad, #thumbs .ad-slot,
+#grid .ad, #grid .ad-slot,
+.gallery .ad, .gallery .ad-slot,
+.masonry .ad, .masonry .ad-slot { display:none !important; }
+#ad-left, #ad-right { position:fixed; top:110px; width:160px; z-index:50; }
+#ad-left{left:10px} #ad-right{right:10px}
+@media (max-width:1200px){ #ad-left,#ad-right{display:none !important} }

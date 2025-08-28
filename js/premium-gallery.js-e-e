@@ -31,7 +31,7 @@
     img.className = "blurred";
     const pp = document.createElement("div");
     pp.className = "pp-icons";
-    pp.innerHTML = '<img alt="PayPal" src="/https://www.paypalobjects.com/webstatic/icon/pp258.png" /><span>Comprar</span>';
+    pp.innerHTML = '<img alt="PayPal" src="/paypal-mark.svg" /><span>Comprar</span>';
     wrap.appendChild(img);
     wrap.appendChild(pp);
 

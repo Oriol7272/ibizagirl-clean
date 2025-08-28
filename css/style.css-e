@@ -31,7 +31,7 @@ img{display:block;max-width:100%}
   background:#111;font-size:14px;line-height:1;cursor:pointer
 }
 .ibg-btn small{opacity:.8}
-.ibg-btn .pp{width:14px;height:14px;display:inline-block;background:url('/img/https://www.paypalobjects.com/webstatic/icon/pp258.png') center/contain no-repeat}
+.ibg-btn .pp{width:14px;height:14px;display:inline-block;background:url('/img/paypal-mark.svg') center/contain no-repeat}
 .ibg-badge{font-size:12px;color:var(--fg-dim)}
 
 /* Grid de thumbs */
@@ -55,7 +55,7 @@ img{display:block;max-width:100%}
 .ibg-pay{
   display:inline-flex;align-items:center;gap:6px;background:#111;border:1px solid #2a2a2a;border-radius:999px;padding:6px 8px;font-size:12px
 }
-.ibg-pay .pp{width:14px;height:14px;background:url('/img/https://www.paypalobjects.com/webstatic/icon/pp258.png') center/contain no-repeat}
+.ibg-pay .pp{width:14px;height:14px;background:url('/img/paypal-mark.svg') center/contain no-repeat}
 
 /* Slot de anuncio */
 .ibg-ad{
