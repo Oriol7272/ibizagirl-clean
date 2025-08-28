@@ -1,22 +1,45 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  // Crear rotador si no existe, y garantizar 2 slides
+  let rot = document.getElementById('banner-rotator');
+  if(!rot){
+    const host = document.querySelector('.banner') || document.body;
+    rot = document.createElement('div'); rot.id='banner-rotator'; rot.className='banner-rotator';
+    host.prepend(rot);
+  }
+  function ensureSlides(){
+    let slides = rot.querySelectorAll('.banner-slide');
+    for(let i = slides.length; i < 2; i++){
+      const d = document.createElement('div'); d.className='banner-slide'; rot.appendChild(d);
+    }
+    return rot.querySelectorAll('.banner-slide');
+  }
+  let slides = ensureSlides();
+
+  // Banner: usa /decorative-images.json generado en build; si no existe, cae a 'full'
   const full = IBG.getFullList();
-  let bannerImages = [];
-  try{
-    const r = await fetch('./decorative-images.json',{cache:'no-store'});
-    if(r.ok){ const arr = await r.json(); if(Array.isArray(arr) && arr.length) bannerImages = arr; }
-  }catch(e){}
-  if(!bannerImages.length){ bannerImages = IBG.pickRandom(full.map(x=>x.src), Math.min(6, full.length)); }
-  const slides = document.querySelectorAll('#banner-rotator .banner-slide');
+  async function getBannerList(){
+    try{
+      const r = await fetch('./decorative-images.json',{cache:'no-store'});
+      if(r.ok){ const arr = await r.json(); if(Array.isArray(arr) && arr.length) return arr; }
+    }catch(e){}
+    return IBG.pickRandom(full.map(x=>x.src), Math.min(6, full.length));
+  }
+  const bannerImages = await getBannerList();
+
   let i = 0;
   function setSlide(idx){
-    slides.forEach((el,k)=>el.classList.toggle('active', k===idx));
-    if (bannerImages[idx]) slides[idx].style.backgroundImage = "url('"+bannerImages[idx]+"')";
-    const other = (idx^1);
-    const nextIdx = (idx+1) % (bannerImages.length||1);
-    if (bannerImages[nextIdx]) slides[other].style.backgroundImage = "url('"+bannerImages[nextIdx]+"')";
+    slides = ensureSlides(); // por si el DOM cambió
+    if (!slides.length || !bannerImages.length) { rot.classList.add('hidden'); return; }
+    const curr = slides[idx % slides.length];
+    const next = slides[(idx+1) % slides.length];
+    for (let k=0;k<slides.length;k++) slides[k].classList.toggle('active', slides[k]===curr);
+    if (curr) curr.style.backgroundImage = "url('"+bannerImages[idx % bannerImages.length]+"')";
+    if (next) next.style.backgroundImage = "url('"+bannerImages[(idx+1) % bannerImages.length]+"')";
   }
   setSlide(0);
   setInterval(()=>{ i = (i+1) % Math.max(1, bannerImages.length); setSlide(i); }, 4000);
+
+  // Carousel (14 aleatorias)
   const track = document.getElementById('carousel-track');
   const items = IBG.pickRandom(full, Math.min(14, full.length));
   for(const it of items){
@@ -24,11 +47,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     card.className = 'carousel-item';
     const img = document.createElement('img');
     img.loading = 'lazy'; img.decoding='async'; img.src = it.src;
-    card.appendChild(img);
-    track.appendChild(card);
+    card.appendChild(img); track.appendChild(card);
   }
   document.getElementById('carousel-prev').addEventListener('click', ()=> track.scrollBy({left:-600, behavior:'smooth'}));
   document.getElementById('carousel-next').addEventListener('click', ()=> track.scrollBy({left: 600, behavior:'smooth'}));
+
+  // Galería (36 aleatorias)
   const grid = document.getElementById('gallery-grid');
   const gitems = IBG.pickRandom(full, Math.min(36, full.length));
   for(const it of gitems){
@@ -36,5 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const img = document.createElement('img'); img.loading = 'lazy'; img.decoding='async'; img.src = it.src;
     card.appendChild(img); grid.appendChild(card);
   }
+
   IBG.loadAds();
 });
