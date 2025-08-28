@@ -99,10 +99,12 @@
 
   window.addEventListener('DOMContentLoaded',()=>{ IBG_Payments.enableThumbHandlers(); IBG_Payments.markLockedThumbs(); });
   window.IBG_Payments=IBG_Payments;
-})();</script><script src="/js/premium-gallery.js" defer></script>
 
 <link rel="stylesheet" href="/css/premium.css">
+  <link rel="stylesheet" href="/css/premium-fixes.css">
 </head><body>
+<div id="premium-topbar"></div>
+<div id="premium-root"></div>
 <aside id="ad-left" class="side-ad left"></aside>
 <aside id="ad-right" class="side-ad right"></aside>
 <div class="page-shell"><div id="app"></div></div>
@@ -112,7 +114,6 @@
   <div id="premium-status">🔎 Cargando premium…</div>
 </div>
 
-<script src="premium.js" defer></script>
 <script>(function(){var el=document.getElementById("premium-status");if(!el)return;try{var cid=(window.__ENV&&window.__ENV.PAYPAL_CLIENT_ID)||"(vacío)";console.log("[premium] ready, PAYPAL_CLIENT_ID len:", (cid||"").length);el.textContent="✅ premium listo • PAYPAL_CLIENT_ID: "+(cid?"•••"+cid.slice(-6):"(vacío)");}catch(e){console.error("[premium] post-load error",e);el.textContent="⚠️ premium error: "+e;}})();</script>
 <section id="premium-plans" style="padding:16px;max-width:1100px;margin:0 auto;">
   <h2 style="font:600 24px system-ui,Arial;margin:0 0 12px;">Suscripciones Premium</h2>
@@ -234,6 +235,14 @@
   <script src="/js/premium-flag.js"></script>
   <script src="/js/premium-menu.js"></script>
   <script src="/js/premium-thumbs.js"></script>
+<!-- IBG premium scripts -->
+
 </body></html>
 
   
+<script src="/js/content-data1.js"></script>
+<script src="/js/content-data2.js"></script>
+<script src="/js/content-data3.js"></script>
+<script src="/js/content-data4.js"></script>
+<script src="/js/content-data5.js"></script>
+<script src="/js/content-data6.js"></script>
