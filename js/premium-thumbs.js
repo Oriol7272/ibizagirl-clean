@@ -1,45 +1,58 @@
-(() => {
-  const BASE = (window.__ENV && window.__ENV.BASE) || "https://ibizagirl.pics";
-  const grid = document.querySelector('.ibg-premium-grid');
-  if (!grid) return;
+(function(){
+  const BASE=(window.__ENV&&window.__ENV.BASE)||'https://ibizagirl.pics';
+  const SOURCES=['content-data3.js','content-data4.js'];
 
-  const L = (window.PREMIUM_PART1 || []).concat(window.PREMIUM_PART2 || []);
-
-  function ensureWebp(name) {
-    if (!name) return "";
-    if (/\.webp$/i.test(name)) return name;
-    return name.replace(/\.(jpe?g|png|gif)$/i, "") + ".webp";
-  }
-  const u = (folder, name) => `${BASE}/${folder}/${ensureWebp(name)}`;
-
-  function card(name) {
-    const wrap = document.createElement('div');
-    wrap.className = 'ibg-card';
-
-    const img = document.createElement('img');
-    img.alt = '';
-    img.loading = 'lazy';
-    img.referrerPolicy = 'no-referrer';
-    img.src = u('uncensored', name);
-    img.onerror = () => { if (img.src.includes('/uncensored/')) img.src = u('full', name); };
-    wrap.appendChild(img);
-
-    const lock = document.createElement('div');
-    lock.className = 'lock';
-    lock.textContent = 'Bloqueado';
-    wrap.appendChild(lock);
-
-    const pp = document.createElement('div');
-    pp.className = 'pp-buy';
-    pp.dataset.paypal = 'subscription';
-    // plan lo obtiene ibg-subscription.js de window.__ENV si está vacío
-    wrap.appendChild(pp);
-
-    return wrap;
+  function buildUrl(name){
+    const clean=(name||'').replace(/\.(webp|jpg|jpeg|png)$/i,'');
+    const webp=BASE.replace(/\/$/,'')+'/uncensored/'+clean+'.webp';
+    const jpg =BASE.replace(/\/$/,'')+'/uncensored/'+clean+'.jpg';
+    return {webp,jpg};
   }
 
-  grid.innerHTML = '';
-  L.forEach(n => grid.appendChild(card(n)));
+  async function loadNames(){
+    let names=[];
+    for(const src of SOURCES){
+      try{
+        const txt=await fetch(src,{cache:'no-store'}).then(r=>r.text());
+        const found=[...txt.matchAll(/["'`]([A-Za-z0-9_-]{8,64})(?:\.(?:webp|jpg|jpeg|png))?["'`]/g)].map(m=>m[1]);
+        names=names.concat(found);
+      }catch(e){}
+    }
+    names=[...new Set(names)].filter(Boolean);
+    return names.slice(0,100);
+  }
 
-  console.log('[premium-thumbs] render:', L.length, 'base:', BASE);
+  function renderCards(list){
+    const grid=document.getElementById('premium-grid');
+    if(!grid){console.warn('premium-grid no encontrado');return;}
+    grid.innerHTML='';
+    list.forEach((name)=>{
+      const {webp,jpg}=buildUrl(name);
+      const card=document.createElement('article');
+      card.className='card';
+      const img=new Image();
+      img.loading='lazy';
+      img.alt='Premium';
+      img.src=webp;
+      img.onerror=function(){ if(this.src!==jpg){ this.src=jpg; } };
+      const lock=document.createElement('div');
+      lock.className='lock';
+      lock.textContent='Bloqueado';
+      const price=document.createElement('div');
+      price.className='price';
+      price.innerHTML='<img alt="PayPal" src="images/paypal.svg"> 0,10€';
+      card.appendChild(img);
+      card.appendChild(lock);
+      card.appendChild(price);
+      grid.appendChild(card);
+    });
+  }
+
+  async function main(){
+    const list=await loadNames();
+    console.log('[premium-thumbs] render:',list.length,'base:',BASE);
+    renderCards(list);
+  }
+
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',main);}else{main();}
 })();
