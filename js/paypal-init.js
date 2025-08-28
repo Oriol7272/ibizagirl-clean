@@ -1,32 +1,27 @@
 ;(function(){
-  let _resolve; window.paypalReady = new Promise(r=>_resolve=r);
-  async function waitEnv(){
-    return new Promise((res,rej)=>{
-      let n=0;(function loop(){
-        const cid = window?.IBG_ENV?.PAYPAL_CLIENT_ID;
-        if (cid && String(cid).trim().length>10) return res(cid);
-        if (++n>400) return rej(new Error('PAYPAL_CLIENT_ID vacío'));
-        setTimeout(loop,50);
-      })();
-    });
-  }
-  function loadSDK(cid){
-    return new Promise((res,rej)=>{
-      if (window.paypal) return res(window.paypal);
+  function loadSDK(cid, {intent='capture', components='buttons', currency='EUR', vault=false}={}){
+    return new Promise((resolve,reject)=>{
+      if (!cid) return reject(new Error('PAYPAL_CLIENT_ID vacío'));
+      if (window.paypal) return resolve(window.paypal);
       const s=document.createElement('script');
-      s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(cid)}&components=buttons&currency=EUR&intent=capture`;
-      s.async=true; s.onload=()=> res(window.paypal); s.onerror=()=> rej(new Error('paypal sdk load error'));
+      const qs=new URLSearchParams({ 'client-id':cid, components, currency, intent, vault:String(vault) });
+      s.src = `https://www.paypal.com/sdk/js?${qs.toString()}`;
+      s.onload=()=> resolve(window.paypal);
+      s.onerror=()=> reject(new Error('paypal sdk load error'));
       document.head.appendChild(s);
     });
   }
-  (async ()=>{
+  async function boot(){
+    await new Promise(r=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',r,{once:true}):r());
+    const CID = window.IBG_ENV?.PAYPAL_CLIENT_ID;
     try{
-      const cid = await waitEnv();
-      const pp = await loadSDK(cid);
-      _resolve(pp);
+      const pp = await loadSDK(CID,{intent:'capture',components:'buttons',currency:'EUR',vault:false});
+      window.paypalReady = Promise.resolve(pp);
       console.log('[paypal-init] listo');
     }catch(e){
-      console.warn('[paypal-init] error', e.message||e);
+      console.error('[paypal-init] error', e.message||e);
+      window.paypalReady = Promise.reject(e);
     }
-  })();
+  }
+  boot();
 })();
