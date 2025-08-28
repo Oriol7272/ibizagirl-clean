@@ -1,0 +1,67 @@
+/* Minimal y limpio. Hereda tipografía del sitio */
+:root{
+  --gap:12px;
+  --radius:10px;
+  --fg:#eee;
+  --fg-dim:#b8b8b8;
+  --bg:#0b0b0b;
+  --card:#141414;
+  --brand:#ffc439; /* PayPal amarillo */
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);margin:0}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+.ibg-container{max-width:1200px;margin:0 auto;padding:16px}
+
+/* Top bar único */
+#premium-topbar{
+  position:sticky;top:0;z-index:40;
+  backdrop-filter:saturate(150%) blur(6px);
+  background:rgba(10,10,10,.75);
+  border-bottom:1px solid #1d1d1d;
+}
+#premium-topbar .inner{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px 16px}
+#premium-topbar .brand{font-weight:600;letter-spacing:.2px}
+#premium-topbar .actions{display:flex;gap:8px;flex-wrap:wrap}
+.ibg-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 10px;border:1px solid #2a2a2a;border-radius:999px;
+  background:#111;font-size:14px;line-height:1;cursor:pointer
+}
+.ibg-btn small{opacity:.8}
+.ibg-btn .pp{width:14px;height:14px;display:inline-block;background:url('/img/paypal-mark.svg') center/contain no-repeat}
+.ibg-badge{font-size:12px;color:var(--fg-dim)}
+
+/* Grid de thumbs */
+#premium-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--gap);padding:16px}
+@media (max-width:1100px){#premium-grid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:900px){#premium-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){#premium-grid{grid-template-columns:repeat(2,1fr)}}
+
+.ibg-card{
+  position:relative;border-radius:var(--radius);overflow:hidden;background:var(--card);
+  border:1px solid #1d1d1d;min-height:140px
+}
+.ibg-card .ph{aspect-ratio:1/1;background:#0f0f0f}
+.ibg-card img.blur{filter:blur(8px) saturate(80%);transform:scale(1.03)}
+.ibg-card footer{
+  position:absolute;left:0;right:0;bottom:0;padding:8px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.8) 60%,rgba(0,0,0,.9))
+}
+.ibg-tag{font-size:12px;color:#ddd;background:#0008;padding:3px 6px;border-radius:6px;border:1px solid #2a2a2a}
+.ibg-pay{
+  display:inline-flex;align-items:center;gap:6px;background:#111;border:1px solid #2a2a2a;border-radius:999px;padding:6px 8px;font-size:12px
+}
+.ibg-pay .pp{width:14px;height:14px;background:url('/img/paypal-mark.svg') center/contain no-repeat}
+
+/* Slot de anuncio */
+.ibg-ad{
+  display:flex;align-items:center;justify-content:center;
+  height:160px;border:1px dashed #2f2f2f;border-radius:var(--radius);color:var(--fg-dim);background:#101010
+}
+
+/* Ocultar lateral heredado si existe */
+#premium-sidebar, .premium-sidebar, .aside, .leftbar{display:none !important}
