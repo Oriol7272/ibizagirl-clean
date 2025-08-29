@@ -1,34 +1,78 @@
 (function(){
-  var E = window.__ENV || {};
-  function add(parent, html){ var d=document.createElement('div'); d.className='ads-box'; d.innerHTML=html; parent.appendChild(d); }
+  var ENV = (window.__ENV||{});
+  var Z_EXO   = (ENV.EXOCLICK_ZONE||"").trim();
+  var Z_JUICY = (ENV.JUICYADS_ZONE||"").trim();
+  var POP_EN  = String(ENV.POPADS_ENABLE||"").toLowerCase() === "true";
+  var POP_ID  = (ENV.POPADS_SITE_ID||"").trim();
 
-  // ExoClick: usa su script de native/standard; el idzone viene de ENV
-  function mountExo(where){
-    if (!E.EXOCLICK_ZONE) return;
-    var html = '<div data-idzone="'+E.EXOCLICK_ZONE+'" class="exoclick"></div>';
-    add(where, html);
-    if (!document.getElementById('exonativejs')){
-      var s=document.createElement('script'); s.id='exonativejs'; s.src='https://a.exdynsrv.com/nativeads.js'; s.async=true; document.head.appendChild(s);
-    }
-  }
-  // JuicyAds: tag estándar
-  function mountJuicy(where){
-    if (!E.JUICYADS_ZONE) return;
-    var html = '<ins class="adsbyjuicy" data-zone="'+E.JUICYADS_ZONE+'"></ins>';
-    add(where, html);
-    if (!document.getElementById('jadsjs')){
-      var s=document.createElement('script'); s.id='jadsjs'; s.src='https://adserver.juicyads.com/js/jads.js'; s.async=true; document.head.appendChild(s);
-    }
-  }
-  // PopAds: popunder, sin slot visual
-  if (String(E.POPADS_ENABLE||"false")==="true" && E.POPADS_SITE_ID){
-    var p=document.createElement('script'); p.src='https://c1.popads.net/pop.js'; p.async=true; p.setAttribute('data-site',E.POPADS_SITE_ID); document.head.appendChild(p);
+  function ensureSidebars(){
+    if (document.getElementById("ads-left") || document.getElementById("ads-right")) return;
+
+    var css = document.createElement("style");
+    css.textContent = `
+      .ads-sidebar{position:fixed; top:80px; width:160px; z-index:10;}
+      #ads-left{left:0;}
+      #ads-right{right:0;}
+      .ads-slot{margin-bottom:12px; width:160px; min-height:600px; display:flex; justify-content:center; align-items:center; background:transparent;}
+      .ads-slot iframe{border:0; width:160px; height:600px;}
+      @media (max-width:1200px){ .ads-sidebar{display:none;} }
+    `;
+    document.head.appendChild(css);
+
+    var L = document.createElement("div");
+    L.id = "ads-left"; L.className = "ads-sidebar";
+    var R = document.createElement("div");
+    R.id = "ads-right"; R.className = "ads-sidebar";
+
+    document.body.appendChild(L);
+    document.body.appendChild(R);
   }
 
-  window.addEventListener('DOMContentLoaded', function(){
-    var L=document.getElementById('ads-left'), R=document.getElementById('ads-right');
-    if (L){ mountExo(L); mountJuicy(L); }
-    if (R){ mountExo(R); mountJuicy(R); }
-    console.info('[ads] sidebars montadas');
-  });
+  function addIframe(container, src){
+    var slot = document.createElement("div");
+    slot.className = "ads-slot";
+    var ifr = document.createElement("iframe");
+    ifr.referrerPolicy = "no-referrer";
+    ifr.loading = "lazy";
+    ifr.src = src;
+    slot.appendChild(ifr);
+    container.appendChild(slot);
+  }
+
+  function mount(){
+    ensureSidebars();
+    var left  = document.getElementById("ads-left");
+    var right = document.getElementById("ads-right");
+
+    if (Z_EXO) {
+      var exoSrc = "https://syndication.exdynsrv.com/ads-iframe-display.php?idzone="+encodeURIComponent(Z_EXO);
+      addIframe(left,  exoSrc);
+      addIframe(right, exoSrc);
+      console.info("[ads] ExoClick OK");
+    }
+
+    if (Z_JUICY) {
+      var juicySrc = "https://www.juicyads.com/inv/iframe.php?adzone="+encodeURIComponent(Z_JUICY);
+      addIframe(left,  juicySrc);
+      addIframe(right, juicySrc);
+      console.info("[ads] JuicyAds OK");
+    }
+
+    if (POP_EN && POP_ID){
+      var s = document.createElement("script");
+      s.src = "https://c1.popads.net/pop.js";
+      s.async = true; s.defer = true;
+      s.setAttribute("data-site", POP_ID);
+      s.onload = function(){ console.info("[ads] PopAds OK"); };
+      document.head.appendChild(s);
+    }
+
+    console.info("[ads] sidebars montadas");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", mount);
+  } else {
+    mount();
+  }
 })();
