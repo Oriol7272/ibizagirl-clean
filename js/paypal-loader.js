@@ -1,4 +1,7 @@
 (function () {
+  if (window.__IBG_PAYPAL_LOADER__) return;
+  window.__IBG_PAYPAL_LOADER__ = true;
+
   var ENV = (window.__ENV || {});
   var CID = ENV.PAYPAL_CLIENT_ID || "";
   if (!CID) { console.warn("[paypal] PAYPAL_CLIENT_ID vacío — no se cargan SDKs"); return; }
