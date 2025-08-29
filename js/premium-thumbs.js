@@ -3,47 +3,47 @@
     var ENV  = (window.__ENV||{});
     var BASE = (ENV.BASE||"https://ibizagirl.pics").replace(/\/+$/,"");
 
-    // Recolecta ANY arrays globales IBG_PREMIUM*
-    var all = [];
-    for (var k in window) {
-      if (Object.prototype.hasOwnProperty.call(window,k) &&
-          /^IBG_PREMIUM/i.test(k) &&
-          Array.isArray(window[k])) {
-        all = all.concat(window[k]);
-      }
-    }
-    if (!all.length) {
-      console.warn("[premium-thumbs] No encontré arrays IBG_PREMIUM* en window");
+    function absolutize(p){
+      if (!p) return "";
+      if (/^https?:\/\//i.test(p)) return p;
+      if (p[0] === "/") return BASE + p;
+      return BASE + "/" + p;
     }
 
-    var files = all.slice(0, 100);
+    var all = []
+      .concat(
+        (window.PREMIUM_IMAGES_PART1||[]),
+        (window.PREMIUM_IMAGES_PART2||[]),
+        (window.IBG_PREMIUM_PART1||[]),
+        (window.IBG_PREMIUM_PART2||[]),
+        (window.IBG_PREMIUM||[])
+      );
+
+    if (!all.length) console.warn("[premium-thumbs] No encontré arrays premium");
+
     var grid = document.getElementById("premium-grid");
     if (!grid) { console.warn("premium-grid no encontrado"); return; }
-
     grid.innerHTML = "";
-    files.forEach(function(name){
-      var src = (typeof name === "string" && name.endsWith(".webp")) ? name : (String(name||"") + ".webp");
-      var url = BASE + "/uncensored/" + src;
 
-      var card = document.createElement("div");
-      card.className = "card";
-
-      var wrap = document.createElement("div");
-      wrap.className = "thumb-wrap";
+    var price = (ENV.PAYPAL_ONESHOT_PRICE_EUR_IMAGE||"0.10");
+    all.slice(0,100).forEach(function(path){
+      var url = absolutize(String(path));
+      var card = document.createElement("div"); card.className = "card";
+      var wrap = document.createElement("div"); wrap.className = "thumb-wrap";
 
       var img = document.createElement("img");
       img.loading = "lazy"; img.decoding = "async"; img.referrerPolicy = "no-referrer";
-      img.src = url; img.alt = src;
+      img.src = url; img.alt = path;
 
       var overlay = document.createElement("div");
       overlay.className = "overlay";
-      overlay.innerHTML = '<div class="pay"><span class="pp"></span><span class="price">0,10€</span></div>';
+      overlay.innerHTML = '<div class="pay"><span class="pp"></span><span class="price">'+price.replace('.',',')+'€</span></div>';
       overlay.addEventListener("click", function(e){
         e.preventDefault();
         if (!window.paypal_buy || !window.paypal_buy.Buttons) {
-          console.warn("paypal_buy SDK no cargado (sin PAYPAL_CLIENT_ID)"); return;
+          console.warn("paypal_buy SDK no cargado (PAYPAL_CLIENT_ID?)"); return;
         }
-        alert("Compra individual simulada (integrar order/capture)");
+        alert("Compra individual simulada (pendiente order/capture)");
       });
 
       wrap.appendChild(img);
@@ -52,7 +52,7 @@
       grid.appendChild(card);
     });
 
-    console.info("[premium-thumbs] render:", files.length, "base:", BASE);
+    console.info("[premium-thumbs] render ok:", Math.min(100, all.length), "base:", BASE);
   } catch (e) {
     console.error("[premium-thumbs] error", e);
   }
