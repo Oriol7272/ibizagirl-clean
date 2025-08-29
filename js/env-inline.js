@@ -1,25 +1,28 @@
-(function(){
-  if (window.__ENV) return;
+(function () {
+  if (window.__IBG_ENV_INLINE__) return;
+  window.__IBG_ENV_INLINE__ = true;
+
+  // Estas cadenas se resuelven en build por Vercel:
   window.__ENV = {
-    // Base assets
-    BASE: "https://ibizagirl-assets.s3.eu-north-1.amazonaws.com",
+    BASE:                     "${IBG_ASSETS_BASE_URL:-https://ibizagirl-assets.s3.eu-north-1.amazonaws.com}",
+    PAYPAL_CLIENT_ID:         "${PAYPAL_CLIENT_ID:-}",
 
-    // PayPal
-    PAYPAL_CLIENT_ID: "AfQEdiielw5fm3wF08p9pcxwqR3gPz82YRNUTKY4A8WNG9AktiGsDNyr2i7BsjVzSwwpeCwR7Tt7DPq5",
-    PAYPAL_PLAN_ID_MONTHLY: "P-3WE8037612641383DNCUKNJI",
-    PAYPAL_PLAN_ID_ANNUAL:  "P-43K261214Y571983RNCUKN7I",
+    // Planes (acepta cualquiera de los dos nombres que tienes configurados)
+    PAYPAL_PLAN_ID_MONTHLY:   "${PAYPAL_PLAN_MONTHLY_1499:-${PAYPAL_PLAN_ID_MONTHLY:-}}",
+    PAYPAL_PLAN_ID_ANNUAL:    "${PAYPAL_PLAN_ANNUAL_4999:-${PAYPAL_PLAN_ID_ANNUAL:-}}",
 
-    // Precios (como string con punto decimal)
-    ONESHOT_PRICE_IMAGE_EUR:    "0.10",
-    ONESHOT_PRICE_VIDEO_EUR:    "0.30",
-    ONESHOT_PRICE_LIFETIME_EUR: "100.00",
+    // Precios
+    ONESHOT_PRICE_IMAGE_EUR:    "${PAYPAL_ONESHOT_PRICE_EUR_IMAGE:-0.10}",
+    ONESHOT_PRICE_VIDEO_EUR:    "${PAYPAL_ONESHOT_PRICE_EUR_VIDEO:-0.30}",
+    ONESHOT_PRICE_LIFETIME_EUR: "${PAYPAL_ONESHOT_PRICE_EUR_LIFETIME:-100.00}",
 
     // Ads
-    EXOCLICK_ZONE:       "5696328",
-    JUICYADS_ZONE:       "1099637",
-    EROADVERTISING_ZONE: "8177575",
-    POPADS_ENABLE:       "true",
-    POPADS_SITE_ID:      "e494ffb82839a29122608e933394c091"
+    EXOCLICK_ZONE:       "${EXOCLICK_ZONE:-}",
+    JUICYADS_ZONE:       "${JUICYADS_ZONE:-}",
+    EROADVERTISING_ZONE: "${EROADVERTISING_ZONE:-}",
+    POPADS_ENABLE:       "${POPADS_ENABLE:-true}",
+    POPADS_SITE_ID:      "${POPADS_SITE_ID:-}"
   };
+
   console.info("[env-inline] listo", window.__ENV);
 })();
