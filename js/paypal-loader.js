@@ -11,10 +11,12 @@
     document.head.appendChild(s);
   }
 
-  // Cargamos SOLO una vez con vault=true e intent=subscription
-  // (con esto puedes usar tanto createSubscription como createOrder)
-  var base = "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
-           + "&components=buttons&currency=EUR&intent=subscription&vault=true&data-namespace=pp";
-  injectOnce("pp-sdk", base);
+  // Un único SDK con vault=true sirve para orders y subscriptions
+  var url = "https://www.paypal.com/sdk/js"
+          + "?client-id="+encodeURIComponent(CID)
+          + "&components=buttons&currency=EUR"
+          + "&intent=subscription&vault=true"
+          + "&data-namespace=pp";
+  injectOnce("pp-sdk", url);
   console.info("[paypal-loader] SDK listo (vault=true)");
 })();
