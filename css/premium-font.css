@@ -1,8 +1,6 @@
 @font-face{
   font-family:"SexyBeachy";
   src:
-    url("/decorative-images/Sexy%20Beachy.woff2") format("woff2"),
-    url("/decorative-images/Sexy%20Beachy.woff") format("woff"),
     url("/decorative-images/Sexy%20Beachy.otf") format("opentype"),
     url("/decorative-images/Sexy%20Beachy.ttf") format("truetype");
   font-weight: normal;
