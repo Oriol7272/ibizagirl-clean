@@ -1,6 +1,8 @@
 @font-face{
   font-family:"SexyBeachy";
   src:
+    url("/decorative-images/Sexy%20Beachy.woff2") format("woff2"),
+    url("/decorative-images/Sexy%20Beachy.woff") format("woff"),
     url("/decorative-images/Sexy%20Beachy.otf") format("opentype"),
     url("/decorative-images/Sexy%20Beachy.ttf") format("truetype");
   font-weight: normal;
@@ -8,10 +10,9 @@
   font-display: swap;
 }
 
-/* aplica la decorativa a títulos/branding del premium */
-:root{ --decorative-font: "SexyBeachy", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+:root{ --decorative-font: "SexyBeachy", -apple-system, system-ui, Segoe UI, Roboto, Arial, sans-serif; }
 
-h1,h2,.site-title,.brand,.hero-title,.menu .brand, .topbar-title{
+h1,h2,.site-title,.brand,.hero-title,.menu .brand,.topbar-title{
   font-family: var(--decorative-font);
-  letter-spacing: .5px;
+  letter-spacing:.5px;
 }

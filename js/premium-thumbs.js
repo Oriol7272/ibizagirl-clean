@@ -3,32 +3,34 @@
     var ENV  = (window.__ENV||{});
     var BASE = (ENV.BASE||"https://ibizagirl.pics").replace(/\/+$/,"");
 
-    function ensureWebp(name){
-      var s = String(name||"").trim();
+    function resolvePrimary(entry){
+      var s = String(entry||"").trim();
       if (!s) return "";
-      // si viene absoluta, solo forzamos la extensión
-      var m = s.match(/^(https?:\/\/[^?#]+?)(\.[a-zA-Z0-9]+)?([?#].*)?$/);
-      if (m) {
-        var base = m[1], q = m[3]||"";
-        if (!/\.webp$/i.test(base)) base = base.replace(/\.[a-zA-Z0-9]+$/,'') + ".webp";
-        return base + q;
+      if (/^https?:\/\//i.test(s)) {
+        if (!/\.(webp|jpg|jpeg|png|gif)(\?|$)/i.test(s)) {
+          s = s.replace(/(\.[a-zA-Z0-9]+)?(\?.*)?$/,".webp$2");
+        }
+        return s;
       }
-      // relativa: quitamos carpeta y extensión, y mandamos a /uncensored/*.webp
-      s = s.split('/').pop().replace(/\.[a-zA-Z0-9]+$/,'') + ".webp";
-      return BASE + "/uncensored/" + s;
+      var file = s.split('/').pop().replace(/\.[a-zA-Z0-9]+$/,'') + ".webp";
+      return BASE + "/uncensored/" + file;
     }
 
-    // juntar arrays posibles
+    function withFallback(img, entry){
+      img.onerror = function(){
+        var name = String(entry||"").trim().split('/').pop().replace(/\.[a-zA-Z0-9]+$/,'') + ".webp";
+        if (img.dataset.fallbackTried==="1") return;
+        img.dataset.fallbackTried="1";
+        img.src = BASE + "/full/" + name;
+      };
+    }
+
     var all = []
       .concat(
-        (window.PREMIUM_IMAGES_PART1||[]),
-        (window.PREMIUM_IMAGES_PART2||[]),
         (window.IBG_PREMIUM_PART1||[]),
         (window.IBG_PREMIUM_PART2||[]),
         (window.IBG_PREMIUM||[])
       );
-
-    if (!all.length) console.warn("[premium-thumbs] No encontré arrays premium");
 
     var grid = document.getElementById("premium-grid");
     if (!grid) { console.warn("premium-grid no encontrado"); return; }
@@ -37,25 +39,18 @@
     var price = (ENV.PAYPAL_ONESHOT_PRICE_EUR_IMAGE||"0.10");
 
     all.slice(0,100).forEach(function(entry){
-      var url = ensureWebp(entry);
+      var url = resolvePrimary(entry);
       var card = document.createElement("div"); card.className = "card";
       var wrap = document.createElement("div"); wrap.className = "thumb-wrap";
 
       var img = document.createElement("img");
-      img.loading = "lazy"; img.decoding = "async"; img.referrerPolicy = "no-referrer";
+      img.loading="lazy"; img.decoding="async"; img.referrerPolicy="no-referrer";
       img.src = url; img.alt = String(entry||"");
+      withFallback(img, entry);
 
       var overlay = document.createElement("div");
       overlay.className = "overlay";
       overlay.innerHTML = '<div class="pay"><span class="pp"></span><span class="price">'+price.replace('.',',')+'€</span></div>';
-      overlay.addEventListener("click", function(e){
-        e.preventDefault();
-        if (!window.paypal || !window.paypal.Buttons) {
-          console.warn("PayPal SDK no listo"); return;
-        }
-        alert("Compra individual simulada (pendiente order/capture)");
-      });
-
       wrap.appendChild(img);
       wrap.appendChild(overlay);
       card.appendChild(wrap);
