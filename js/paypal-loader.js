@@ -1,26 +1,20 @@
 (function(){
-  if (window.__PP_SDK_LOADED__) return; window.__PP_SDK_LOADED__=true;
-  var E = window.__ENV || {};
-  var CID = ((E.PAYPAL_CLIENT_ID||"")+"").replace(/\s+/g,'').trim();
-  if (!CID) { console.warn("[paypal] sin PAYPAL_CLIENT_ID, no cargo SDKs"); return; }
+  if (window.__PP_SDK__) return; window.__PP_SDK__=true;
+  var E = window.__ENV||{};
+  var CID = (E.PAYPAL_CLIENT_ID||"").trim();
+  if (!CID){ console.warn("[paypal] sin PAYPAL_CLIENT_ID, no cargo SDK"); return; }
 
-  function inject(id, url){
+  function injectOnce(id, src){
     if (document.getElementById(id)) return;
-    var s=document.createElement('script');
-    s.id=id; s.src=url; s.async=true; s.defer=true; s.crossOrigin="anonymous";
+    var s=document.createElement("script");
+    s.id=id; s.src=src; s.async=true; s.defer=true; s.crossOrigin="anonymous";
     document.head.appendChild(s);
   }
 
-  var base="https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
-           +"&components=buttons&currency=EUR";
-
-  // Compra suelta
-  inject("pp-buy",  base+"&intent=capture&data-namespace=pp_buy");
-
-  // Suscripciones si hay planes
-  var hasSubs = !!(E.PAYPAL_PLAN_ID_MONTHLY || E.PAYPAL_PLAN_ID_ANNUAL);
-  if (hasSubs) {
-    inject("pp-subs", base+"&intent=subscription&vault=true&data-namespace=pp_subs");
-  }
-  console.info("[paypal-loader] SDKs: buy(capture)"+(hasSubs?" + subs(vault)":""));
+  // Cargamos SOLO una vez con vault=true e intent=subscription
+  // (con esto puedes usar tanto createSubscription como createOrder)
+  var base = "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
+           + "&components=buttons&currency=EUR&intent=subscription&vault=true&data-namespace=pp";
+  injectOnce("pp-sdk", base);
+  console.info("[paypal-loader] SDK listo (vault=true)");
 })();
