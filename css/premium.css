@@ -1,75 +1,26 @@
 @font-face{
-  font-family:"SexyBeachy";
-  src:url("/decorative-images/Sexy Beachy.otf") format("opentype"),
-      url("/decorative-images/Sexy Beachy.ttf") format("truetype");
+  font-family:'Sexy Beachy';
+  src:
+    url('/decorative-images/SexyBeachy.woff2') format('woff2'),
+    url('/decorative-images/Sexy Beachy.woff2') format('woff2'),
+    url('/decorative-images/sexy-beachy.woff2') format('woff2'),
+    url('/decorative-images/SexyBeachy.woff') format('woff'),
+    url('/decorative-images/Sexy Beachy.woff') format('woff'),
+    url('/decorative-images/sexy-beachy.woff') format('woff');
   font-display:swap;
 }
-:root{
-  --bg: #0b1e27;
-  --panel: rgba(255,255,255,.06);
-  --panel-strong: rgba(0,0,0,.35);
-  --text: #eef6fb;
-  --chip:#1f7a8c;
-  --chip2:#126782;
-  --accent:#ffd166;
-}
-*{box-sizing:border-box}
-body{
-  margin:0; background:#092029; color:var(--text);
-  font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
-  background-image:url("/decorative-images/paradise-beach.png");
-  background-size:cover; background-attachment:fixed; background-position:center;
-}
-.topbar{
-  position:sticky; top:0; z-index:10;
-  backdrop-filter: blur(10px);
-  background: linear-gradient(90deg, rgba(3,15,22,.75), rgba(0,0,0,.35));
-  padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.08);
-}
-.menu{
-  display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center;
-}
-.menu .chip{
-  font-size:14px; line-height:1; padding:10px 14px; border-radius:999px;
-  background:var(--chip); border:1px solid rgba(255,255,255,.15); color:#e9fbff;
-}
-.menu .chip.primary{ background:var(--chip2); }
-.menu .chip.strong{ background:var(--accent); color:#202022; font-weight:700; }
 
-.wrap{ max-width:1200px; margin:0 auto; padding:20px; }
+body{ font-family:'Sexy Beachy', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
 
-.grid{
-  display:grid; grid-template-columns:repeat(5,1fr); gap:16px;
-}
-.card{
-  position:relative; border-radius:14px; overflow:hidden;
-  background:var(--panel); border:1px solid rgba(255,255,255,.1);
-}
-.card .thumb{
-  width:100%; aspect-ratio: 3 / 4; display:block; object-fit:cover;
-  filter: blur(16px) saturate(0.8); transform:scale(1.03);
-}
-.card.locked .thumb{ filter: blur(16px) brightness(.85); }
-.card .badge{
-  position:absolute; top:8px; left:8px;
-  background:rgba(0,0,0,.6); color:#fff; font-size:12px; padding:6px 8px; border-radius:999px;
-}
-.card .label{
-  position:absolute; bottom:8px; left:8px; right:8px;
-  text-align:center; font-size:12px; padding:8px; border-radius:10px;
-  background:var(--panel-strong); border:1px solid rgba(255,255,255,.12);
-}
-.card .actions{
-  position:absolute; inset:auto 8px 8px auto;
-  display:flex; gap:8px;
-}
-.card .btn{
-  appearance:none; border:0; border-radius:999px; padding:8px 10px; cursor:pointer;
-  background:#ffc439; color:#1d1d1d; font-weight:700; font-size:12px;
-}
-#ad-left,#ad-right{
-  position:fixed; top:80px; width:160px; height:600px; z-index:9;
-  background:rgba(0,0,0,.08); border:1px dashed rgba(255,255,255,.1); display:none;
-}
-#ad-left{ left:10px } #ad-right{ right:10px }
-@media(min-width:1300px){ #ad-left,#ad-right{ display:block } }
+.header-nav{ font-size:18px; font-weight:600; letter-spacing:.5px; }
+.header-nav a{ color:#fff; text-decoration:none; margin-right:14px; }
+.header-nav a:hover{ text-decoration:underline; }
+
+/* grid y overlay */
+#premium-grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); gap:12px; padding:12px; }
+.thumb-wrap{ position:relative; overflow:hidden; border-radius:12px; }
+.thumb-wrap img{ width:100%; height:auto; filter:blur(12px); transform:scale(1.05); }
+.overlay{ position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:flex-end; padding:8px; }
+.overlay .pay{ background:rgba(0,0,0,.6); backdrop-filter:saturate(160%) blur(4px); padding:6px 10px; border-radius:999px; display:flex; align-items:center; gap:8px; }
+.overlay .pp{ display:inline-block; width:20px; height:20px; background-size:contain; background-repeat:no-repeat; }
+.overlay .price{ color:#fff; font-weight:700; }
