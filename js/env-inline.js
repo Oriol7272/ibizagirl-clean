@@ -1,20 +1,18 @@
 (() => {
-  window.__ENV = {
-    BASE: "https://ibizagirl.pics\\n",
-    PAYPAL_CLIENT_ID: "AfQEdiielw5fm3wF08p9pcxwqR3gPz82YRNUTKY4A8WNG9AktiGsDNyr2i7BsjVzSwwpeCwR7Tt7DPq5",
-    PAYPAL_PLAN_ID_MONTHLY: "P-3WE8037612641383DNCUKNJI",
-    PAYPAL_PLAN_ID_ANNUAL:  "P-43K261214Y571983RNCUKN7I",
-    PAYPAL_ONESHOT_PRICE_EUR_IMAGE:   "0.10",
-    PAYPAL_ONESHOT_PRICE_EUR_VIDEO:   "0.30",
-    PAYPAL_ONESHOT_PRICE_EUR_LIFETIME:"100.00",
-    EXOCLICK_ZONE: "5696328",
-    JUICYADS_ZONE: "1099637",
-    JUICYADS_SNIPPET_B64: "2093981",
-    EROADVERTISING_ZONE: "8177575",
-    EROADVERTISING_SNIPPET_B64: "2093981",
-    POPADS_ENABLE: "true",
-    POPADS_SITE_ID: "e494ffb82839a29122608e933394c091",
-    CRISP_WEBSITE_ID: "59e184b1-e679-4c93-b3ea-d60b63c1c04c"
+  const ENV = {
+    BASE: (window.__ENV && window.__ENV.BASE) || (typeof IBG_ASSETS_BASE_URL !== "undefined" ? IBG_ASSETS_BASE_URL : "") || "https://ibizagirl.pics",
+    PAYPAL_CLIENT_ID: (typeof PAYPAL_CLIENT_ID !== "undefined" ? PAYPAL_CLIENT_ID : "") || "",
+    PAYPAL_PLAN_ID_MONTHLY: (typeof PAYPAL_PLAN_MONTHLY_1499 !== "undefined" ? PAYPAL_PLAN_MONTHLY_1499 : (typeof PAYPAL_PLAN_ID_MONTHLY !== "undefined" ? PAYPAL_PLAN_ID_MONTHLY : "")) || "",
+    PAYPAL_PLAN_ID_ANNUAL:  (typeof PAYPAL_PLAN_ANNUAL_4999  !== "undefined" ? PAYPAL_PLAN_ANNUAL_4999  : (typeof PAYPAL_PLAN_ID_ANNUAL  !== "undefined" ? PAYPAL_PLAN_ID_ANNUAL  : "")) || "",
+    PAYPAL_ONESHOT_PRICE_EUR_IMAGE:    (typeof PAYPAL_ONESHOT_PRICE_EUR_IMAGE    !== "undefined" ? PAYPAL_ONESHOT_PRICE_EUR_IMAGE    : (typeof PAYPAL_ONESHOT_PACK10_IMAGES_EUR !== "undefined" ? PAYPAL_ONESHOT_PACK10_IMAGES_EUR : "")) || "0.10",
+    PAYPAL_ONESHOT_PRICE_EUR_VIDEO:    (typeof PAYPAL_ONESHOT_PRICE_EUR_VIDEO    !== "undefined" ? PAYPAL_ONESHOT_PRICE_EUR_VIDEO    : (typeof PAYPAL_ONESHOT_PACK5_VIDEOS_EUR  !== "undefined" ? PAYPAL_ONESHOT_PACK5_VIDEOS_EUR  : "")) || "",
+    PAYPAL_ONESHOT_PRICE_EUR_LIFETIME: (typeof PAYPAL_ONESHOT_PRICE_EUR_LIFETIME !== "undefined" ? PAYPAL_ONESHOT_PRICE_EUR_LIFETIME : "") || "",
+    EXOCLICK_ZONE:        (typeof EXOCLICK_ZONE        !== "undefined" ? EXOCLICK_ZONE        : "") || "",
+    JUICYADS_ZONE:        (typeof JUICYADS_ZONE        !== "undefined" ? JUICYADS_ZONE        : "") || "",
+    EROADVERTISING_ZONE:  (typeof EROADVERTISING_ZONE  !== "undefined" ? EROADVERTISING_ZONE  : "") || "",
+    POPADS_ENABLE:        (typeof POPADS_ENABLE        !== "undefined" ? POPADS_ENABLE        : "") || "",
+    POPADS_SITE_ID:       (typeof POPADS_SITE_ID       !== "undefined" ? POPADS_SITE_ID       : "") || ""
   };
-  console.info("[env-inline] window.__ENV", window.__ENV);
+  window.__ENV = ENV;
+  console.info("[env-inline] window.__ENV", ENV);
 })();

@@ -3,60 +3,129 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>IBIZA GIRL — Premium</title>
-  <link rel="preload" as="image" href="/decorative-images/paradise-beach.png">
-  <link rel="stylesheet" href="/css/premium.css">
+  <title>Premium — IbizaGirl</title>
+  <link rel="preload" href="https://ibizagirl.pics/decorative-images/paradise-beach.png" as="image"/>
+  <style>
+    :root{
+      --bg:url("https://ibizagirl.pics/decorative-images/paradise-beach.png");
+      --glass: rgba(255,255,255,0.12);
+      --text:#fff;
+      --accent:#ffd700;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0; color:var(--text); font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;
+      background: center/cover fixed no-repeat var(--bg), #000;
+    }
+    .topbar{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(6px); background:rgba(0,0,0,.45);
+      border-bottom:1px solid rgba(255,255,255,.15);
+    }
+    .topbar .inner{
+      max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:16px; padding:14px 16px;
+    }
+    .brand{font-size:28px; font-weight:800; letter-spacing:.5px}
+    .menu{display:flex; flex-wrap:wrap; gap:10px; margin-left:auto}
+    .btn{
+      font-size:15px; padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.25);
+      background:var(--glass); color:#fff; text-decoration:none; display:inline-block
+    }
+    .btn:hover{border-color:#fff}
+    .layout{max-width:1200px; margin:22px auto; display:grid; grid-template-columns: 200px 1fr 200px; gap:16px;}
+    .ad-col{position:sticky; top:72px; height:calc(100vh - 90px); overflow:auto}
+    .ad-box{background:rgba(0,0,0,.35); border:1px dashed rgba(255,255,255,.25); height:250px; margin-bottom:12px; display:flex; align-items:center; justify-content:center; font-size:12px}
+    .content{min-height:60vh}
+    .grid{display:grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap:10px}
+    .card{background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.15); border-radius:12px; overflow:hidden}
+    .thumb-wrap{position:relative; aspect-ratio: 3/4; overflow:hidden}
+    .thumb-wrap img{width:100%; height:100%; object-fit:cover; filter: blur(12px) saturate(1.05) brightness(.9)}
+    .thumb-wrap:hover img{filter: blur(8px)}
+    .overlay{
+      position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center;
+      background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,.0) 55%);
+      padding:10px;
+    }
+    .pay{
+      display:flex; align-items:center; gap:8px; background:rgba(0,0,0,.55);
+      padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.25)
+    }
+    .pp{
+      width:20px; height:20px; display:inline-block; background-size:contain; background-repeat:no-repeat;
+      background-image:url("https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-mark-color.svg");
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,.4));
+    }
+    .price{font-weight:700; color:var(--accent)}
+    footer{opacity:.85; text-align:center; padding:24px 0}
+    @media (max-width: 960px){ .layout{grid-template-columns: 1fr}}
+  </style>
 </head>
 <body>
-  <div id="ad-left"></div>
-  <div id="ad-right"></div>
-
   <header class="topbar">
-    <div class="menu">
-      <span class="chip" style="font-family:'SexyBeachy', system-ui">Ibiza Girl — <b>Premium</b></span>
-      <a class="chip" href="/">Home</a>
-      <button class="chip" data-pack="images10">Pack 10 imágenes · €0.99</button>
-      <button class="chip" data-pack="videos5">Pack 5 vídeos · €1.49</button>
-      <button class="chip primary" id="sub-month">Mensual · €14.99</button>
-      <button class="chip" id="sub-year">Anual · €49.99</button>
-      <button class="chip strong" id="lifetime">Lifetime · €49.99</button>
+    <div class="inner">
+      <div class="brand">IbizaGirl — Premium</div>
+      <nav class="menu" aria-label="Pagos">
+        <a class="btn" href="/premium">Imágenes</a>
+        <a class="btn" href="/videos">Vídeos</a>
+        <a class="btn" href="/packs">Packs</a>
+        <a class="btn" href="/lifetime">Lifetime</a>
+        <a class="btn" id="btn-month">Suscripción Mensual</a>
+        <a class="btn" id="btn-year">Suscripción Anual</a>
+      </nav>
     </div>
   </header>
 
-  <main class="wrap">
-    <section id="premium-grid" class="grid" aria-label="Premium grid (100)"></section>
+  <main class="layout">
+    <aside class="ad-col" id="ads-left">
+      <div class="ad-box">Ad left</div>
+      <div class="ad-box">Ad left</div>
+      <div class="ad-box">Ad left</div>
+    </aside>
+
+    <section class="content">
+      <div id="premium-grid" class="grid"></div>
+    </section>
+
+    <aside class="ad-col" id="ads-right">
+      <div class="ad-box">Ad right</div>
+      <div class="ad-box">Ad right</div>
+      <div class="ad-box">Ad right</div>
+    </aside>
   </main>
 
-  <!-- ENV primero -->
-  <script src="/js/env-inline.js"></script>
+  <footer>
+    <small>&copy; IbizaGirl</small>
+  </footer>
 
-  <!-- SDK PayPal solo si hay CLIENT_ID -->
+  <!-- ENV y datos -->
+  <script src="js/env-inline.js"></script>
+  <!-- Los 5 módulos de contenido (mismos nombres que en home) -->
+  <script src="content-data1.js"></script>
+  <script src="content-data2.js"></script>
+  <script src="content-data3.js"></script>
+  <script src="content-data4.js"></script>
+  <script src="content-data5.js"></script>
+
+  <!-- SDKs de PayPal y lógica UI -->
+  <script src="js/paypal-loader.js"></script>
+  <script src="js/premium-thumbs.js"></script>
+
   <script>
-    (function loadPayPal(){
-      try{
-        var cid = (window.__ENV && window.__ENV.PAYPAL_CLIENT_ID) || "";
-        if(!cid){ console.warn("[paypal] PAYPAL_CLIENT_ID vacío — no se cargan SDKs"); return; }
-        var s1 = document.createElement("script");
-        s1.src = "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(cid)
-                 + "&currency=EUR&components=buttons,hosted-fields&vault=true";
-        s1.async = true;
-        document.head.appendChild(s1);
-      }catch(e){ console.error("[paypal] load error", e); }
+    // Botones suscripción (requiere paypal_subs Buttons + plan ids)
+    (function(){
+      var ENV = (window.__ENV||{});
+      function bind(id, planId){
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.onclick = function(){
+          if (!window.paypal_subs || !paypal_subs.Buttons){ alert("PayPal subs no cargado"); return; }
+          if (!planId){ alert("Plan no configurado"); return; }
+          alert("Suscripción simulada a plan: " + planId + " (integrar createSubscription)");
+        };
+      }
+      bind("btn-month", ENV.PAYPAL_PLAN_ID_MONTHLY);
+      bind("btn-year",  ENV.PAYPAL_PLAN_ID_ANNUAL);
     })();
   </script>
-
-  <!-- Datos de contenido (orden correcto) -->
-  <script src="/js/content-data1.js"></script>
-  <script src="/js/content-data2.js"></script>
-  <script src="/js/content-data3.js"></script>
-  <script src="/js/content-data4.js"></script>
-  <script src="/js/content-data5.js"></script>
-
-  <!-- Lógica de suscripción y de pagos unitarios -->
-  <script src="/js/ibg-subscription.js"></script>
-  <script src="/js/premium-thumbs.js"></script>
-
-  <!-- Ads (se inyectan desde JS leyendo __ENV) -->
-  <script src="/js/ads-inline.js"></script>
 </body>
 </html>
