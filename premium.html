@@ -78,9 +78,14 @@
 <meta name="ibg:EROADVERTISING_SNIPPET_B64"  content="">
 <meta name="ibg:POPADS_ENABLE"               content="">
 <meta name="ibg:POPADS_SITE_ID"              content="">
+  <link rel="stylesheet" href="/css/premium-ads.css">
   <script src="/js/env-inline.js"></script>
+  <script src="/js/paypal-loader.js" defer></script>
 </head>
 <body>
+  <div class="layout-ads">
+    <aside id="ads-left"  class="ads-col"></aside>
+    <main id="premium-center">
 <div id="ads-premium-top" style="margin:12px auto;max-width:980px"></div>
 <main class="main">
   <header class="topbar">
@@ -111,7 +116,6 @@
       <div class="ad-box">Ad right</div>
       <div class="ad-box">Ad right</div>
     </aside>
-  </main>
 
   <footer>
     <small>&copy; IbizaGirl</small>
@@ -161,7 +165,27 @@
     <button id="btn-year">Suscripción Anual</button>
   </div>
 <div id="ads-premium-bottom" style="margin:12px auto;max-width:980px"></div>
-  <script src="/js/paypal-loader.js" defer></script>
+  <div id="ads-wrap" style="max-width:1200px;margin:20px auto;display:grid;gap:16px;grid-template-columns:1fr 1fr 1fr">
+    <div id="exoclick-zone"></div>
+    <div id="juicy-zone"></div>
+    <div id="popads-zone"></div>
+  </div>
+  <section id="premium-ctas" style="max-width:1200px;margin:24px auto;display:flex;flex-wrap:wrap;gap:12px">
+    <button class="btn" data-pp-buy data-type="image" data-label="Imagen suelta">Imagen (0,10€)</button>
+    <button class="btn" data-pp-buy data-type="video" data-label="Vídeo suelto">Vídeo (0,30€)</button>
+    <button class="btn" data-pp-pack-img data-label="Pack 10 imágenes">Pack 10 imágenes (0,80€)</button>
+    <button class="btn" data-pp-pack-vid data-label="Pack 5 vídeos">Pack 5 vídeos (1,00€)</button>
+    <button class="btn" data-pp-sub data-plan="P-3WE8037612641383DNCUKNJI" data-label="Mensual">Mensual (14,99€)</button>
+    <button class="btn" data-pp-sub data-plan="P-43K261214Y571983RNCUKN7I" data-label="Anual">Anual (49,99€)</button>
+    <button class="btn" data-pp-lifetime>Lifetime 100€ (sin anuncios)</button>
+  </section>
+  <script src="/js/pp-ui.js" defer></script>
+  <script src="/js/premium-thumbs.js" defer></script>
+  <script src="/js/premium-actions.js" defer></script>
+    </main>
+    <aside id="ads-right" class="ads-col"></aside>
+  </div>
+  <script src="/js/ads-loader.js" defer></script>
 </body>
   <script>window.adsbyjuicy = window.adsbyjuicy || [];</script>
 </html>

@@ -1,16 +1,15 @@
 ;(()=>{ 
   try{
     const E  = window.__ENV||{};
-    const BASE = (E.IBG_ASSETS_BASE_URL || "https://ibizagirl.pics").replace(/\/+$/,"");
-    // recolectar arrays IBG_PREMIUM*
+    const BASE = (E.IBG_ASSETS_BASE_URL || "https://ibizagirl-assets.s3.eu-north-1.amazonaws.com").replace(/\/+$/,"");
+
     let all = [];
     for (const k in window){
       if (Object.prototype.hasOwnProperty.call(window,k) && /^IBG_PREMIUM/i.test(k) && Array.isArray(window[k])){
         all = all.concat(window[k]);
       }
     }
-    const files = all; // ya están generados content-data3/4
-
+    const files = all;
     const grid = document.getElementById("premium-grid");
     if (!grid){ console.warn("[premium-thumbs] sin #premium-grid"); return; }
     grid.innerHTML = "";
@@ -21,8 +20,7 @@
       const src = (typeof name==="string" && name.endsWith(".webp")) ? name : (String(name||"") + ".webp");
       const url = BASE + "/uncensored/" + src;
 
-      const card = document.createElement("div");
-      card.className = "card";
+      const card = document.createElement("div"); card.className = "card";
       const wrap = document.createElement("div"); wrap.className = "thumb-wrap";
 
       const img = document.createElement("img");
@@ -35,7 +33,11 @@
       overlay.addEventListener("click", (e)=>{
         e.preventDefault();
         if (!window.IBGPay){ alert("PayPal aún no está listo."); return; }
-        window.IBGPay.openBuy({ value: E.ONESHOT_PRICE_IMAGE_EUR || "0.10", label: "Imagen: "+src, metadata:{ type:"image", file:src } });
+        window.IBGPay.openBuy({
+          value: E.ONESHOT_PRICE_IMAGE_EUR || "0.10",
+          label: "Imagen: "+src,
+          metadata:{ type:"image", file:src }
+        });
       });
 
       wrap.appendChild(img);
