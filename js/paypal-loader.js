@@ -10,14 +10,12 @@
     document.head.appendChild(s);
   }
 
-  // Oneshot (intent=capture)
   injectOnce(
     "sdk-paypal-buy",
     "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
       +"&components=buttons&currency=EUR&intent=capture&data-namespace=paypal_buy"
   );
 
-  // Suscripciones (intent=subscription + vault) si hay plan
   var MONTH = ENV.PAYPAL_PLAN_ID_MONTHLY || "";
   var YEAR  = ENV.PAYPAL_PLAN_ID_ANNUAL  || "";
   if (MONTH || YEAR) {
