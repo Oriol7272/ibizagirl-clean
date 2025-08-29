@@ -9,10 +9,9 @@
     s.setAttribute("data-namespace", ns);
     document.head.appendChild(s);
   }
-  inject("sdk-pp-buy", "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)+"&components=buttons&currency=EUR&intent=capture", "pp_buy");
-  var needSubs = (ENV.PAYPAL_PLAN_ID_MONTHLY || ENV.PAYPAL_PLAN_ID_ANNUAL);
-  if (needSubs){
+  inject("sdk-pp-buy",  "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)+"&components=buttons&currency=EUR&intent=capture", "pp_buy");
+  if (ENV.PAYPAL_PLAN_ID_MONTHLY || ENV.PAYPAL_PLAN_ID_ANNUAL){
     inject("sdk-pp-subs", "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)+"&components=buttons&currency=EUR&intent=subscription&vault=true", "pp_subs");
   }
-  console.info("[paypal-loader] SDKs: buy(capture)"+(needSubs?" + subs(vault)":""));
+  console.info("[paypal-loader] SDKs: buy(capture) + subs(vault)");
 })();
