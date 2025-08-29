@@ -80,6 +80,7 @@
   <link rel="stylesheet" href="/css/premium-ads.css">
   <script src="/js/env-inline.js"></script>
   <link rel="stylesheet" href="/css/premium.css">
+  <link rel="stylesheet" href="/css/premium-layout.css">
 </head>
 <body>
   <div class="layout-ads">
@@ -180,12 +181,24 @@
   </section>
   <script src="/js/pp-ui.js" defer></script>
   <script src="/js/premium-actions.js" defer></script>
-    </main>
+    <!-- IBG-PAYWALL-START -->
+<section style="margin:16px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+<button id="btn-pack10">Pack 10 imágenes (0,80€)</button>
+<button id="btn-pack5v">Pack 5 vídeos (1€)</button>
+<button id="btn-lifetime">Lifetime (100€, sin anuncios)</button>
+</section>
+<section style="margin:16px 0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+<button id="btn-month">Suscripción mensual 14,99€</button>
+<button id="btn-year">Suscripción anual 49,99€</button>
+</section>
+<!-- IBG-PAYWALL-END -->
+</main>
     <aside id="ads-right" class="ads-col"></aside>
   </div>
-  <script src="/js/paypal-loader.js" defer></script>
   <script src="/js/premium-thumbs.js" defer></script>
-  <script src="/js/ads-loader.js" defer></script>
 </body>
+  <script src="/js/ads-loader.js" defer></script>
+  <script src="/js/paypal-loader.js" defer></script>
+  <script src="/js/premium-paypal.js" defer></script>
   <script>window.adsbyjuicy = window.adsbyjuicy || [];</script>
 </html>
