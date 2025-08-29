@@ -10,21 +10,14 @@
     document.head.appendChild(s);
   }
 
-  injectOnce(
-    "sdk-paypal-buy",
-    "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
-      +"&components=buttons&currency=EUR&intent=capture&data-namespace=paypal_buy"
-  );
-
   var MONTH = ENV.PAYPAL_PLAN_ID_MONTHLY || "";
   var YEAR  = ENV.PAYPAL_PLAN_ID_ANNUAL  || "";
-  if (MONTH || YEAR) {
-    injectOnce(
-      "sdk-paypal-subs",
-      "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
-        +"&components=buttons&currency=EUR&intent=subscription&vault=true&data-namespace=paypal_subs"
-    );
-  }
+  var wantSubs = !!(MONTH || YEAR);
 
-  console.info("[paypal-loader] SDKs solicitados (buy/subs)");
+  var base = "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)+"&components=buttons&currency=EUR";
+  var url  = wantSubs ? (base + "&intent=subscription&vault=true")
+                      : (base + "&intent=capture");
+
+  injectOnce("sdk-paypal", url);
+  console.info("[paypal-loader] SDK solicitado ("+(wantSubs?"subscription":"capture")+")");
 })();
