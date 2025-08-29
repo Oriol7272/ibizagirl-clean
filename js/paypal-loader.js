@@ -1,26 +1,20 @@
-(function () {
+(function(){
   if (window.__IBG_PAYPAL_LOADER__) return;
   window.__IBG_PAYPAL_LOADER__ = true;
 
-  var ENV = window.__ENV || {};
-  var CID = ENV.PAYPAL_CLIENT_ID || "";
-  if (!CID) {
-    console.error("[paypal-loader] CID vacío. __ENV=", ENV, "script:", (document.currentScript && document.currentScript.src));
-    return;
-  }
+  var E = window.__ENV || {};
+  var CID = E.PAYPAL_CLIENT_ID || "";
+  if (!CID){ console.warn("[paypal] CID vacío"); return; }
 
-  function injectOnce(id, src) {
-    if (document.getElementById(id)) return;
-    var s = document.createElement("script");
-    s.id = id; s.src = src; s.async = true; s.defer = true; s.crossOrigin = "anonymous";
+  var wantSubs = !!(E.PAYPAL_PLAN_ID_MONTHLY || E.PAYPAL_PLAN_ID_ANNUAL);
+  var url = "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
+          + "&components=buttons&currency=EUR"
+          + (wantSubs ? "&intent=subscription&vault=true" : "&intent=capture");
+
+  if (!document.getElementById("sdk-paypal")) {
+    var s=document.createElement("script");
+    s.id="sdk-paypal"; s.src=url; s.async=true; s.defer=true; s.crossOrigin="anonymous";
     document.head.appendChild(s);
   }
-
-  var wantSubs = !!(ENV.PAYPAL_PLAN_ID_MONTHLY || ENV.PAYPAL_PLAN_ID_ANNUAL);
-  var base = "https://www.paypal.com/sdk/js?client-id=" + encodeURIComponent(CID) + "&components=buttons&currency=EUR";
-  var url  = wantSubs ? base + "&intent=subscription&vault=true"
-                      : base + "&intent=capture";
-
-  injectOnce("sdk-paypal", url);
-  console.info("[paypal-loader] cargado:", url);
+  console.info("[paypal-loader] url:", url);
 })();
