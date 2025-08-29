@@ -3,7 +3,7 @@
   src:
     url('/decorative-images/Sexy Beachy.otf') format('opentype'),
     url('/decorative-images/Sexy Beachy.ttf') format('truetype'),
-    url('/decorative-images/SexyBeachy.ttf') format('truetype');
+    url('/decorative-images/SexyBeachy.ttf')  format('truetype');
   font-display:swap;
 }
 body{ font-family:'Sexy Beachy', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }

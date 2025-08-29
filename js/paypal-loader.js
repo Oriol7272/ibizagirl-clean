@@ -10,21 +10,21 @@
     document.head.appendChild(s);
   }
 
-  // Compra puntual (capture)
+  // Oneshot (intent=capture)
   injectOnce(
     "sdk-paypal-buy",
     "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
-    +"&components=buttons&currency=EUR&intent=capture&data-namespace=paypal_buy"
+      +"&components=buttons&currency=EUR&intent=capture&data-namespace=paypal_buy"
   );
 
-  // Suscripciones (subscription + vault)
+  // Suscripciones (intent=subscription + vault) si hay plan
   var MONTH = ENV.PAYPAL_PLAN_ID_MONTHLY || "";
   var YEAR  = ENV.PAYPAL_PLAN_ID_ANNUAL  || "";
   if (MONTH || YEAR) {
     injectOnce(
       "sdk-paypal-subs",
       "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
-      +"&components=buttons&currency=EUR&intent=subscription&vault=true&data-namespace=paypal_subs"
+        +"&components=buttons&currency=EUR&intent=subscription&vault=true&data-namespace=paypal_subs"
     );
   }
 
