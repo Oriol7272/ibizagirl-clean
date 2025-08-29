@@ -1,78 +1,82 @@
 (function(){
-  var ENV = (window.__ENV||{});
-  var Z_EXO   = (ENV.EXOCLICK_ZONE||"").trim();
-  var Z_JUICY = (ENV.JUICYADS_ZONE||"").trim();
-  var POP_EN  = String(ENV.POPADS_ENABLE||"").toLowerCase() === "true";
-  var POP_ID  = (ENV.POPADS_SITE_ID||"").trim();
+  var ENV = (window.__ENV || {});
 
-  function ensureSidebars(){
-    if (document.getElementById("ads-left") || document.getElementById("ads-right")) return;
+  function createLayout(){
+    var grid = document.getElementById('premium-grid');
+    if (!grid) return;
 
-    var css = document.createElement("style");
-    css.textContent = `
-      .ads-sidebar{position:fixed; top:80px; width:160px; z-index:10;}
-      #ads-left{left:0;}
-      #ads-right{right:0;}
-      .ads-slot{margin-bottom:12px; width:160px; min-height:600px; display:flex; justify-content:center; align-items:center; background:transparent;}
-      .ads-slot iframe{border:0; width:160px; height:600px;}
-      @media (max-width:1200px){ .ads-sidebar{display:none;} }
-    `;
-    document.head.appendChild(css);
+    // Si ya tenemos layout, no repetir
+    var already = grid.closest('.ibg-layout');
+    if (already) return;
 
-    var L = document.createElement("div");
-    L.id = "ads-left"; L.className = "ads-sidebar";
-    var R = document.createElement("div");
-    R.id = "ads-right"; R.className = "ads-sidebar";
+    // Crear layout con sidebars
+    var wrap = document.createElement('div');
+    wrap.className = 'ibg-layout';
 
-    document.body.appendChild(L);
-    document.body.appendChild(R);
+    var left = document.createElement('aside');
+    left.className = 'ibg-sidebar left';
+    left.innerHTML = '<div class="ad-slot" id="ad-left"></div>';
+
+    var main = document.createElement('main');
+    main.className = 'ibg-content';
+
+    var right = document.createElement('aside');
+    right.className = 'ibg-sidebar right';
+    right.innerHTML = '<div class="ad-slot" id="ad-right"></div>';
+
+    // Insertar en DOM
+    grid.parentNode.insertBefore(wrap, grid);
+    wrap.appendChild(left);
+    wrap.appendChild(main);
+    wrap.appendChild(right);
+    main.appendChild(grid);
   }
 
-  function addIframe(container, src){
-    var slot = document.createElement("div");
-    slot.className = "ads-slot";
-    var ifr = document.createElement("iframe");
-    ifr.referrerPolicy = "no-referrer";
-    ifr.loading = "lazy";
-    ifr.src = src;
-    slot.appendChild(ifr);
-    container.appendChild(slot);
+  function mountAds(){
+    var L = document.getElementById('ad-left');
+    var R = document.getElementById('ad-right');
+
+    // JUICYADS (LEFT) – usar URL ABSOLUTA, no relativa (evita 404)
+    if (ENV.JUICYADS_ZONE && L){
+      var jf = document.createElement('iframe');
+      jf.loading        = 'lazy';
+      jf.referrerPolicy = 'no-referrer';
+      jf.src            = 'https://juicyads.com/adshow.php?adzone=' + encodeURIComponent(ENV.JUICYADS_ZONE);
+      jf.width = '300'; jf.height = '600'; jf.frameBorder = '0'; jf.scrolling = 'no';
+      L.appendChild(jf);
+    }
+
+    // EXOCLICK (RIGHT) – iframe directo para evitar CORS/XHR
+    if (ENV.EXOCLICK_ZONE && R){
+      var ef = document.createElement('iframe');
+      ef.loading        = 'lazy';
+      ef.referrerPolicy = 'no-referrer';
+      ef.src            = 'https://syndication.exdynsrv.com/ads-iframe-display.php?idzone=' + encodeURIComponent(ENV.EXOCLICK_ZONE);
+      ef.width = '300'; ef.height = '600'; ef.frameBorder = '0'; ef.scrolling = 'no';
+      R.appendChild(ef);
+    }
+
+    // POPADS – solo si enable=true y hay site_id
+    var popEnabled = String(ENV.POPADS_ENABLE || '').toLowerCase() === 'true';
+    if (popEnabled && ENV.POPADS_SITE_ID){
+      var s = document.createElement('script');
+      s.src = 'https://c1.popads.net/pop.js';
+      s.async = true;
+      s.setAttribute('data-site', ENV.POPADS_SITE_ID);
+      (document.head || document.body).appendChild(s);
+    }
+
+    console.info('[ads] sidebars montadas');
   }
 
-  function mount(){
-    ensureSidebars();
-    var left  = document.getElementById("ads-left");
-    var right = document.getElementById("ads-right");
-
-    if (Z_EXO) {
-      var exoSrc = "https://syndication.exdynsrv.com/ads-iframe-display.php?idzone="+encodeURIComponent(Z_EXO);
-      addIframe(left,  exoSrc);
-      addIframe(right, exoSrc);
-      console.info("[ads] ExoClick OK");
-    }
-
-    if (Z_JUICY) {
-      var juicySrc = "https://www.juicyads.com/inv/iframe.php?adzone="+encodeURIComponent(Z_JUICY);
-      addIframe(left,  juicySrc);
-      addIframe(right, juicySrc);
-      console.info("[ads] JuicyAds OK");
-    }
-
-    if (POP_EN && POP_ID){
-      var s = document.createElement("script");
-      s.src = "https://c1.popads.net/pop.js";
-      s.async = true; s.defer = true;
-      s.setAttribute("data-site", POP_ID);
-      s.onload = function(){ console.info("[ads] PopAds OK"); };
-      document.head.appendChild(s);
-    }
-
-    console.info("[ads] sidebars montadas");
+  function start(){
+    try { createLayout(); mountAds(); }
+    catch(e){ console.error('[ads-loader] error', e); }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mount);
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', start);
   } else {
-    mount();
+    start();
   }
 })();
