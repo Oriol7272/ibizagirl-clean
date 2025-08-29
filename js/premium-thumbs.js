@@ -1,24 +1,47 @@
 (function () {
   try {
-    var ENV  = (window.__ENV||{});
-    var BASE = (ENV.BASE||"https://ibizagirl-assets.s3.eu-north-1.amazonaws.com").replace(/\/+$/,"");
-    var PRICE = String(ENV.ONESHOT_PRICE_IMAGE_EUR||"0.10");
+    var ENV  = window.__ENV||{};
+    var BASE = (ENV.BASE||"").replace(/\/+$/,"");
+    if (!BASE){ console.warn("[premium-thumbs] BASE vacío"); return; }
 
-    // Recolecta arrays globales IBG_PREMIUM*
     var all = [];
-    for (var k in window) {
-      if (Object.prototype.hasOwnProperty.call(window,k) &&
-          /^IBG_PREMIUM/i.test(k) &&
-          Array.isArray(window[k])) {
-        all = all.concat(window[k]);
-      }
-    }
+    for (var k in window) if (/^IBG_PREMIUM/i.test(k) && Array.isArray(window[k])) all = all.concat(window[k]);
     var files = all.slice(0, 100);
     var grid = document.getElementById("premium-grid");
-    if (!grid) { console.warn("premium-grid no encontrado"); return; }
+    if (!grid){ console.warn("[premium-thumbs] premium-grid no encontrado"); return; }
     grid.innerHTML = "";
 
-    files.forEach(function(name, idx){
+    function ensurePPHost(){
+      var host = document.getElementById("pp-buy-host");
+      if (!host){
+        host = document.createElement("div");
+        host.id = "pp-buy-host";
+        host.style = "position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:9999";
+        host.innerHTML = '<div style="background:#111;padding:16px;border-radius:12px"><div id="pp-buy-btn"></div><div style="text-align:center;margin-top:8px"><button id="pp-buy-close">Cerrar</button></div></div>';
+        document.body.appendChild(host);
+        host.querySelector("#pp-buy-close").onclick = function(){ host.remove(); };
+      }
+      return host;
+    }
+
+    function openBuy(price, label){
+      if (!window.pp_buy || !window.pp_buy.Buttons){ alert("PayPal no está listo aún."); return; }
+      var host = ensurePPHost();
+      var mount = host.querySelector("#pp-buy-btn");
+      mount.innerHTML = "";
+      var p = (price||ENV.ONESHOT_PRICE_IMAGE_EUR||"0.10");
+      window.pp_buy.Buttons({
+        createOrder: function(data, actions){
+          return actions.order.create({
+            purchase_units: [{ amount: { currency_code: 'EUR', value: String(p) }, description: label||'IBG item' }]
+          });
+        },
+        onApprove: function(data, actions){ return actions.order.capture().then(function(d){ alert("Pago OK: "+d.id); host.remove(); }); },
+        onError: function(err){ console.error(err); alert("Pago cancelado"); host.remove(); }
+      }).render(mount);
+    }
+
+    files.forEach(function(name){
       var src = (typeof name === "string" && name.endsWith(".webp")) ? name : (String(name||"") + ".webp");
       var url = BASE + "/uncensored/" + src;
 
@@ -34,52 +57,33 @@
 
       var overlay = document.createElement("div");
       overlay.className = "overlay";
-      overlay.innerHTML = '<div class="pay"><span class="pp"></span><span class="price">'+PRICE.replace('.',',')+'€</span></div>';
-
-      // Contenedor para PayPal button inline
-      var btnHost = document.createElement("div");
-      btnHost.style.display="none";
-      btnHost.style.marginTop="6px";
-      btnHost.id = "pphost-"+idx;
-
-      overlay.addEventListener("click", function(e){
-        e.preventDefault();
-
-        if (!window.paypal_buy || !window.paypal_buy.Buttons){
-          console.warn("paypal_buy SDK no cargado"); return;
-        }
-        btnHost.style.display="block";
-
-        // Render del botón (client-side: create + capture)
-        window.paypal_buy.Buttons({
-          style:{ layout:'horizontal', height:35, tagline:false },
-          createOrder: function(data, actions){
-            return actions.order.create({
-              purchase_units: [{
-                description: src,
-                amount: { currency_code: "EUR", value: PRICE }
-              }],
-              intent: "CAPTURE"
-            });
-          },
-          onApprove: function(data, actions){
-            return actions.order.capture().then(function(details){
-              alert("✅ Compra completada: " + details.id);
-            });
-          },
-          onError: function(err){
-            console.error("PayPal error", err);
-            alert("Error con PayPal, inténtalo de nuevo.");
-          }
-        }).render(btnHost);
-      });
+      overlay.innerHTML = '<div class="pay"><span class="pp"></span><span class="price">'+(ENV.ONESHOT_PRICE_IMAGE_EUR||"0,10€")+'</span></div>';
+      overlay.addEventListener("click", function(e){ e.preventDefault(); openBuy(ENV.ONESHOT_PRICE_IMAGE_EUR, "Imagen: "+src); });
 
       wrap.appendChild(img);
       wrap.appendChild(overlay);
       card.appendChild(wrap);
-      card.appendChild(btnHost);
       grid.appendChild(card);
     });
+
+    function bindSub(btnId, planId){
+      if (!planId) return;
+      var el = document.getElementById(btnId);
+      if (!el) return;
+      el.addEventListener('click', function(){
+        if (!window.pp_subs || !window.pp_subs.Buttons){ alert("PayPal (subs) no está listo."); return; }
+        var host = ensurePPHost();
+        var mount = host.querySelector("#pp-buy-btn");
+        mount.innerHTML = "";
+        window.pp_subs.Buttons({
+          createSubscription: function(data, actions){ return actions.subscription.create({ plan_id: planId }); },
+          onApprove: function(d){ alert("Suscripción OK: "+d.subscriptionID); host.remove(); },
+          onError: function(err){ console.error(err); alert("Error suscripción"); host.remove(); }
+        }).render(mount);
+      });
+    }
+    bindSub("btn-month", ENV.PAYPAL_PLAN_ID_MONTHLY||"");
+    bindSub("btn-year",  ENV.PAYPAL_PLAN_ID_ANNUAL||"");
 
     console.info("[premium-thumbs] render ok:", files.length, "base:", BASE);
   } catch (e) {
