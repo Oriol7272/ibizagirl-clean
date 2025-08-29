@@ -1,20 +1,34 @@
-(function(){
+(function () {
   if (window.__IBG_PAYPAL_LOADER__) return;
   window.__IBG_PAYPAL_LOADER__ = true;
 
-  var E = window.__ENV || {};
-  var CID = E.PAYPAL_CLIENT_ID || "";
-  if (!CID){ console.warn("[paypal] CID vacío"); return; }
+  var ENV = (window.__ENV || {});
+  var CID = ENV.PAYPAL_CLIENT_ID || "";
+  if (!CID) { console.warn("[paypal] PAYPAL_CLIENT_ID vacío — no se cargan SDKs"); return; }
 
-  var wantSubs = !!(E.PAYPAL_PLAN_ID_MONTHLY || E.PAYPAL_PLAN_ID_ANNUAL);
-  var url = "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
-          + "&components=buttons&currency=EUR"
-          + (wantSubs ? "&intent=subscription&vault=true" : "&intent=capture");
-
-  if (!document.getElementById("sdk-paypal")) {
-    var s=document.createElement("script");
-    s.id="sdk-paypal"; s.src=url; s.async=true; s.defer=true; s.crossOrigin="anonymous";
+  function injectOnce(id, src) {
+    if (document.getElementById(id)) return;
+    var s = document.createElement("script");
+    s.id = id; s.src = src; s.async = true; s.defer = true; s.crossOrigin = "anonymous";
     document.head.appendChild(s);
   }
-  console.info("[paypal-loader] url:", url);
+
+  // Compra one-shot (intent=capture)
+  injectOnce(
+    "sdk-paypal-buy",
+    "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
+      +"&components=buttons&currency=EUR&intent=capture&data-namespace=paypal_buy"
+  );
+
+  // Suscripciones si hay plan
+  var MONTH = ENV.PAYPAL_PLAN_ID_MONTHLY || "";
+  var YEAR  = ENV.PAYPAL_PLAN_ID_ANNUAL  || "";
+  if (MONTH || YEAR) {
+    injectOnce(
+      "sdk-paypal-subs",
+      "https://www.paypal.com/sdk/js?client-id="+encodeURIComponent(CID)
+        +"&components=buttons&currency=EUR&intent=subscription&vault=true&data-namespace=paypal_subs"
+    );
+  }
+  console.info("[paypal-loader] SDKs solicitados (buy/subs)");
 })();
