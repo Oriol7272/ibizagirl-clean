@@ -2,25 +2,8 @@
   font-family:'Sexy Beachy';
   src:
     url('/decorative-images/Sexy Beachy.otf') format('opentype'),
-    url('/decorative-images/SexyBeachy.ttf') format('truetype'),
-    url('/decorative-images/Sexy Beachy.ttf') format('truetype');
+    url('/decorative-images/Sexy Beachy.ttf') format('truetype'),
+    url('/decorative-images/SexyBeachy.ttf') format('truetype');
   font-display:swap;
 }
-body{ font-family:'Sexy Beachy', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#0b3a5b; }
-
-.header{ position:sticky; top:0; z-index:10; background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.15)); backdrop-filter: blur(6px); }
-.header-inner{ display:flex; align-items:center; gap:10px; padding:10px 14px; }
-.badge{ font-size:14px; color:#fff; background:#184f74; padding:8px 12px; border-radius:999px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.15); }
-.badge strong{ font-weight:800; }
-
-.hero{ height:340px; background: url('/decorative-images/paradise-beach.png') center/cover no-repeat; border-bottom:1px solid rgba(255,255,255,.12);}
-.hero::after{ content:""; display:block; height:100%; background:linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.45)); }
-
-.main{ max-width:1200px; margin:0 auto; padding:14px; }
-
-#premium-grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); gap:12px; padding:12px; }
-.thumb-wrap{ position:relative; overflow:hidden; border-radius:12px; }
-.thumb-wrap img{ width:100%; height:auto; filter:blur(12px); transform:scale(1.05); }
-.overlay{ position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:flex-end; padding:8px; }
-.overlay .pay{ background:rgba(0,0,0,.6); backdrop-filter:saturate(160%) blur(4px); padding:6px 10px; border-radius:999px; display:flex; align-items:center; gap:8px; color:#fff;}
-.overlay .pp{ width:18px; height:18px; background:url('https://www.paypalobjects.com/webstatic/icon/pp258.png') center/contain no-repeat; display:inline-block; }
+body{ font-family:'Sexy Beachy', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }

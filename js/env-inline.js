@@ -1,23 +1,23 @@
 (() => {
   window.__ENV = {
-    BASE: typeof IBG_ASSETS_BASE_URL !== "undefined" && IBG_ASSETS_BASE_URL ? IBG_ASSETS_BASE_URL : "https://ibizagirl.pics",
+    BASE: "https://ibizagirl.pics",
 
-    // PayPal (IDs según Vercel)
-    PAYPAL_CLIENT_ID: typeof PAYPAL_CLIENT_ID !== "undefined" ? PAYPAL_CLIENT_ID : "",
-    PAYPAL_PLAN_ID_MONTHLY: (typeof PAYPAL_PLAN_MONTHLY_1499 !== "undefined" && PAYPAL_PLAN_MONTHLY_1499) ? PAYPAL_PLAN_MONTHLY_1499 : (typeof PAYPAL_PLAN_ID_MONTHLY !== "undefined" ? PAYPAL_PLAN_ID_MONTHLY : ""),
-    PAYPAL_PLAN_ID_ANNUAL:  (typeof PAYPAL_PLAN_ANNUAL_4999  !== "undefined" && PAYPAL_PLAN_ANNUAL_4999)  ? PAYPAL_PLAN_ANNUAL_4999  : (typeof PAYPAL_PLAN_ID_ANNUAL  !== "undefined" ? PAYPAL_PLAN_ID_ANNUAL  : ""),
+    // PayPal (IDs REALES)
+    PAYPAL_CLIENT_ID: "AfQEdiielw5fm3wF08p9pcxwqR3gPz82YRNUTKY4A8WNG9AktiGsDNyr2i7BsjVzSwwpeCwR7Tt7DPq5",
+    PAYPAL_PLAN_ID_MONTHLY: "P-3WE8037612641383DNCUKNJI",
+    PAYPAL_PLAN_ID_ANNUAL:  "P-43K261214Y571983RNCUKN7I",
 
-    // Precios visibles en los chips
-    ONESHOT_PRICE_IMAGE_EUR:   (typeof PAYPAL_ONESHOT_PRICE_EUR_IMAGE   !== "undefined" && PAYPAL_ONESHOT_PRICE_EUR_IMAGE)   ? PAYPAL_ONESHOT_PRICE_E    OAGE   : (typeof PAYPAL_ONESHOT_PACK10_IMAGES_EUR !== "undefined" ? PAYPAL_ONESHOT_PACK10_IMAGES_EUR : "0.10"),
-    ONESHOT_PRICE_VIDEO_EUR:   (typeof PAYPAL_ONESHOT_PRICE_EUR_VIDEO   !== "undefined" ? PAYPAL_ONESHOT_PRICE_EUR_VIDEO   : "0.30"),
-    ONESHOT_PRICE_LIFETIME_EUR:(typeof PAYPAL_ONESHOT_PRICE_EUR_LIFETIME!== "undefined" ? PAYPAL_ONESHOT_PRICE_EUR_LIFETIME: "100.00"),
+    // Precios para chips
+    ONESHOT_PRICE_IMAGE_EUR:    "0.10",
+    ONESHOT_PRICE_VIDEO_EUR:    "0.30",
+    ONESHOT_PRICE_LIFETIME_EUR: "100.00",
 
-    // Ads
-    EXOCLICK_ZONE:       (typeof EXOCLICK_ZONE       !== "undefined" ? EXOCLICK_ZONE       : ""),
-    JUICYADS_ZONE:       (typeof JUICYADS_ZONE       !== "undefined" ? JUICYADS_ZONE       : ""),
-    EROADVERTISING_ZONE: (typeof EROADVERTISING_ZONE !== "undefined" ? EROADVERTISING_ZONE : ""),
-    POPADS_ENABLE:       (typeof POPADS_ENABLE       !== "undefined" ? POPADS_ENABLE       : "false"),
-    POPADS_SITE_ID:      (typeof POPADS_SITE_ID      !== "undefined" ? POPADS_SITE_ID      : "")
+    // Ads (tal cual Vercel)
+    EXOCLICK_ZONE:       "5696328",
+    JUICYADS_ZONE:       "1099637",
+    EROADVERTISING_ZONE: "8177575",
+    POPADS_ENABLE    POPA"true",
+    POPADS_SITE_ID:      "e494ffb82839a29122608e933394c091"
   };
   console.info("[env-inline] window.__ENV", window.__ENV);
 })();
