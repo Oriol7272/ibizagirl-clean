@@ -63,6 +63,18 @@
   <link rel="stylesheet" href="/css/premium.css">
 </head>
 <body>
+<header class="header"><div class="header-inner">
+  <span class="badge">Imágenes</span>
+  <span class="badge">Videos</span>
+  <span class="badge">Packs</span>
+  <span class="badge"><strong>Lifetime</strong></span>
+  <span class="badge">Suscripción Mensual</span>
+  <span class="badge">Suscripción Anual</span>
+</div></header>
+<section class="hero"></section>
+<aside id="ad-left"  style="position:fixed;left:10px;top:120px;width:120px;height:600px;z-index:9;"></aside>
+<aside id="ad-right" style="position:fixed;right:10px;top:120px;width:120px;height:600px;z-index:9;"></aside>
+<main class="main">
   <header class="topbar">
     <div class="inner">
       <div class="brand">IbizaGirl — Premium</div>
@@ -129,5 +141,6 @@
       bind("btn-year",  ENV.PAYPAL_PLAN_ID_ANNUAL);
     })();
   </script>
+  <script src="/js/ads-loader.js" defer></script>
 </body>
 </html>
