@@ -1,60 +1,72 @@
 (function(){
   try{
-    var ENV = (window.__ENV||{});
-    var BASE = (ENV.BASE||"https://ibizagirl.pics").replace(/\/+$/,"");
+    var ENV=(window.__ENV||{}), BASE=ENV.IBG_ASSETS_BASE_URL||"https://ibizagirl.pics";
+    var files=[].concat((window.IBG_PREMIUM_P1||[]),(window.IBG_PREMIUM_P2||[]));
+    var grid=document.getElementById("premium-grid")||document.body;
 
-    // Colectar arrays globales IBG_PREMIUM*
-    var all = [];
-    for (var k in window){
-      if (Object.prototype.hasOwnProperty.call(window,k) && /^IBG_PREMIUM/i.test(k) && Array.isArray(window[k])){
-        all = all.concat(window[k]);
+    function ensurePPHost(){
+      var host=document.getElementById("pp-buy-host");
+      if(!host){
+        host=document.createElement("div");
+        host.id="pp-buy-host"; host.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.6);display:grid;place-items:center;z-index:9999";
+        host.innerHTML='<div style="background:#111;padding:16px;border-radius:12px;min-width:320px"><div id="pp-buy-btn"></div><div style="margin-top:12px;text-align:right"><button id="pp-buy-close">Cerrar</button></div></div>';
+        document.body.appendChild(host);
+        host.querySelector("#pp-buy-close").onclick=function(){ host.remove(); };
       }
-    }
-    var files = all.slice(0, 100);
-    var grid = document.getElementById("premium-grid");
-    if (!grid){ console.warn("[premium-thumbs] premium-grid no encontrado"); return; }
-    grid.innerHTML="";
-
-    function priceLabel(eur){
-      try{ return Number(eur).toFixed(2).replace('.',',')+"€"; }catch(_){ return eur||"0,10€"; }
+      return host;
     }
 
-    function onThumbClick(src){
-      var p = ENV.ONESHOT_PRICE_IMAGE_EUR || "0.10";
-      if (!window.IBG_Pay || !window.IBG_Pay.buy){ alert("PayPal no está listo aún."); return; }
-      window.IBG_Pay.buy(p, "Imagen: "+src);
+    function openBuy(price,label){
+      if(!window.pp_buy || !window.pp_buy.Buttons){ alert("PayPal no está listo (buy)."); return; }
+      var host=ensurePPHost(), mount=host.querySelector("#pp-buy-btn"); mount.innerHTML="";
+      var p = (price||ENV.PAYPAL_ONESHOT_PRICE_EUR_IMAGE||"0.10");
+      window.pp_buy.Buttons({
+        createOrder:function(_d, actions){
+          return actions.order.create({ purchase_units:[{ amount:{ currency_code:'EUR', value:String(p) }, description: label||'IBG item' }]});
+        },
+        onApprove:function(d,a){ return a.order.capture().then(function(r){ alert("Pago OK: "+r.id); host.remove(); }); },
+        onError:function(err){ console.error(err); alert("Pago cancelado"); host.remove(); }
+      }).render(mount);
     }
 
+    function openSub(planId){
+      if(!planId) return alert("Plan vacío");
+      if(!window.pp_subs || !window.pp_subs.Buttons){ alert("PayPal no está listo (subs)."); return; }
+      var host=ensurePPHost(), mount=host.querySelector("#pp-buy-btn"); mount.innerHTML="";
+      window.pp_subs.Buttons({
+        createSubscription:function(_d, actions){ return actions.subscription.create({ plan_id: planId }); },
+        onApprove:function(d){ alert("Suscripción OK: "+d.subscriptionID); host.remove(); },
+        onError:function(err){ console.error(err); alert("Error suscripción"); host.remove(); }
+      }).render(mount);
+    }
+
+    // thumbnails
+    var euroChip=(ENV.PAYPAL_ONESHOT_PRICE_EUR_IMAGE||"0.10");
     files.forEach(function(name){
-      var src = (typeof name==="string" && name.endsWith(".webp")) ? name : (String(name||"")+".webp");
-      var url = BASE + "/uncensored/" + src;
-
-      var card = document.createElement("div");
-      card.className="card";
-      var wrap = document.createElement("div");
-      wrap.className="thumb-wrap";
-
-      var img = document.createElement("img");
-      img.loading="lazy"; img.decoding="async"; img.referrerPolicy="no-referrer";
-      img.src=url; img.alt=src;
-
-      var overlay = document.createElement("div");
-      overlay.className="overlay";
-      overlay.innerHTML = '<div class="pay"><span class="pp"></span><span class="price">'+priceLabel(ENV.ONESHOT_PRICE_IMAGE_EUR)+'</span></div>';
-      overlay.addEventListener("click", function(e){ e.preventDefault(); onThumbClick(src); });
-
+      var src=String(name).endsWith(".webp")?name:(String(name||"")+".webp");
+      var url=BASE+"/uncensored/"+src;
+      var card=document.createElement("div"); card.className="card";
+      var wrap=document.createElement("div"); wrap.className="thumb-wrap";
+      var img=document.createElement("img"); img.loading="lazy"; img.decoding="async"; img.referrerPolicy="no-referrer"; img.src=url; img.alt=src;
+      var overlay=document.createElement("div"); overlay.className="overlay";
+      overlay.innerHTML='<div class="pay"><span class="pp"></span><span class="price">'+euroChip+'</span></div>';
+      overlay.addEventListener("click", function(e){ e.preventDefault(); openBuy(ENV.PAYPAL_ONESHOT_PRICE_EUR_IMAGE, "Imagen: "+src); });
       wrap.appendChild(img); wrap.appendChild(overlay); card.appendChild(wrap); grid.appendChild(card);
     });
 
-    // Botones packs / lifetime / suscripciones
-    function bind(id, fn){ var el=document.getElementById(id); if (el) el.addEventListener("click", fn); }
-    bind("btn-pack-10", function(){ var p=ENV.ONESHOT_PRICE_VIDEO_EUR||"0.30"; if (!IBG_Pay) return alert("PayPal…"); IBG_Pay.buy(p, "Pack 10 imágenes"); });
-    bind("btn-pack-5v", function(){ var p=ENV.ONESHOT_PRICE_VIDEO_EUR||"0.30"; if (!IBG_Pay) return alert("PayPal…"); IBG_Pay.buy(p, "Pack 5 vídeos"); });
-    bind("btn-lifetime", function(){ var p=ENV.ONESHOT_PRICE_LIFETIME_EUR||"100.00"; if (!IBG_Pay) return alert("PayPal…"); IBG_Pay.buy(p, "Acceso lifetime"); });
+    // packs y lifetime
+    var byId=function(id){ return document.getElementById(id); };
+    var pairs=[
+      ["btn-pack-images-10", ENV.PAYPAL_ONESHOT_PACK10_IMAGES_EUR, "Pack 10 imágenes"],
+      ["btn-pack-videos-5",  ENV.PAYPAL_ONESHOT_PACK5_VIDEOS_EUR,  "Pack 5 vídeos"],
+      ["btn-lifetime",       ENV.PAYPAL_ONESHOT_PRICE_EUR_LIFETIME,"Acceso lifetime"]
+    ];
+    pairs.forEach(function(p){ var el=byId(p[0]); if(el){ el.addEventListener("click", function(){ openBuy(p[1], p[2]); }); }});
 
-    bind("btn-month", function(){ var pid=ENV.PAYPAL_PLAN_ID_MONTHLY||""; if (!pid) return alert("Plan mensual no configurado"); IBG_Pay.subscribe(pid); });
-    bind("btn-year",  function(){ var pid=ENV.PAYPAL_PLAN_ID_ANNUAL ||""; if (!pid) return alert("Plan anual no configurado");   IBG_Pay.subscribe(pid); });
+    // suscripciones
+    if (byId("btn-month")) byId("btn-month").addEventListener("click", function(){ openSub(ENV.PAYPAL_PLAN_MONTHLY_1499); });
+    if (byId("btn-year"))  byId("btn-year").addEventListener("click",  function(){ openSub(ENV.PAYPAL_PLAN_ANNUAL_4999 ); });
 
     console.info("[premium-thumbs] render ok:", files.length, "base:", BASE);
-  }catch(e){ console.error("[premium-thumbs] error", e); }
+  } catch(e){ console.error("[premium-thumbs] error", e); }
 })();
