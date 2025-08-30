@@ -1,43 +1,31 @@
 (function(){
- try{
-  if(window.__IBG_ADS__)return;window.__IBG_ADS__=true;
-  var ENV=(window.__ENV||{});
+  var E = (window.__ENV||{});
+  var isProd = E.IS_PROD || (!/localhost|127\.0\.0\.1/.test(location.hostname));
+  if (!isProd) { console.log('[ads] dev/off'); return; }
 
-  function ensure(){
-    var main=document.querySelector("main")||document.body;
-    if(!main.querySelector(".ibg-layout")){
-      main.innerHTML='<div class="ibg-layout"><aside class="sidebar" id="leftBar"></aside><div id="ibg-main">'+main.innerHTML+'</div><aside class="sidebar" id="rightBar"></aside></div>';
-    }
+  // Google AdSense
+  if (E.ADSENSE_ID && !document.querySelector('script[data-adsense]')) {
+    var sa = document.createElement('script');
+    sa.async = true; sa.crossOrigin='anonymous';
+    sa.setAttribute('data-adsense','1');
+    sa.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+encodeURIComponent(E.ADSENSE_ID);
+    document.head.appendChild(sa);
   }
-  function slot(where,id){var el=document.getElementById(where);if(!el)return;var d=document.createElement("div");d.className="ad";d.id=id;el.appendChild(d);return d;}
-  ensure();
-
   // ExoClick
-  (function(){
-    var z=(ENV.EXOCLICK_ZONE||"").trim();if(!z)return;
-    var s=document.createElement("script");s.src="https://a.exdynsrv.com/ad-provider.js";s.async=true;
-    s.onload=function(){console.info("[ads] ExoClick OK");};
-    document.head.appendChild(s);
-  })();
-
+  if (E.EXO_SITE_ID && !document.querySelector('script[data-exo]')) {
+    var se = document.createElement('script');
+    se.async = true; se.setAttribute('data-exo','1');
+    se.src = 'https://a.exdynsrv.com/ad-provider.js';
+    se.onload = function(){ try{ window.adProvider && adProvider.init({siteId:E.EXO_SITE_ID}); }catch(_){} };
+    document.head.appendChild(se);
+  }
   // JuicyAds
-  (function(){
-    var j=(ENV.JUICYADS_ZONE||"").trim();if(!j)return;
-    slot("leftBar","ja-left");slot("rightBar","ja-right");
-    var s=document.createElement("script");s.src="https://poweredby.jads.co/js/jads.js";s.async=true;
-    s.onload=function(){console.info("[ads] JuicyAds OK");};
-    document.head.appendChild(s);
-  })();
-
-  // PopAds
-  (function(){
-    if((ENV.POPADS_ENABLE||"")!=="true")return;
-    var sid=(ENV.POPADS_SITE_ID||"").trim();if(!sid)return;
-    var s=document.createElement("script");s.src="https://c.adsco.re/t";s.async=true;
-    s.onload=function(){console.info("[ads] PopAds OK");};
-    document.head.appendChild(s);
-  })();
-
-  console.info("[ads] sidebars montadas");
- }catch(e){console.error("[ads] error",e);}
+  if (E.JUICY_SITE_ID && !document.querySelector('script[data-juicy]')) {
+    var sj = document.createElement('script');
+    sj.async = true; sj.setAttribute('data-juicy','1');
+    sj.src = 'https://js.juicyads.com/jp.js';
+    sj.onload = function(){ try{ window.juicyads && juicyads.init && juicyads.init({site:E.JUICY_SITE_ID}); }catch(_){} };
+    document.head.appendChild(sj);
+  }
+  console.log('[ads] loaders attached');
 })();
