@@ -1,9 +1,14 @@
-# Ignora repos y caches, pero NO ignores tools/ ni *.sh
 .git/
 node_modules/
-.vercel/output/
-_backup_*/
-*.bak
-*.tmp
-*.log
-*.DS_Store
+.vercel/output/cache/
+backup_*.tgz
+*.tgz
+*.zip
+*.rar
+*.7z
+uncensored/
+_uncensored/
+assets/raw/
+assets/originals/
+media/
+videos/
