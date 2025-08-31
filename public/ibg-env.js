@@ -1,18 +1,17 @@
-(function(){
-  function set(k,v){ try{ window[k]=v; }catch(_){ } }
-  var b = (window && window.__IBG_B64) ? window.__IBG_B64 : {};
-  function dec(x){ try{ return x ? atob(x) : ''; }catch(_){ return ''; } }
-  var cfg = {
-    JUICYADS_ZONE:        dec(b.JUICYADS_ZONE),
-    JUICYADS_SNIPPET_B64: dec(b.JUICYADS_SNIPPET_B64),
-    EXOCLICK_ZONE:        dec(b.EXOCLICK_ZONE),
-    EROADVERTISING_ZONE:  dec(b.EROADVERTISING_ZONE),
-    POPADS_SITE_ID:       dec(b.POPADS_SITE_ID),
-    POPADS_ENABLE:        dec(b.POPADS_ENABLE),
-    CRISP_WEBSITE_ID:     dec(b.CRISP_WEBSITE_ID),
-    IBG_ASSETS_BASE_URL:  dec(b.IBG_ASSETS_BASE_URL)
-  };
-  for (var k in cfg){ set(k, cfg[k]); }
-  if (typeof window!=='undefined'){ window.IBG_ENV = cfg; }
-})();
-export {};
+// auto-generated 20250831_203536
+export const IBG_ENV = {
+  IBG_ASSETS_BASE_URL: "https://ibizagirl-assets.s3.eu-north-1.amazonaws.com",
+  EROADVERTISING_ZONE: "8177575",
+  EXOCLICK_ZONE: "5696328",
+  JUICYADS_ZONE: "1099637",
+  JUICYADS_SNIPPET_B64: "2093981",
+  POPADS_SITE_ID: "e494ffb82839a29122608e933394c091",
+  POPADS_ENABLE: "true",
+  CRISP_WEBSITE_ID: "59e184b1-e679-4c93-b3ea-d60b63c1c04c"
+};
+
+// también en window para scripts no-ESM
+if (typeof window !== "undefined") {
+  window.IBG_ENV = IBG_ENV;
+  for (const k in IBG_ENV) { try { window[k] = IBG_ENV[k]; } catch(_){} }
+}
