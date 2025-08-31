@@ -1,11 +1,3 @@
-/* IBG_ADS_DOMREADY_FIX: added  */
-(function(){
-  function run(){ try{ if(!document || !document.body){ return setTimeout(run,50); }
-    if(typeof window.IBG_ADS_INIT==="function"){ window.IBG_ADS_INIT(); }
-  }catch(e){ console.warn("[ads] loader guard error", e); } }
-  if(document.readyState==="loading"){ document.addEventListener("DOMContentLoaded", run, {once:true}); } else { run(); }
-})();
-/* /IBG_ADS_DOMREADY_FIX */
 /* === PATCH: robust DOM ready & null-safe === */
 (function(){
   function ready(fn){
