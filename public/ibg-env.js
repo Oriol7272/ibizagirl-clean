@@ -1,4 +1,4 @@
-// auto-generated 20250831_205255
+// auto-generated 20250831_210024
 export const IBG_ENV = {
   IBG_ASSETS_BASE_URL: "https://ibizagirl-assets.s3.eu-north-1.amazonaws.com",
   EROADVERTISING_ZONE: "8177575",

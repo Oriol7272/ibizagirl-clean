@@ -3,20 +3,19 @@
   function G(k,def){
     try{
       var w = (typeof window!=="undefined") ? window : {};
-      if (w.IBG_ENV && w.IBG_ENV[k] != null) return w.IBG_ENV[k];
-      if (w[k] != null) return w[k];
+      if (w.IBG_ENV && w.IBG_ENV[k] != null) return String(w.IBG_ENV[k]);
+      if (w[k] != null) return String(w[k]);
     }catch(_){}
-    return def||"";
+    return String(def||"");
   }
   function fill(slot){
     try{
-      if(!slot) return;
-      var ja_id = String(G('JUICYADS_ZONE',''));
-      var ja_b64= String(G('JUICYADS_SNIPPET_B64',''));
-      var exo   = String(G('EXOCLICK_ZONE',''));
-      var eroz  = String(G('EROADVERTISING_ZONE',''));
-      var popid = String(G('POPADS_SITE_ID',''));
-      var popen = String(G('POPADS_ENABLE',''));
+      var ja_id = G('JUICYADS_ZONE','');
+      var ja_b64= G('JUICYADS_SNIPPET_B64','');
+      var exo   = G('EXOCLICK_ZONE','');
+      var eroz  = G('EROADVERTISING_ZONE','');
+      var popid = G('POPADS_SITE_ID','');
+      var popen = G('POPADS_ENABLE','');
 
       if(ja_b64){
         try{ var s=document.createElement('script'); s.defer=true; s.innerHTML=atob(ja_b64); slot.appendChild(s);}catch(e){ console.warn('[ads] juicy snippet',e); }
@@ -33,7 +32,7 @@
         try{ var sc=document.createElement('script'); sc.async=true; sc.src='https://a.magsrv.com/ad-provider.js'; sc.setAttribute('data-zone',eroz); slot.appendChild(sc);}catch(e){ console.warn('[ads] eroadv',e); }
       }
 
-      if((popen==="1" || popen==="true") && popid){
+      if((popen==="1"||popen==="true") && popid){
         try{ var sp=document.createElement('script'); sp.async=true; sp.src='//c1.popads.net/pop.js';
              sp.onload=function(){ try{ if(window.popns){ window.popns.popads_site_id=popid; } }catch(_){} }; slot.appendChild(sp);}catch(e){ console.warn('[ads] popads',e); }
       }
@@ -41,8 +40,8 @@
   }
   ready(function(){
     try{
-      var slots = document.querySelectorAll('[data-ad-slot]');
-      if(!slots || !slots.length){ console.info('[ads] sin slots'); return; }
+      var slots=document.querySelectorAll('[data-ad-slot]');
+      if(!slots||!slots.length){ console.info('[ads] sin slots'); return; }
       for(var i=0;i<slots.length;i++){ fill(slots[i]); }
     }catch(e){ console.warn('[ads] error',e); }
   });
