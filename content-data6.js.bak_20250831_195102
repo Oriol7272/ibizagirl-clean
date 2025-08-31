@@ -1,4 +1,3 @@
-/* deps guard (auto) */(function(){try{var W=window,need=["CONTENT_CONFIG","CONTENT_PUBLIC","CONTENT_PREMIUM_1","CONTENT_PREMIUM_2","CONTENT_VIDEOS"];var miss=need.filter(k=>typeof W[k]==="undefined");if(miss.length){miss.forEach(k=>{try{W[k]=Array.isArray(W[k])?W[k]:[];}catch(_){}});} }catch(_){}})();
 /* === FIX: tolerant deps for UnifiedContentAPI === */
 (function(){
   try {
@@ -202,7 +201,7 @@ const UnifiedContentAPI = {
         const missing = required.filter(dep => !window[dep]);
         
         if (missing.length > 0) {
-            console.info('ℹ️ Dependencias faltantes:', missing);
+            console.error('❌ Dependencias faltantes:', missing);
             return false;
         }
         
@@ -403,7 +402,7 @@ class ContentSystemManager {
         const apiReady = await UnifiedContentAPI.initialize();
         
         if (!apiReady) {
-            console.info('ℹ️ No se pudo inicializar UnifiedContentAPI');
+            console.error('❌ No se pudo inicializar UnifiedContentAPI');
             return false;
         }
         
