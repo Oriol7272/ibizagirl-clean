@@ -1,12 +1,12 @@
-// Auto-generado 20250831_195102
-export const IBG_ASSETS_BASE_URL =  || "";
-export const EROADVERTISING_ZONE =  || "";
-export const EXOCLICK_ZONE =  || "";
-export const JUICYADS_ZONE =  || "";
-export const JUICYADS_SNIPPET_B64 =  || "";
-export const POPADS_SITE_ID =  || "";
-export const POPADS_ENABLE =  || "";
-export const CRISP_WEBSITE_ID =  || "";
+// Auto-generado 20250831_195412
+export const IBG_ASSETS_BASE_URL = " \"https://ibizagirl-assets.s3.eu-north-1.amazonaws.com\"";
+export const EROADVERTISING_ZONE = " \"8177575\"";
+export const EXOCLICK_ZONE = " \"5696328\"";
+export const JUICYADS_ZONE = " \"1099637\"";
+export const JUICYADS_SNIPPET_B64 = " \"2093981\"";
+export const POPADS_SITE_ID = " \"e494ffb82839a29122608e933394c091\"";
+export const POPADS_ENABLE = " \"true\"";
+export const CRISP_WEBSITE_ID = " \"59e184b1-e679-4c93-b3ea-d60b63c1c04c\"";
 
 try {
   if (typeof window !== 'undefined') {
@@ -19,4 +19,4 @@ try {
     window.POPADS_ENABLE = POPADS_ENABLE;
     window.CRISP_WEBSITE_ID = CRISP_WEBSITE_ID;
   }
-} catch {}
+} catch (e) {}
