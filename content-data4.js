@@ -1,6 +1,5 @@
-console.info('📦 Cargando módulo content-data4.js - Imágenes premium parte 2...');
+/* generado auto desde /uncensored (parte 2) */
 window.IBG_PREMIUM_P2 = [
-  "kR9XOLqWZK7YEpnwCXcz.webp",
   "kRVFX2Hx82yLkxMv2Bkv.webp",
   "kvMWPx1dZLAKZTdYz021.webp",
   "KXIiOrTZuPIftCkvbbJr.webp",
@@ -282,4 +281,5 @@ window.IBG_PREMIUM_P2 = [
   "ZqrNZJMkwWcuckpUMfxM.webp",
   "Zv7rn9Iq9Fvv8ketJ0qM.webp",
 ];
-console.info('✅',  281 , 'imágenes premium parte 2 cargadas desde /uncensored/', window.IBG_PREMIUM_P2.length);
+console.info('📦 Cargando módulo content-data4.js - Imágenes premium parte 2...');
+console.info('✅', '280', 'imágenes premium parte 2 cargadas desde /uncensored/');

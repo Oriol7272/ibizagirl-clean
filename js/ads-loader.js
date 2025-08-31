@@ -1,43 +1,41 @@
 (function(){
- try{
-  if(window.__IBG_ADS__)return;window.__IBG_ADS__=true;
-  var ENV=(window.__ENV||{});
+  var ENV = window.__ENV || {};
 
-  function ensure(){
-    var main=document.querySelector("main")||document.body;
-    if(!main.querySelector(".ibg-layout")){
-      main.innerHTML='<div class="ibg-layout"><aside class="sidebar" id="leftBar"></aside><div id="ibg-main">'+main.innerHTML+'</div><aside class="sidebar" id="rightBar"></aside></div>';
+  // ExoClick (script + div placeholder si aplica)
+  try{
+    if (ENV.EXOCLICK_ZONE){
+      var exo = document.createElement('script');
+      exo.src = "https://a.exdynsrv.com/ad-provider.js";
+      exo.async = true; exo.defer = true;
+      exo.onload = function(){ console.info("[ads] ExoClick Listo"); };
+      exo.onerror = function(){ console.warn("[ads] ExoClick error"); };
+      document.head.appendChild(exo);
     }
-  }
-  function slot(where,id){var el=document.getElementById(where);if(!el)return;var d=document.createElement("div");d.className="ad";d.id=id;el.appendChild(d);return d;}
-  ensure();
+  }catch(e){ console.warn(e); }
 
-  // ExoClick
-  (function(){
-    var z=(ENV.EXOCLICK_ZONE||"").trim();if(!z)return;
-    var s=document.createElement("script");s.src="https://a.exdynsrv.com/ad-provider.js";s.async=true;
-    s.onload=function(){console.info("[ads] ExoClick OK");};
-    document.head.appendChild(s);
-  })();
-
-  // JuicyAds
-  (function(){
-    var j=(ENV.JUICYADS_ZONE||"").trim();if(!j)return;
-    slot("leftBar","ja-left");slot("rightBar","ja-right");
-    var s=document.createElement("script");s.src="https://poweredby.jads.co/js/jads.js";s.async=true;
-    s.onload=function(){console.info("[ads] JuicyAds OK");};
-    document.head.appendChild(s);
-  })();
+  // JuicyAds (script oficial)
+  try{
+    if (ENV.JUICYADS_ZONE){
+      var j = document.createElement('script');
+      j.src = "https://js.juicyads.com/jads.js";
+      j.async = true; j.defer = true;
+      j.onload = function(){ console.info("[ads] JuicyAds Listo"); };
+      j.onerror = function(){ console.warn("[ads] JuicyAds error"); };
+      document.head.appendChild(j);
+      // Evitar 'adsbyjuicy' undefined si algún snippet lo usa
+      window.adsbyjuicy = window.adsbyjuicy || [];
+    }
+  }catch(e){ console.warn(e); }
 
   // PopAds
-  (function(){
-    if((ENV.POPADS_ENABLE||"")!=="true")return;
-    var sid=(ENV.POPADS_SITE_ID||"").trim();if(!sid)return;
-    var s=document.createElement("script");s.src="https://c.adsco.re/t";s.async=true;
-    s.onload=function(){console.info("[ads] PopAds OK");};
-    document.head.appendChild(s);
-  })();
-
-  console.info("[ads] sidebars montadas");
- }catch(e){console.error("[ads] error",e);}
+  try{
+    if (String(ENV.POPADS_ENABLE).toLowerCase() === "true" && ENV.POPADS_SITE_ID){
+      var p = document.createElement('script');
+      p.src = "https://cdn.popcash.net/pop.js"; // proveedor pop
+      p.async = true; p.defer = true;
+      p.onload = function(){ console.info("[ads] PopAds Listo"); };
+      p.onerror = function(){ console.warn("[ads] PopAds error"); };
+      document.head.appendChild(p);
+    }
+  }catch(e){ console.warn(e); }
 })();

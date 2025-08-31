@@ -1,45 +1,10 @@
-/* --- LAYOUT CON SIDEBARS --- */
-.ibg-layout{
-  display: grid;
-  grid-template-columns: 300px minmax(0,1fr) 300px;
-  gap: 16px;
-  align-items: start;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 8px;
+@font-face{
+  font-family:'Sexy Beachy';
+  src:
+    url('/decorative-images/Sexy Beachy.ttf') format('truetype'),
+    url('/decorative-images/SexyBeachy.ttf') format('truetype'),
+    url('/decorative-images/Sexy Beachy.otf') format('opentype');
+  font-display:swap;
 }
-.ibg-sidebar{ position: sticky; top: 12px; height: fit-content; }
-.ibg-sidebar .ad-slot{ width: 300px; min-height: 600px; }
-.ibg-sidebar iframe{ width: 300px; height: 600px; border: 0; display: block; }
-
-/* En móviles: sin sidebars, el contenido ocupa todo */
-@media (max-width: 980px){
-  .ibg-layout{ grid-template-columns: 1fr; }
-  .ibg-sidebar{ display: none; }
-}
-
-/* --- GRID PREMIUM: 5 columnas --- */
-#premium-grid{
-  display: grid !important;
-  grid-template-columns: repeat(5, minmax(0,1fr));
-  gap: 12px;
-}
-
-/* Responsivo */
-@media (max-width: 1280px){
-  #premium-grid{ grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 1024px){
-  #premium-grid{ grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 768px){
-  #premium-grid{ grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 480px){
-  #premium-grid{ grid-template-columns: 1fr; }
-}
-
-/* Tarjetas básicas (si no existen ya) */
-#premium-grid .card{ overflow: hidden; border-radius: 10px; background: rgba(0,0,0,0.25); }
-#premium-grid .thumb-wrap{ position: relative; }
-#premium-grid img{ width: 100%; height: auto; display: block; }
+:root { --font-ui: 'Sexy Beachy', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+body { font-family: var(--font-ui); }
