@@ -1,21 +1,3 @@
-/* === FIX: tolerant deps for UnifiedContentAPI === */
-(function(){
-  try {
-    const wanted = [
-      "CONTENT_CONFIG",      // de content-data1
-      "CONTENT_PUBLIC",      // de content-data2
-      "CONTENT_PREMIUM_1",   // de content-data3
-      "CONTENT_PREMIUM_2",   // de content-data4
-      "CONTENT_VIDEOS"       // de content-data5
-    ];
-    const miss = wanted.filter(k => typeof window!=="undefined" && !window[k]);
-    if (miss.length){
-      console.warn("[content-data6] Dependencias faltantes → creo stubs para continuar:", miss);
-      miss.forEach(k => { try { window[k] = Array.isArray(window[k]) ? window[k] : []; } catch(e){} });
-    }
-  } catch(e){ console.warn("[content-data6] FIX guard error", e); }
-})();
-/* === /FIX === */
 /**
  * content-data6.js - Unified API v4.1.0 FIXED
  * API unificada y funciones principales del sistema
