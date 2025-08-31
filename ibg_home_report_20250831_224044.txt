@@ -17,3 +17,32 @@
    • Referencias únicas detectadas: 0
    • Faltantes en disco: 0
 💾 Commit + push…
+remote: 
+remote: Create a pull request for 'home-fix-20250831_224044' on GitHub by visiting:        
+remote:      https://github.com/Oriol7272/ibizagirl-clean/pull/new/home-fix-20250831_224044        
+remote: 
+To https://github.com/Oriol7272/ibizagirl-clean.git
+ * [new branch]      home-fix-20250831_224044 -> home-fix-20250831_224044
+branch 'home-fix-20250831_224044' set up to track 'origin/home-fix-20250831_224044'.
+🚀 Deploy prod en Vercel…
+Vercel CLI 46.1.1
+Retrieving project…
+Deploying oriols-projects-ed6b9b04/ibizagirl-clean
+Uploading [--------------------] (0.0B/4.3KB)
+Uploading [=========-----------] (2.1KB/4.3KB)
+Uploading [===========---------] (2.4KB/4.3KB)
+Uploading [====================] (4.3KB/4.3KB)
+Inspect: https://vercel.com/oriols-projects-ed6b9b04/ibizagirl-clean/2hTmnvgQmn7dxVkxLafHM18CGMUX [4s]
+Production: https://ibizagirl-clean-m09wqt0a4-oriols-projects-ed6b9b04.vercel.app [4s]
+https://ibizagirl-clean-m09wqt0a4-oriols-projects-ed6b9b04.vercel.appQueued
+Building
+Completing
+
+✅ Hecho.
+   • Rama: home-fix-20250831_224044
+   • Tag : home-fix-20250831_224044
+   • Reporte detallado: ibg_home_report_20250831_224044.txt
+
+👉 DevTools (en la home):
+   document.querySelectorAll('[data-ad-slot]').length   // debería ser 2
+   (window.JUICYADS_SNIPPET_B64||'').slice(0,12), window.EXOCLICK_ZONE||'', window.EROADVERTISING_ZONE||''
