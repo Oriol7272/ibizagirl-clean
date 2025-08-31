@@ -1,43 +1,52 @@
+/* robust ads loader */
 (function(){
- try{
-  if(window.__IBG_ADS__)return;window.__IBG_ADS__=true;
-  var ENV=(window.__ENV||{});
-
-  function ensure(){
-    var main=document.querySelector("main")||document.body;
-    if(!main.querySelector(".ibg-layout")){
-      main.innerHTML='<div class="ibg-layout"><aside class="sidebar" id="leftBar"></aside><div id="ibg-main">'+main.innerHTML+'</div><aside class="sidebar" id="rightBar"></aside></div>';
-    }
+  function insertHouseAd(slot){
+    if (!slot) return;
+    slot.innerHTML =
+      '<a href="/premium.html" class="ad-fallback" style="display:block;border:1px solid #eee;padding:8px;text-align:center;font-family:sans-serif;text-decoration:none;">' +
+      '🔥 Acceso PREMIUM — Fotos y vídeos sin censura' +
+      '</a>';
   }
-  function slot(where,id){var el=document.getElementById(where);if(!el)return;var d=document.createElement("div");d.className="ad";d.id=id;el.appendChild(d);return d;}
-  ensure();
 
-  // ExoClick
-  (function(){
-    var z=(ENV.EXOCLICK_ZONE||"").trim();if(!z)return;
-    var s=document.createElement("script");s.src="https://a.exdynsrv.com/ad-provider.js";s.async=true;
-    s.onload=function(){console.info("[ads] ExoClick OK");};
-    document.head.appendChild(s);
-  })();
+  function tryProvider(){
+    return new Promise(function(resolve, reject){
+      try{
+        var s = document.createElement('script');
+        s.src = (window.__ADS_SRC || 'https://c.adsco.re/p');
+        s.async = true;
+        s.onload = function(){ resolve(); };
+        s.onerror = function(){ reject(new Error('ads load error')); };
+        (document.head || document.getElementsByTagName('head')[0] || document.documentElement).appendChild(s);
+        setTimeout(function(){ reject(new Error('ads timeout')); }, 5000);
+      }catch(e){ reject(e); }
+    });
+  }
 
-  // JuicyAds
-  (function(){
-    var j=(ENV.JUICYADS_ZONE||"").trim();if(!j)return;
-    slot("leftBar","ja-left");slot("rightBar","ja-right");
-    var s=document.createElement("script");s.src="https://poweredby.jads.co/js/jads.js";s.async=true;
-    s.onload=function(){console.info("[ads] JuicyAds OK");};
-    document.head.appendChild(s);
-  })();
+  function fillSlots(){
+    var list = document.querySelectorAll ? document.querySelectorAll('[data-ad-slot]') : [];
+    if (!list || !list.forEach) return;
+    list.forEach(function(slot){
+      if (!slot) return;
+      if (typeof window.renderAd === 'function') {
+        try { window.renderAd(slot.getAttribute('data-ad-slot'), slot); }
+        catch(e){ insertHouseAd(slot); }
+      } else {
+        insertHouseAd(slot);
+      }
+    });
+  }
 
-  // PopAds
-  (function(){
-    if((ENV.POPADS_ENABLE||"")!=="true")return;
-    var sid=(ENV.POPADS_SITE_ID||"").trim();if(!sid)return;
-    var s=document.createElement("script");s.src="https://c.adsco.re/t";s.async=true;
-    s.onload=function(){console.info("[ads] PopAds OK");};
-    document.head.appendChild(s);
-  })();
+  function init(){
+    tryProvider().then(fillSlots).catch(function(){
+      console.warn('[ads] proveedor falló/bloqueado → fallback');
+      var list = document.querySelectorAll ? document.querySelectorAll('[data-ad-slot]') : [];
+      list.forEach(insertHouseAd);
+    });
+  }
 
-  console.info("[ads] sidebars montadas");
- }catch(e){console.error("[ads] error",e);}
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, {once:true});
+  } else {
+    init();
+  }
 })();
