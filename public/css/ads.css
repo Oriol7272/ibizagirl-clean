@@ -1,5 +1,5 @@
-.ad-side{position:fixed;top:80px;bottom:20px;width:160px;z-index:50;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:8px;background:transparent}
+.ad-side{position:fixed;top:80px;bottom:20px;width:160px;z-index:50;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:8px}
 .ad-left{left:8px}
 .ad-right{right:8px}
-.ad-side > *{max-width:100%}
-@media (max-width: 1099px){ .ad-side{display:none} }
+.ad-side>*{max-width:100%}
+@media(max-width:1099px){.ad-side{display:none}}
