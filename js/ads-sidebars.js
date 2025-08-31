@@ -9,17 +9,14 @@
     }catch(_){}
     return '';
   }
-  function pick(slot, name){
-    try{
-      if (slot && slot.dataset && slot.dataset[name]) return String(slot.dataset[name]);
-    }catch(_){}
-    return '';
-  }
   function mount(slot){
     try{
-      var juicyB64 = pick(slot,'juicyB64'); if(!juicyB64) juicyB64 = getEnv('JUICYADS_SNIPPET_B64');
-      var exoZone  = pick(slot,'exoZone');  if(!exoZone)  exoZone  = getEnv('EXOCLICK_ZONE');
-      var eroZone  = pick(slot,'eroZone');  if(!eroZone)  eroZone  = getEnv('EROADVERTISING_ZONE');
+      var juicyB64 = (slot && slot.dataset && slot.dataset.juicyB64) ? String(slot.dataset.juicyB64) : '';
+      var exoZone  = (slot && slot.dataset && slot.dataset.exoZone)   ? String(slot.dataset.exoZone)   : '';
+      var eroZone  = (slot && slot.dataset && slot.dataset.eroZone)   ? String(slot.dataset.eroZone)   : '';
+      if(!juicyB64) juicyB64 = getEnv('JUICYADS_SNIPPET_B64');
+      if(!exoZone)  exoZone  = getEnv('EXOCLICK_ZONE');
+      if(!eroZone)  eroZone  = getEnv('EROADVERTISING_ZONE');
 
       if (juicyB64){
         var s=document.createElement('script'); s.defer=true;
@@ -33,16 +30,13 @@
       if (eroZone){
         var sc=document.createElement('script'); sc.async=true; sc.src='https://a.magsrv.com/ad-provider.js'; sc.setAttribute('data-zone', eroZone); slot.appendChild(sc); return;
       }
-      // sin proveedor: no rompe
-      // console.info('[ads] sin proveedor', slot);
     }catch(e){ try{ console.warn('[ads] slot error', e); }catch(_){} }
   }
-
   ready(function(){
     try{
       var slots = document.querySelectorAll('[data-ad-slot]');
       if (!slots || !slots.length) return;
-      for (var i=0; i<slots.length; i++){ mount(slots[i]); }
+      for (var i=0;i<slots.length;i++) mount(slots[i]);
     }catch(e){ try{ console.warn('[ads] init', e); }catch(_){} }
   });
 })();

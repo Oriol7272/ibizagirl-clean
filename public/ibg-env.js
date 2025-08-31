@@ -1,4 +1,4 @@
-// auto-generated 20250831_220022
+// auto-generated 20250831_221652
 (function(){
   var IBG_ENV = {
     IBG_ASSETS_BASE_URL: "https://ibizagirl-assets.s3.eu-north-1.amazonaws.com",
