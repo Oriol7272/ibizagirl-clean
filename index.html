@@ -10,7 +10,11 @@
 <script src="/content-data4.js"></script>
 <script src="/content-data5.js"></script>
 <script src="/content-data6.js"></script>
-<script src="/js/ads-loader.js"></script></head><body>
+<script src="/js/ads-loader.js"></script><style>/* ibg side ads */
+(min-width:1100px){.ibg-side-ads{position:fixed;top:90px;bottom:20px;width:300px;z-index:5;display:block}.ibg-side-left{left:10px}.ibg-side-right{right:10px}.ibg-side-ads .ad{width:300px;min-height:600px;background:#111;border-radius:8px;padding:4px;box-sizing:border-box}}
+(max-width:1099px){.ibg-side-ads{display:none!important}}
+</style>
+</head><body>
 <aside id="ad-left" class="side-ad left"></aside>
 <aside id="ad-right" class="side-ad right"></aside>
 <div class="page-shell"><div id="app"></div></div>
@@ -26,4 +30,6 @@ window.POPADS_SITE_ID='e494ffb82839a29122608e933394c091';
 window.POPADS_ENABLE='true';
 window.CRISP_WEBSITE_ID='59e184b1-e679-4c93-b3ea-d60b63c1c04c';
 </script>
+<div id="ibg-ad-left"  class="ibg-side-ads ibg-side-left"><div class="ad" data-ad-slot="side-left"></div></div>
+<div id="ibg-ad-right" class="ibg-side-ads ibg-side-right"><div class="ad" data-ad-slot="side-right"></div></div>
 </body></html>
