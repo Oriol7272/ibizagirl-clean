@@ -1,5 +1,7 @@
-@media(min-width:1100px){
-  .ibg-side{position:fixed;top:84px;bottom:20px;width:300px;display:block;z-index:10}
-  .ad-left{left:12px}.ad-right{right:12px}
+@media (min-width:1100px){
+  .ibg-side-ads{position:fixed;top:84px;bottom:20px;width:300px;z-index:10;display:block}
+  .ibg-side-left{left:12px}
+  .ibg-side-right{right:12px}
+  .ibg-side-ads .ad{width:300px;min-height:600px}
 }
-@media(max-width:1099px){ .ibg-side{display:none!important} }
+@media (max-width:1099px){ .ibg-side-ads{display:none!important} }

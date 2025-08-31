@@ -1,0 +1,19 @@
+🔎 DIAGNÓSTICO HOME @ /Users/oriolcabre/ibizagirl-clean (20250831_224044)
+-----------------------------------
+   • origin: https://github.com/Oriol7272/ibizagirl-clean.git
+🔑 Vercel link & env pull (.env.local)…
+✅ .env.local presente
+🧩 Generando public/ibg-env.js (ESM + window.*)…
+✅ public/ibg-env.js escrito
+✅ inclusión ibg-env.js corregida
+🧱 Asegurando slots laterales y CSS…
+ℹ️  slots laterales ya presentes
+⚙️  Escribiendo js/ads-sidebars.js…
+ℹ️  guard ya presente o no hay content-data6.js
+🩹 Corrigiendo referencias problemáticas (S%C3%BCtulo3)…
+🖼️  Asegurando decoratives…
+✅ decoratives presentes
+📋 Auditando rutas de media referenciadas vs disco…
+   • Referencias únicas detectadas: 0
+   • Faltantes en disco: 0
+💾 Commit + push…
