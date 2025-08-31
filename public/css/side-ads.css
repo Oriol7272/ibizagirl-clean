@@ -1,0 +1,7 @@
+@media(min-width:1100px){
+  .ibg-side-ads{position:fixed;top:90px;bottom:20px;width:300px;z-index:5;display:block}
+  .ibg-side-left{left:10px}
+  .ibg-side-right{right:10px}
+  .ibg-side-ads .ad{width:300px;min-height:600px;background:#111;border-radius:8px;padding:4px;box-sizing:border-box}
+}
+@media(max-width:1099px){ .ibg-side-ads{display:none!important} }
