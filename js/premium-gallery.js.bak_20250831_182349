@@ -1,0 +1,71 @@
+// js/premium-gallery.js
+(function(){
+  const $ = (s)=>document.querySelector(s);
+  const $$ = (s)=>Array.from(document.querySelectorAll(s));
+
+  function pickRandom(arr, n){
+    if (arr.length<=n) return [...arr];
+    const out = [];
+    const used = new Set();
+    while(out.length<n){
+      const i = Math.floor(Math.random()*arr.length);
+      if(!used.has(i)){ used.add(i); out.push(arr[i]); }
+    }
+    return out;
+  }
+
+  function ribbon(el, text){
+    const r = document.createElement("div");
+    r.className = "ribbon";
+    r.textContent = text;
+    el.appendChild(r);
+  }
+
+  function card(url){
+    const wrap = document.createElement("div");
+    wrap.className = "thumb";
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    img.src = url;
+    img.alt = "preview";
+    img.className = "blurred";
+    const pp = document.createElement("div");
+    pp.className = "pp-icons";
+    pp.innerHTML = '<img alt="PayPal" src="/paypal-mark.svg" /><span>Comprar</span>';
+    wrap.appendChild(img);
+    wrap.appendChild(pp);
+
+    // click: desblur + abre en grande (nueva pestaña)
+    wrap.addEventListener("click", ()=>{
+      img.classList.remove("blurred");
+      const a = document.createElement("a");
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      // simulamos “abrir imagen completa”
+      a.click();
+    });
+    return wrap;
+  }
+
+  async function main(){
+    try{
+      // UnifiedContentAPI ya existe por content-data6.js
+      const U = window.UnifiedContentAPI;
+      if(!U || !U.getAllPremiumImages){ console.warn("UnifiedContentAPI no disponible"); return; }
+      const all = U.getAllPremiumImages(); // se asume devuelve rutas /uncensored/xxx
+      const sample = pickRandom(all, 100);
+      const grid = $("#premium-grid");
+      grid.innerHTML = "";
+      sample.forEach((url, idx)=>{
+        const c = card(url);
+        grid.appendChild(c);
+      });
+      // marca 30% como NEW
+      const toNew = Math.floor(sample.length*0.30);
+      pickRandom($$(".thumb"), toNew).forEach(el=>ribbon(el,"NEW"));
+    }catch(e){ console.error("[premium-gallery]", e); }
+  }
+
+  document.readyState==="loading" ? document.addEventListener("DOMContentLoaded", main) : main();
+})();

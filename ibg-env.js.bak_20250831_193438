@@ -1,0 +1,25 @@
+export const IBG = {
+  ASSETS_BASE_URL: (typeof IBG_ASSETS_BASE_URL !== "undefined" ? IBG_ASSETS_BASE_URL : undefined) || "",
+  ADS: {
+    ENABLE_POPADS: (typeof POPADS_ENABLE !== "undefined" ? POPADS_ENABLE : "false"),
+    EROADVERTISING_ZONE: (typeof EROADVERTISING_ZONE !== "undefined" ? EROADVERTISING_ZONE : ""),
+    EXOCLICK_ZONE: (typeof EXOCLICK_ZONE !== "undefined" ? EXOCLICK_ZONE : ""),
+    JUICYADS_ZONE: (typeof JUICYADS_ZONE !== "undefined" ? JUICYADS_ZONE : ""),
+    JUICYADS_SNIPPET_B64: (typeof JUICYADS_SNIPPET_B64 !== "undefined" ? JUICYADS_SNIPPET_B64 : ""),
+    POPADS_SITE_ID: (typeof POPADS_SITE_ID !== "undefined" ? POPADS_SITE_ID : ""),
+    CRISP_WEBSITE_ID: (typeof CRISP_WEBSITE_ID !== "undefined" ? CRISP_WEBSITE_ID : "")
+  },
+  PAYPAL: {
+    CLIENT_ID: (typeof PAYPAL_CLIENT_ID !== "undefined" ? PAYPAL_CLIENT_ID : ""),
+    SECRET: (typeof PAYPAL_SECRET !== "undefined" ? PAYPAL_SECRET : ""),
+    PRICE_EUR_IMAGE: (typeof PAYPAL_ONESHOT_PRICE_EUR_IMAGE !== "undefined" ? PAYPAL_ONESHOT_PRICE_EUR_IMAGE : ""),
+    PRICE_EUR_VIDEO: (typeof PAYPAL_ONESHOT_PRICE_EUR_VIDEO !== "undefined" ? PAYPAL_ONESHOT_PRICE_EUR_VIDEO : ""),
+    PRICE_EUR_LIFETIME: (typeof PAYPAL_ONESHOT_PRICE_EUR_LIFETIME !== "undefined" ? PAYPAL_ONESHOT_PRICE_EUR_LIFETIME : ""),
+    PLAN_MONTHLY_1499: (typeof PAYPAL_PLAN_MONTHLY_1499 !== "undefined" ? PAYPAL_PLAN_MONTHLY_1499 : ""),
+    PLAN_ANNUAL_4999: (typeof PAYPAL_PLAN_ANNUAL_4999 !== "undefined" ? PAYPAL_PLAN_ANNUAL_4999 : ""),
+    WEBHOOK_ID: (typeof PAYPAL_WEBHOOK_ID !== "undefined" ? PAYPAL_WEBHOOK_ID : "")
+  }
+};
+
+export function envOr(k, def=""){ try { return IBG?.[k] ?? def; } catch { return def; } }
+export default IBG;
