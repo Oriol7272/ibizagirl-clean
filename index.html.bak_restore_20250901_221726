@@ -16,13 +16,17 @@
 </style>
 <link rel="stylesheet" href="/css/side-ads.css">
 <link rel="stylesheet" href="/css/ads.css">
+<script src="/js/ads-sidebars.js"></script>
 <script type="module" src="/ibg-env.js"></script>
 <script type="module" src="/ibg-env.js"></script>
 <script type="module" src="/ibg-env.js"></script>
+  <link rel="stylesheet" href="/cmp.css">
+  <script src="/cmp.js" defer></script>
 </head><body>
 <aside id="ad-left" class="side-ad left"></aside>
 <aside id="ad-right" class="side-ad right"></aside>
 <div class="page-shell"><div id="app"></div></div>
+<script type="module" src="/js/i18n.js"></script>
 <script type="module" src="/js/bootstrap-ibg.js"></script>
 <div class="ad" data-ad-slot="home-top"></div><script>
 window.IBG_ASSETS_BASE_URL='https://ibizagirl-assets.s3.eu-north-1.amazonaws.com';
@@ -50,6 +54,4 @@ window.__IBG_B64 = {
 </script>
 <div class="ibg-side ad-left"  data-ad-slot="side-left"></div>
 <div class="ibg-side ad-right" data-ad-slot="side-right"></div>
-  <script src="/ads-loader.js"></script>  <script>var juicy_adzone="1100309";</script>
-  <script async src="https://poweredby.jads.co/js/jfc.js" charset="utf-8"></script>
-</body></html>
+  <script src="/ads-loader.js"></script></body></html>
