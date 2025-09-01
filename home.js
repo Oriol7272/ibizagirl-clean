@@ -1,12 +1,10 @@
 // ==== HOME LOGIC ====
-// Requiere content-data2.js que expone FULL_IMAGES = [{src, ...}, ...]
+// Requiere decorative-data.js (DECORATIVE_IMAGES) y content-data2.js (FULL_IMAGES)
 
 function yyyymmdd() {
   const d = new Date();
   return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
 }
-
-// RNG determinista por día (pool diario estable)
 function mulberry32(a) {
   return function () {
     var t = (a += 0x6d2b79f5);
@@ -28,66 +26,54 @@ function pickDeterministic(arr, n, seed) {
   return shuffleDeterministic(arr, seed).slice(0, n);
 }
 
-// --- Banner (hero) usando FULL ---
-function setHeroFromFull(full) {
-  const hero = document.getElementById('hero');
-  if (!hero || !Array.isArray(full) || full.length === 0) return;
+// --- Banner con DECORATIVE_IMAGES ---
+function setHero() {
+  const hero = document.getElementById("hero");
+  if (!hero || !Array.isArray(window.DECORATIVE_IMAGES)) return;
   const seed = yyyymmdd();
-  const { src } = pickDeterministic(full, 1, seed)[0];
+  const { src } = pickDeterministic(window.DECORATIVE_IMAGES, 1, seed)[0];
   hero.style.backgroundImage = `url("${src}")`;
-  hero.setAttribute('data-src', src);
 }
 
-// --- Carrusel muy ligero (cambia cada 6s) ---
-function renderCarousel(full) {
-  const el = document.getElementById('carousel');
-  if (!el || !Array.isArray(full) || full.length === 0) return;
-
-  const img = document.createElement('img');
-  img.alt = 'Carousel';
-  img.style.width = '100%';
-  img.style.height = '100%';
-  img.style.objectFit = 'cover';
+// --- Carrusel usando FULL_IMAGES ---
+function renderCarousel() {
+  if (!Array.isArray(window.FULL_IMAGES)) return;
+  const el = document.getElementById("carousel");
+  const img = document.createElement("img");
+  img.alt = "Carousel";
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.objectFit = "cover";
   el.appendChild(img);
 
   const seed = yyyymmdd();
-  const order = shuffleDeterministic(full, seed);
+  const order = shuffleDeterministic(window.FULL_IMAGES, seed);
   let i = 0;
-
   function swap() {
-    const next = order[i % order.length].src;
-    img.src = next;
+    img.src = order[i % order.length].src;
     i++;
   }
   swap();
   setInterval(swap, 6000);
 }
 
-// --- Grid 5x30 (150) del pool FULL ---
-function renderGrid(full) {
-  const grid = document.getElementById('photo-grid');
-  if (!grid || !Array.isArray(full) || full.length === 0) return;
-
+// --- Grid 5x30 desde FULL_IMAGES ---
+function renderGrid() {
+  if (!Array.isArray(window.FULL_IMAGES)) return;
+  const grid = document.getElementById("photo-grid");
   const seed = yyyymmdd();
-  const picks = pickDeterministic(full, 150, seed + 13);
-
-  grid.innerHTML = '';
-  for (const item of picks) {
-    const im = document.createElement('img');
-    im.loading = 'lazy';
-    im.decoding = 'async';
+  const picks = pickDeterministic(window.FULL_IMAGES, 150, seed + 13);
+  grid.innerHTML = "";
+  picks.forEach(item => {
+    const im = document.createElement("img");
+    im.loading = "lazy";
     im.src = item.src;
     grid.appendChild(im);
-  }
+  });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  if (!Array.isArray(window.FULL_IMAGES) || window.FULL_IMAGES.length === 0) {
-    console.error('⚠️ FULL_IMAGES no disponible.');
-    return;
-  }
-  console.log('[IBG] /full pool size:', window.FULL_IMAGES.length);
-  setHeroFromFull(window.FULL_IMAGES);
-  renderCarousel(window.FULL_IMAGES);
-  renderGrid(window.FULL_IMAGES);
+window.addEventListener("DOMContentLoaded", () => {
+  setHero();
+  renderCarousel();
+  renderGrid();
 });
