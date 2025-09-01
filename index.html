@@ -4,15 +4,27 @@
   <meta charset="UTF-8" />
   <title>IbizaGirl.pics - Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="ibg-layout.css" />
+
+  <!-- Preconnect para anuncios (mejora TTFB) -->
+  <link rel="preconnect" href="https://poweredby.jads.co" crossorigin>
+  <link rel="preconnect" href="https://a.magsrv.com" crossorigin>
+  <link rel="preconnect" href="https://go.easrv.cl" crossorigin>
+
+  <!-- Datos -->
   <script src="decorative-data.js" defer></script>
   <script src="content-data2.js" defer></script>
-  <script src="ads-loader.js" defer></script>
+
+  <!-- Lógica -->
   <script src="home.js" defer></script>
 </head>
 <body>
   <header>
+    <!-- Banner rotatorio: lo rellena home.js con DECORATIVE_IMAGES -->
     <div id="hero" class="banner"></div>
+
     <nav class="menu">
       <a href="index.html">Home</a>
       <a href="premium.html">Premium</a>
@@ -22,12 +34,57 @@
   </header>
 
   <main>
-    <aside id="ads-left" class="ads-column"></aside>
+    <!-- ====== LATERAL IZQUIERDO (4 anuncios visibles) ====== -->
+    <aside id="ads-left" class="ads-column">
+      <!-- JuicyAds -->
+      <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
+      <ins id="1099637-left" data-width="300" data-height="250"></ins>
+      <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1099637});</script>
+
+      <!-- ExoClick -->
+      <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+      <ins class="eas6a97888e2" data-zoneid="5696328"></ins>
+      <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+
+      <!-- EroAdvertising -->
+      <div id="sp_8177575_node_left">&nbsp;</div>
+      <script type="text/javascript" charset="utf-8" src="https://go.easrv.cl/loadeactrl.go?pid=152716&spaceid=8177575&ctrlid=798544"></script>
+      <script>window.eaCtrl&&eaCtrl.add({"display":"sp_8177575_node_left","sid":8177575,"plugin":"banner"});</script>
+
+      <!-- PopAds -->
+      <script type="text/javascript" data-cfasync="false">
+      (function(){var p=window,j="e494ffb82839a29122608e933394c091",d=[["siteId",4245161],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],v=["d3d3LnByZW1pdW12ZXJ0aXNpbmcuY29tL3pTL2J3ZHZmL3R0YWJsZXRvcC5taW4uanM="],e=-1,a,y,m=function(){clearTimeout(y);e++;if(v[e]){a=p.document.createElement("script");a.type="text/javascript";a.async=!0;var s=p.document.getElementsByTagName("script")[0];a.src="https://"+atob(v[e]);a.crossOrigin="anonymous";s.parentNode.insertBefore(a,s)}};if(!p[j]){try{Object.freeze(p[j]=d)}catch(e){}m()}})();
+      </script>
+    </aside>
+
+    <!-- ====== CONTENIDO ====== -->
     <section id="content">
       <div id="carousel" class="carousel"></div>
       <div id="photo-grid" class="grid"></div>
     </section>
-    <aside id="ads-right" class="ads-column"></aside>
+
+    <!-- ====== LATERAL DERECHO (4 anuncios visibles) ====== -->
+    <aside id="ads-right" class="ads-column">
+      <!-- JuicyAds -->
+      <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
+      <ins id="1099637-right" data-width="300" data-height="250"></ins>
+      <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1099637});</script>
+
+      <!-- ExoClick -->
+      <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+      <ins class="eas6a97888e2" data-zoneid="5696328"></ins>
+      <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+
+      <!-- EroAdvertising -->
+      <div id="sp_8177575_node_right">&nbsp;</div>
+      <script type="text/javascript" charset="utf-8" src="https://go.easrv.cl/loadeactrl.go?pid=152716&spaceid=8177575&ctrlid=798544"></script>
+      <script>window.eaCtrl&&eaCtrl.add({"display":"sp_8177575_node_right","sid":8177575,"plugin":"banner"});</script>
+
+      <!-- PopAds -->
+      <script type="text/javascript" data-cfasync="false">
+      (function(){var p=window,j="e494ffb82839a29122608e933394c091",d=[["siteId",4245161],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],v=["d3d3LnByZW1pdW12ZXJ0aXNpbmcuY29tL3pTL2J3ZHZmL3R0YWJsZXRvcC5taW4uanM="],e=-1,a,y,m=function(){clearTimeout(y);e++;if(v[e]){a=p.document.createElement("script");a.type="text/javascript";a.async=!0;var s=p.document.getElementsByTagName("script")[0];a.src="https://"+atob(v[e]);a.crossOrigin="anonymous";s.parentNode.insertBefore(a,s)}};if(!p[j]){try{Object.freeze(p[j]=d)}catch(e){}m()}})();
+      </script>
+    </aside>
   </main>
 </body>
 </html>

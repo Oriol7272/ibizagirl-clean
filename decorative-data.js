@@ -1,6 +1,4 @@
-// ==== Decorative Images ====
-// Generado para banner y fondos
-
+// ==== Decorative Images para banner ====
 window.DECORATIVE_IMAGES = [
   { src: "decorative-images/1115ae7d-909f-4760-a3a1-037a05ad9931.jpg" },
   { src: "decorative-images/1618cbb2-8dd1-4127-99d9-d9f30536de72.jpg" },

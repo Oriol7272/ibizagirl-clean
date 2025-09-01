@@ -1,5 +1,5 @@
 // ==== HOME LOGIC ====
-// Requiere decorative-data.js (DECORATIVE_IMAGES) y content-data2.js (FULL_IMAGES)
+// Requiere decorative-data.js (DECORATIVE_IMAGES) + content-data2.js (FULL_IMAGES)
 
 function yyyymmdd() {
   const d = new Date();
@@ -26,19 +26,29 @@ function pickDeterministic(arr, n, seed) {
   return shuffleDeterministic(arr, seed).slice(0, n);
 }
 
-// --- Banner con DECORATIVE_IMAGES ---
-function setHero() {
+// === Banner rotatorio con DECORATIVE_IMAGES ===
+function runHeroRotation(intervalMs = 7000) {
   const hero = document.getElementById("hero");
-  if (!hero || !Array.isArray(window.DECORATIVE_IMAGES)) return;
+  const list = Array.isArray(window.DECORATIVE_IMAGES) ? window.DECORATIVE_IMAGES : [];
+  if (!hero || list.length === 0) return;
+
   const seed = yyyymmdd();
-  const { src } = pickDeterministic(window.DECORATIVE_IMAGES, 1, seed)[0];
-  hero.style.backgroundImage = `url("${src}")`;
+  const order = shuffleDeterministic(list, seed);
+  let i = 0;
+  function setBg() {
+    const src = order[i % order.length].src;
+    hero.style.backgroundImage = `url("${src}")`;
+    i++;
+  }
+  setBg();
+  setInterval(setBg, intervalMs);
 }
 
-// --- Carrusel usando FULL_IMAGES ---
-function renderCarousel() {
+// === Carrusel usando FULL_IMAGES ===
+function runCarousel() {
   if (!Array.isArray(window.FULL_IMAGES)) return;
   const el = document.getElementById("carousel");
+  if (!el) return;
   const img = document.createElement("img");
   img.alt = "Carousel";
   img.style.width = "100%";
@@ -47,7 +57,7 @@ function renderCarousel() {
   el.appendChild(img);
 
   const seed = yyyymmdd();
-  const order = shuffleDeterministic(window.FULL_IMAGES, seed);
+  const order = shuffleDeterministic(window.FULL_IMAGES, seed + 101);
   let i = 0;
   function swap() {
     img.src = order[i % order.length].src;
@@ -57,23 +67,29 @@ function renderCarousel() {
   setInterval(swap, 6000);
 }
 
-// --- Grid 5x30 desde FULL_IMAGES ---
+// === Grid 5x30 desde FULL_IMAGES ===
 function renderGrid() {
   if (!Array.isArray(window.FULL_IMAGES)) return;
   const grid = document.getElementById("photo-grid");
+  if (!grid) return;
+
   const seed = yyyymmdd();
   const picks = pickDeterministic(window.FULL_IMAGES, 150, seed + 13);
   grid.innerHTML = "";
   picks.forEach(item => {
     const im = document.createElement("img");
     im.loading = "lazy";
+    im.decoding = "async";
     im.src = item.src;
     grid.appendChild(im);
   });
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  setHero();
-  renderCarousel();
+  runHeroRotation(7000); // cada 7s
+  runCarousel();
   renderGrid();
+  if (Array.isArray(window.FULL_IMAGES)) {
+    console.log("[IBG] /full pool size:", window.FULL_IMAGES.length);
+  }
 });
