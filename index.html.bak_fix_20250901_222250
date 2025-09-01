@@ -19,14 +19,6 @@
 <script type="module" src="/ibg-env.js"></script>
 <script type="module" src="/ibg-env.js"></script>
 <script type="module" src="/ibg-env.js"></script>
-  <!-- Ads SDKs -->
-  <link rel="preconnect" href="https://poweredby.jads.co" crossorigin>
-  <link rel="preconnect" href="https://a.magsrv.com" crossorigin>
-  <link rel="preconnect" href="https://go.easrv.cl" crossorigin>
-  <script>window.adsbyjuicy = window.adsbyjuicy || [];</script>
-  <script async data-cfasync="false" src="https://poweredby.jads.co/js/jads.js"></script>
-  <script async src="https://a.magsrv.com/ad-provider.js"></script>
-  <script async src="https://go.easrv.cl/loadeactrl.go?pid=152716&spaceid=8177575&ctrlid=798544"></script>
 </head><body>
 <aside id="ad-left" class="side-ad left"></aside>
 <aside id="ad-right" class="side-ad right"></aside>
