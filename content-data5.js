@@ -1,3 +1,4 @@
+if(window.__IBG_ONCE_cd5__){console.info("[IBG] content-data5.js ya cargado, skip");}else{window.__IBG_ONCE_cd5__=true;
 console.log("📦 Cargando módulo content-data5.js - Videos premium...");
 
 const PREMIUM_VIDEOS_POOL = [
@@ -99,3 +100,5 @@ const PREMIUM_VIDEOS_POOL = [
 console.log("✅ 93 videos premium cargados desde /uncensored-videos/");
 
 window.PREMIUM_VIDEOS_POOL = PREMIUM_VIDEOS_POOL;
+
+}

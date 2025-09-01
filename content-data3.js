@@ -1,3 +1,4 @@
+if(window.__IBG_ONCE_cd3__){console.info("[IBG] content-data3.js ya cargado, skip");}else{window.__IBG_ONCE_cd3__=true;
 console.info('📦 Cargando módulo content-data3.js - Imágenes premium parte 1...');
 window.IBG_PREMIUM_P1 = [
   "00wd2wVE89BJnQVenuNP.webp",
@@ -282,3 +283,5 @@ window.IBG_PREMIUM_P1 = [
   "kMOVTOl3HyJSFM9SSy3z.webp",
 ];
 console.info('✅',  280 , 'imágenes premium parte 1 cargadas desde /uncensored/', window.IBG_PREMIUM_P1.length);
+
+}

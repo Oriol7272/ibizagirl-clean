@@ -1,3 +1,4 @@
+if(window.__IBG_ONCE_cd2__){console.info("[IBG] content-data2.js ya cargado, skip");}else{window.__IBG_ONCE_cd2__=true;
 /**
  * content-data2.js - Public Images Module v4.1.0 UPDATED
  * Contains all public/full images (127 files) - COMPLETE LIST
@@ -151,3 +152,5 @@ console.log('📊 Estadísticas de contenido público:', {
     banners: window.BANNER_IMAGES.length,
     teasers: window.TEASER_IMAGES.length
 });
+
+}

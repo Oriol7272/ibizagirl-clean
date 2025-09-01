@@ -1,3 +1,4 @@
+if(window.__IBG_ONCE_cd6__){console.info("[IBG] content-data6.js ya cargado, skip");}else{window.__IBG_ONCE_cd6__=true;
 /* [content-data6] guard */(function(){try{var W=window,need=["CONTENT_CONFIG","CONTENT_PUBLIC","CONTENT_PREMIUM_1","CONTENT_PREMIUM_2","CONTENT_VIDEOS"];var miss=need.filter(function(k){return typeof W[k]==="undefined";});if(miss.length){for(var i=0;i<miss.length;i++){var k=miss[i]; try{W[k]=Array.isArray(W[k])?W[k]:[];}catch(_){}}} }catch(_){}})();
 /* deps guard (auto) */(function(){try{var W=window,need=["CONTENT_CONFIG","CONTENT_PUBLIC","CONTENT_PREMIUM_1","CONTENT_PREMIUM_2","CONTENT_VIDEOS"];var miss=need.filter(function(k){return typeof W[k]==="undefined";});if(miss.length){for(var i=0;i<miss.length;i++){var k=miss[i]; try{W[k]=Array.isArray(W[k])?W[k]:[];}catch(_){}}} }catch(_){}})();
 /* deps guard (auto) */(function(){try{var W=window,need=["CONTENT_CONFIG","CONTENT_PUBLIC","CONTENT_PREMIUM_1","CONTENT_PREMIUM_2","CONTENT_VIDEOS"];var miss=need.filter(k=>typeof W[k]==="undefined");if(miss.length){miss.forEach(k=>{try{W[k]=Array.isArray(W[k])?W[k]:[];}catch(_){}});} }catch(_){}})();
@@ -486,3 +487,5 @@ console.log('📊 APIs disponibles:', {
     UnifiedContentAPI: !!window.UnifiedContentAPI,
     ContentSystemManager: !!window.ContentSystemManager
 });
+
+}
