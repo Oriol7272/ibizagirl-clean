@@ -1,3 +1,4 @@
+(function(){ if (window.__IBG_I18N_GUARD__) return; window.__IBG_I18N_GUARD__=1;
 /**
  * i18n con API retrocompatible:
  *  - lang() -> devuelve el idioma actual (lo que pages-common espera)
@@ -26,3 +27,4 @@ export function setLang(next){
 }
 
 export default { t, setLang, lang, messages };
+})(); // __IBG_I18N_GUARD__

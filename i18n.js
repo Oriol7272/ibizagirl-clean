@@ -1,3 +1,4 @@
+(function(){ if (window.__IBG_I18N_GUARD__) return; window.__IBG_I18N_GUARD__=1;
 /* === canonical i18n (generado) === */
 export const lang =
   (typeof window!=="undefined" && (window.IBG_LANG || document.documentElement.getAttribute("lang"))) || "es";
@@ -16,3 +17,4 @@ export default lang;
 
 // side-effect: dejar IBG_LANG listo
 try { if (typeof window!=="undefined") window.IBG_LANG = window.IBG_LANG || lang; } catch (_){}
+})(); // __IBG_I18N_GUARD__
