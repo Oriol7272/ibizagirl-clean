@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Premium • IbizaGirl.pics</title>
+
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="style.css">   <!-- mismo que Home -->
+<link rel="stylesheet" href="styles.css">  <!-- estilos complementarios -->
+
+<script src="ibg-env.js"></script>
+<script src="js/i18n.global.js"></script>
+<script src="js/ads.js" defer></script>
+
+<!-- PayPal SDK -->
+<script>
+!function(){
+  var cid=(window.__IBG&&window.__IBG.PAYPAL_CLIENT_ID)||"";
+  if(!cid){console.warn("[paypal] PAYPAL_CLIENT_ID vacío; no cargaré SDK");return;}
+  var s=document.createElement("script");
+  s.async=true;document.head.appendChild(s);
+}();
+</script>
+
+<style>
+  /* mínimos para la grid; el resto viene de style.css */
+  .wrap{max-width:1200px;margin:0 auto;padding:10px 16px}
+  .topbar{display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .langs button{background:#1f1f24;color:#fff;border:1px solid #2b2b31;border-radius:10px;padding:6px 10px;cursor:pointer}
+  .langs button.active{border-color:#6ee7b7}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;padding:16px}
+  .card{position:relative;border-radius:14px;overflow:hidden;background:#101014;border:1px solid #222}
+  .card img{width:100%;height:240px;object-fit:cover;display:block;filter:blur(12px);transform:scale(1.03)}
+  .card.unlocked img{filter:none;transform:none}
+  .badge{position:absolute;top:8px;left:8px;background:#ef4444;color:#fff;font-size:12px;border-radius:999px;padding:3px 8px}
+  .price{position:absolute;bottom:8px;right:8px;background:#111827;color:#fff;border:1px solid #1f2937;border-radius:999px;padding:4px 8px;font-size:12px}
+  .paybox{position:absolute;inset:auto 8px 8px 8px;background:rgba(0,0,0,.7);border:1px solid #333;border-radius:10px;padding:8px;display:none}
+  .card.showpay .paybox{display:block}
+  .note{color:#a1a1aa;font-size:13px;margin:6px 0}
+  .hint{font-size:12px;color:#9ca3af}
+  header{position:sticky;top:0;background:#0f0f13;z-index:20;border-bottom:1px solid #1f1f24}
+  .ad-row{padding:8px 16px}
+  .ad-box{border:1px dashed #333;border-radius:12px;min-height:60px;display:flex;align-items:center;justify-content:center;color:#aaa}
+  footer{padding:30px 16px;color:#9ca3af;text-align:center}
+</style>
+<script>window.PAYPAL_INTENT="subscription";window.PAYPAL_CURRENCY="EUR";window.PAYPAL_CLIENT_ID="AfQEdiielw5fm3wF08p9pcxwqR3gPz82YRNUTKY4A8WNG9AktiGsDNyr2i7BsjVzSwwpeCwR7Tt7DPq5";</script>
+<script src="/js/paypal-loader.js"></script>
+  <link rel="stylesheet" href="css/ibg-home.css">
+  <script src="content-data2.js" defer></script>
+  <script src="home.js" defer></script>
+</head>
+<body>
+<header>
+  <div class="wrap topbar">
+    <div>
+      <h1 style="margin:6px 0;font-size:18px" id="title">Premium</h1>
+      <div class="note" id="note"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btn-monthly"></button>
+      <button class="btn" id="btn-yearly"></button>
+      <button class="btn" id="btn-lifetime"></button>
+      <div class="langs">
+        <span class="hint" id="lang-label"></span>
+        <button data-lang="es">ES</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="fr">FR</button>
+        <button data-lang="it">IT</button>
+        <button data-lang="ca">CA</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="ad-row"><div id="ad-top" class="ad-box">Ad Top</div></div>
+
+<main class="wrap">
+  <div id="status" class="note"></div>
+  <section id="grid" class="grid" aria-live="polite"></section>
+  <div class="ad-row"><div id="ad-inline-1" class="ad-box">Ad Inline 1</div></div>
+  <div class="ad-row"><div id="ad-inline-2" class="ad-box">Ad Inline 2</div></div>
+</main>
+
+<footer>
+  <div id="ads-disclaimer" class="hint"></div>
+  <div class="hint">© IbizaGirl.pics</div>
+</footer>
+
+<script src="content-data3.js" defer></script>
+<script src="content-data4.js" defer></script>
+<script src="premium.js" defer></script>
+
+<!-- Chat (si tienes CRISP_WEBSITE_ID en env) -->
+<script>
+(function(){
+  var id=(window.__IBG && window.__IBG.CRISP_WEBSITE_ID)||"";
+  if(!id) return;
+  window.$crisp=[];window.CRISP_WEBSITE_ID=id;
+  var d=document;var s=d.createElement("script");
+  s.src="https://client.crisp.chat/l.js";s.async=1;d.head.appendChild(s);
+})();
+</script>
+  <!-- PayPal LIVE -->
+  <div id="paypal-buttons-premium"
+       data-paypal="buttons"
+       data-amount="9.99"
+       data-currency="EUR"
+       data-layout="vertical"
+       data-redirect="/gracias.html"></div>
+  <script src="js/paypal-live.js" defer></script>
+</body>
+</html>
