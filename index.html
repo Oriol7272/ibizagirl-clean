@@ -12,6 +12,9 @@
   <link rel="preconnect" href="https://a.magsrv.com" crossorigin>
   <link rel="preconnect" href="https://go.easrv.cl" crossorigin>
 
+  <!-- JuicyAds loader (una sola vez) -->
+  <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
+
   <!-- Datos -->
   <script src="decorative-data.js" defer></script>
   <script src="content-data2.js" defer></script>
@@ -34,10 +37,11 @@
   <main>
     <!-- ===== LATERAL IZQUIERDO ===== -->
     <aside id="ads-left" class="ads-column">
-      <!-- JuicyAds -->
-      <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
-      <ins id="1099637" data-width="300" data-height="250"></ins>
-      <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1099637});</script>
+      <!-- JuicyAds Banner 300x250 (zone 1100308) -->
+      <ins id="1100308" data-width="300" data-height="250"></ins>
+      <script type="text/javascript" data-cfasync="false" async>
+        (adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1100308});
+      </script>
 
       <!-- ExoClick (zona 5696328) -->
       <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
@@ -71,17 +75,18 @@
 
     <!-- ===== LATERAL DERECHO ===== -->
     <aside id="ads-right" class="ads-column">
-      <!-- JuicyAds (misma zona; recomendable crear otra) -->
-      <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
-      <ins id="1099637" data-width="300" data-height="250"></ins>
-      <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1099637});</script>
+      <!-- JuicyAds Banner 300x250 (zone 1100308) -->
+      <ins id="1100308" data-width="300" data-height="250"></ins>
+      <script type="text/javascript" data-cfasync="false" async>
+        (adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1100308});
+      </script>
 
       <!-- ExoClick (zona 5705186) -->
       <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
       <ins class="eas6a97888e2" data-zoneid="5705186"></ins>
       <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
 
-      <!-- EroAdvertising (segundo slot) -->
+      <!-- EroAdvertising: segundo slot -->
       <div id="sp_8177575_node_right">&nbsp;</div>
       <script>window.eaCtrl && eaCtrl.add({"display":"sp_8177575_node_right","sid":8177575,"plugin":"banner"});</script>
 
@@ -91,5 +96,9 @@
       </script>
     </aside>
   </main>
+
+  <!-- ===== JuicyAds Float Ad (zone 1100309) — cargar solo una vez ===== -->
+  <script type="text/javascript">juicy_adzone = '1100309';</script>
+  <script type="text/javascript" src="https://poweredby.jads.co/js/jfc.js" charset="utf-8"></script>
 </body>
 </html>
