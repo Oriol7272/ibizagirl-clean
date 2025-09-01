@@ -51,3 +51,26 @@ main {
 .grid img.blurred {
   filter: blur(8px);
 }
+
+/* === Premium Styles === */
+.thumb-wrapper {
+  position: relative;
+}
+.thumb-wrapper img {
+  width: 100%;
+}
+.thumb-wrapper .paypal-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #0070ba;
+  color: #fff;
+  border: none;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.thumb-wrapper .paypal-btn:hover {
+  background: #005c95;
+}
