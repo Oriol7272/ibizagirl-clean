@@ -18,7 +18,7 @@
 
   <!-- Lógica página -->
   <script src="home.js" defer></script>
-  <script src="ad-init.js" defer></script>
+  <script src="ads-debug.js" defer></script>
 </head>
 <body>
   <header>
@@ -31,22 +31,20 @@
     </nav>
   </header>
 
-  <!-- =================== CONTENIDO =================== -->
   <main>
-    <!-- ===== LATERAL IZQUIERDO (4 anuncios) ===== -->
+    <!-- ===== LATERAL IZQUIERDO ===== -->
     <aside id="ads-left" class="ads-column">
-
-      <!-- JuicyAds (snippet EXACTO; deja id numérico tal cual) -->
+      <!-- JuicyAds -->
       <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
       <ins id="1099637" data-width="300" data-height="250"></ins>
       <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1099637});</script>
 
-      <!-- ExoClick (snippet EXACTO) -->
+      <!-- ExoClick (zona 5696328) -->
       <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
       <ins class="eas6a97888e2" data-zoneid="5696328"></ins>
       <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
 
-      <!-- EroAdvertising (snippet maestro una vez; define eaCtrl y carga JS) -->
+      <!-- EroAdvertising (loader maestro + slot left) -->
       <div id="sp_8177575_node_left">&nbsp;</div>
       <script type="text/javascript">
       if (typeof eaCtrl =="undefined"){
@@ -59,36 +57,35 @@
       eaCtrl.add({"display":"sp_8177575_node_left","sid":8177575,"plugin":"banner"});
       </script>
 
-      <!-- PopAds (snippet EXACTO) -->
+      <!-- PopAds (popunder; no es banner visible) -->
       <script type="text/javascript" data-cfasync="false">
       (function(){var p=window,j="e494ffb82839a29122608e933394c091",d=[["siteId",4245161],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],v=["d3d3LnByZW1pdW12ZXJ0aXNpbmcuY29tL3pTL2J3ZHZmL3R0YWJsZXRvcC5taW4uanM="],e=-1,a,y,m=function(){clearTimeout(y);e++;if(v[e]){a=p.document.createElement("script");a.type="text/javascript";a.async=!0;var s=p.document.getElementsByTagName("script")[0];a.src="https://"+atob(v[e]);a.crossOrigin="anonymous";s.parentNode.insertBefore(a,s)}};if(!p[j]){try{Object.freeze(p[j]=d)}catch(e){}m()}})();
       </script>
     </aside>
 
-    <!-- ===== ZONA CENTRAL ===== -->
+    <!-- ===== CONTENIDO ===== -->
     <section id="content">
       <div id="carousel" class="carousel"></div>
       <div id="photo-grid" class="grid"></div>
     </section>
 
-    <!-- ===== LATERAL DERECHO (4 anuncios) ===== -->
+    <!-- ===== LATERAL DERECHO ===== -->
     <aside id="ads-right" class="ads-column">
-
-      <!-- JuicyAds (mismo id numérico; Juicy lo requiere así) -->
+      <!-- JuicyAds (misma zona; recomendable crear otra) -->
       <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
       <ins id="1099637" data-width="300" data-height="250"></ins>
       <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1099637});</script>
 
-      <!-- ExoClick -->
+      <!-- ExoClick (zona 5705186) -->
       <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-      <ins class="eas6a97888e2" data-zoneid="5696328"></ins>
+      <ins class="eas6a97888e2" data-zoneid="5705186"></ins>
       <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
 
-      <!-- EroAdvertising: segundo slot, usando el eaCtrl ya cargado arriba -->
+      <!-- EroAdvertising (segundo slot) -->
       <div id="sp_8177575_node_right">&nbsp;</div>
       <script>window.eaCtrl && eaCtrl.add({"display":"sp_8177575_node_right","sid":8177575,"plugin":"banner"});</script>
 
-      <!-- PopAds -->
+      <!-- PopAds (popunder) -->
       <script type="text/javascript" data-cfasync="false">
       (function(){var p=window,j="e494ffb82839a29122608e933394c091",d=[["siteId",4245161],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],v=["d3d3LnByZW1pdW12ZXJ0aXNpbmcuY29tL3pTL2J3ZHZmL3R0YWJsZXRvcC5taW4uanM="],e=-1,a,y,m=function(){clearTimeout(y);e++;if(v[e]){a=p.document.createElement("script");a.type="text/javascript";a.async=!0;var s=p.document.getElementsByTagName("script")[0];a.src="https://"+atob(v[e]);a.crossOrigin="anonymous";s.parentNode.insertBefore(a,s)}};if(!p[j]){try{Object.freeze(p[j]=d)}catch(e){}m()}})();
       </script>
