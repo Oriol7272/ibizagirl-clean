@@ -1,55 +1,40 @@
-<!doctype html><html lang="es"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IBIZAGIRL.PICS — Home</title>
-<link rel="stylesheet" href="/css/ibg.css">
-<link rel="stylesheet" href="/css/ibg-home.css">
-<script type="module" src="/ibg-env.js"></script>
-<script src="/content-data1.js"></script>
-<script src="/content-data2.js"></script>
-<script src="/content-data3.js"></script>
-<script src="/content-data4.js"></script>
-<script src="/content-data5.js"></script>
-<script src="/content-data6.js"></script>
-<script src="/js/ads-loader.js"></script><style>/* ibg side ads */
-(min-width:1100px){.ibg-side-ads{position:fixed;top:90px;bottom:20px;width:300px;z-index:5;display:block}.ibg-side-left{left:10px}.ibg-side-right{right:10px}.ibg-side-ads .ad{width:300px;min-height:600px;background:#111;border-radius:8px;padding:4px;box-sizing:border-box}}
-(max-width:1099px){.ibg-side-ads{display:none!important}}
-</style>
-<link rel="stylesheet" href="/css/side-ads.css">
-<link rel="stylesheet" href="/css/ads.css">
-<script src="/js/ads-sidebars.js"></script>
-<script type="module" src="/ibg-env.js"></script>
-<script type="module" src="/ibg-env.js"></script>
-<script type="module" src="/ibg-env.js"></script>
-</head><body>
-<aside id="ad-left" class="side-ad left"></aside>
-<aside id="ad-right" class="side-ad right"></aside>
-<div class="page-shell"><div id="app"></div></div>
-<script type="module" src="/js/i18n.js"></script>
-<script type="module" src="/js/bootstrap-ibg.js"></script>
-<div class="ad" data-ad-slot="home-top"></div><script>
-window.IBG_ASSETS_BASE_URL='https://ibizagirl-assets.s3.eu-north-1.amazonaws.com';
-window.EROADVERTISING_ZONE='8177575';
-window.EXOCLICK_ZONE='5696328';
-window.JUICYADS_ZONE='1099637';
-window.JUICYADS_SNIPPET_B64='2093981';
-window.POPADS_SITE_ID='e494ffb82839a29122608e933394c091';
-window.POPADS_ENABLE='true';
-window.CRISP_WEBSITE_ID='59e184b1-e679-4c93-b3ea-d60b63c1c04c';
-</script>
-<div id="ibg-ad-left"  class="ibg-side-ads ibg-side-left"><div class="ad" data-ad-slot="side-left"></div></div>
-<div id="ibg-ad-right" class="ibg-side-ads ibg-side-right"><div class="ad" data-ad-slot="side-right"></div></div>
-<script>
-window.__IBG_B64 = {
-  JUICYADS_ZONE:        'IjEwOTk2Mzci',
-  JUICYADS_SNIPPET_B64: 'IjIwOTM5ODEi',
-  EXOCLICK_ZONE:        'IjU2OTYzMjgi',
-  EROADVERTISING_ZONE:  'IjgxNzc1NzUi',
-  POPADS_SITE_ID:       'ImU0OTRmZmI4MjgzOWEyOTEyMjYwOGU5MzMzOTRjMDkxIg==',
-  POPADS_ENABLE:        'InRydWUi',
-  CRISP_WEBSITE_ID:     'IjU5ZTE4NGIxLWU2NzktNGM5My1iM2VhLWQ2MGI2M2MxYzA0YyI=',
-  IBG_ASSETS_BASE_URL:  'Imh0dHBzOi8vaWJpemFnaXJsLWFzc2V0cy5zMy5ldS1ub3J0aC0xLmFtYXpvbmF3cy5jb20i'
-};
-</script>
-<div class="ibg-side ad-left"  data-ad-slot="side-left"></div>
-<div class="ibg-side ad-right" data-ad-slot="side-right"></div>
-</body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>IbizaGirl.pics - Home</title>
+  <link rel="stylesheet" href="ibg-layout.css">
+  <script src="ads-loader.js" defer></script>
+  <script src="content-data2.js" defer></script>
+  <script src="home.js" defer></script>
+</head>
+<body>
+  <!-- Banner + menú superior -->
+  <header>
+    <div class="banner">
+      <img src="decorative-images/banner1.jpg" alt="Banner IbizaGirl">
+    </div>
+    <nav class="menu">
+      <a href="index.html">Home</a>
+      <a href="premium.html">Premium</a>
+      <a href="videos.html">Videos</a>
+      <a href="pics.html">Pics</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Laterales con ads -->
+    <aside id="ads-left" class="ads-column"></aside>
+
+    <section id="content">
+      <!-- Carrusel -->
+      <div id="carousel" class="carousel"></div>
+
+      <!-- Grid aleatorio 5x30 -->
+      <div id="photo-grid" class="grid"></div>
+    </section>
+
+    <aside id="ads-right" class="ads-column"></aside>
+  </main>
+</body>
+</html>
