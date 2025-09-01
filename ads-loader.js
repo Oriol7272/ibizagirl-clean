@@ -1,11 +1,12 @@
 // ==== Ads Loader ====
+// Inserta 4 anuncios por lateral: JuicyAds, ExoClick, EroAdvertising y PopAds
 
 function loadJuicyAds(target) {
-  const s = document.createElement("script");
-  s.src = "https://poweredby.jads.co/js/jads.js";
-  s.async = true;
-  s.dataset.cfasync = "false";
-  document.body.appendChild(s);
+  const boot = document.createElement("script");
+  boot.src = "https://poweredby.jads.co/js/jads.js";
+  boot.async = true;
+  boot.dataset.cfasync = "false";
+  document.body.appendChild(boot);
 
   const ins = document.createElement("ins");
   ins.id = "1099637";
@@ -15,7 +16,7 @@ function loadJuicyAds(target) {
 
   const run = document.createElement("script");
   run.innerHTML = "(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1099637});";
-  document.body.appendChild(run);
+  target.appendChild(run);
 }
 
 function loadExoClick(target) {
@@ -35,14 +36,16 @@ function loadExoClick(target) {
 }
 
 function loadEroAdvertising(target) {
+  // contenedor requerido
   const div = document.createElement("div");
   div.id = "sp_8177575_node";
   target.appendChild(div);
 
+  // usar https para evitar mixed content
   const s = document.createElement("script");
   s.type = "text/javascript";
   s.charset = "utf-8";
-  s.src = "//go.easrv.cl/loadeactrl.go?pid=152716&spaceid=8177575&ctrlid=798544";
+  s.src = "https://go.easrv.cl/loadeactrl.go?pid=152716&spaceid=8177575&ctrlid=798544";
   document.body.appendChild(s);
 }
 
@@ -56,6 +59,8 @@ function loadPopAds(target) {
 window.addEventListener("DOMContentLoaded", () => {
   const left = document.getElementById("ads-left");
   const right = document.getElementById("ads-right");
+  if (!left || !right) return;
+
   const loaders = [loadJuicyAds, loadExoClick, loadEroAdvertising, loadPopAds];
 
   loaders.forEach(fn => fn(left));

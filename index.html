@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>IbizaGirl.pics - Home</title>
-  <link rel="stylesheet" href="ibg-layout.css">
-  <script src="ads-loader.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="ibg-layout.css" />
   <script src="content-data2.js" defer></script>
+  <script src="ads-loader.js" defer></script>
   <script src="home.js" defer></script>
 </head>
 <body>
-  <!-- Banner + menú superior -->
   <header>
-    <div class="banner">
-      <img src="decorative-images/banner1.jpg" alt="Banner IbizaGirl">
-    </div>
+    <!-- El banner se rellena desde home.js con una imagen de FULL -->
+    <div id="hero" class="banner"></div>
     <nav class="menu">
       <a href="index.html">Home</a>
       <a href="premium.html">Premium</a>
@@ -23,14 +22,10 @@
   </header>
 
   <main>
-    <!-- Laterales con ads -->
     <aside id="ads-left" class="ads-column"></aside>
 
     <section id="content">
-      <!-- Carrusel -->
       <div id="carousel" class="carousel"></div>
-
-      <!-- Grid aleatorio 5x30 -->
       <div id="photo-grid" class="grid"></div>
     </section>
 
