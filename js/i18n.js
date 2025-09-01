@@ -1,18 +1,28 @@
-export const messages = { es:{}, en:{} };
+/**
+ * i18n con API retrocompatible:
+ *  - lang() -> devuelve el idioma actual (lo que pages-common espera)
+ *  - setLang(next), t(key), messages
+ */
+const _d = (typeof document !== 'undefined') ? document : null;
+const _ls = (typeof localStorage !== 'undefined') ? localStorage : null;
 
-export let lang =
-  (typeof localStorage !== 'undefined' && localStorage.getItem('ibg_lang')) ||
-  (document?.documentElement?.getAttribute('lang')) ||
+let _lang =
+  (_ls && _ls.getItem('ibg_lang')) ||
+  (_d && _d.documentElement && _d.documentElement.getAttribute('lang')) ||
   'es';
 
+export function lang(){ return _lang; }
+
+export const messages = (typeof window !== 'undefined' && window.IBG_MESSAGES) || { es:{}, en:{} };
+
 export function t(key){
-  try { return (messages[lang] && messages[lang][key]) || key } catch { return key }
+  try { return (messages[_lang] && messages[_lang][key]) || key } catch { return key }
 }
 
 export function setLang(next){
-  lang = next;
-  try { localStorage.setItem('ibg_lang', next) } catch {}
-  try { document.documentElement.setAttribute('lang', next) } catch {}
+  _lang = next;
+  try { _ls && _ls.setItem('ibg_lang', next) } catch {}
+  try { _d && _d.documentElement && _d.documentElement.setAttribute('lang', next) } catch {}
 }
 
 export default { t, setLang, lang, messages };
