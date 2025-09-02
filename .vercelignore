@@ -1,14 +1,33 @@
-.git/
-node_modules/
-.vercel/output/cache/
-backup_*.tgz
-*.tgz
-*.zip
-*.rar
-*.7z
-uncensored/
-_uncensored/
-assets/raw/
-assets/originals/
-media/
-videos/
+# Backups / archives / logs / triggers / env locales
+.ibg_backup_*
+_archive
+_backup_*
+_backup_styles
+ibg_audit
+*.log
+*.tmp
+.deploy-trigger
+.deployment-trigger
+.vercel_build_trigger_*
+.ibg_vercel_last.txt
+.last_vercel*.txt
+.cleanup_marker
+.env*
+.!29080!subscription.html
+.!29081!subscription.html
+
+# Directorios de desarrollo no necesarios en producción estática
+api
+scripts
+tools
+snippets
+partials
+examples
+sample
+demo
+assets
+images
+img
+
+# Copias .bak
+*.bak_*
