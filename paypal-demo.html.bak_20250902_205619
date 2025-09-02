@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <title>PayPal Demo</title>
   <link rel="stylesheet" href="css/ibg-home.css">
-  <script src="content-data2.js" defer></script>  <script src="/js/pages/home.js" defer></script>
+  <script src="content-data2.js" defer></script>
+  <script src="home.js" defer></script>
 </head>
 <body>
   <h1>Demo PayPal (captura única)</h1>
