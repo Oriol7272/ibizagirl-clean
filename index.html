@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es">
-<head>
+<<<<d>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>IbizaGirl.pics — Home</title>
@@ -20,14 +20,13 @@
     }
     :root{--max:1400px}
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background #0b0b0c;color:#eee}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:#0b0b0c;color:#eee}
     header{position:sticky;top:0;background:#0f0f12cc;backdrop-filter:saturate(120%) blur(6px);z-index:30;border-bottom:1px solid #1f1f24}
     .wrap{max-width:var(--max);margin:0 auto;padding:10px 16px}
     .row{display:flex;gap:12px;align-items:center;justify-content:space-between}
     nav a{color:#ddd;text-decoration:none;margin:0 10px;font-weight:600}
     nav a:hover{color:#fff}
     .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
-    .brand .dot{width:10px;height:10px;border-radius:50%;background:#ff4d6d;display:inline-block}
 
     /* Banner */
     .banner{border-bottom:1px solid #1f1f24;background:radial-gradient(1200px 320px at 50% -80px,#1f2030,#0b0b0c);}
@@ -47,7 +46,7 @@
     @media (max-width:1100px){.layout{grid-template-columns:1fr}}
     .sidebar .box{position:sticky;top:72px}
 
-    /* Galería 5 columnas */
+    /* Galería */
     .grid{columns:5 260px;column-gap:12px}
     .grid .card{break-inside:avoid;margin:0 0 12px;border-radius:14px;overflow:hidden;position:relative;background:#15151a;border:1px solid #1f1f24}
     .grid img{width:100%;height:auto;display:block}
@@ -60,15 +59,15 @@
   </style>
 </head>
 <body>
-  <!-- Header + menú superior fijo -->
+  <!-- Header + menú superior -->
   <header>
     <div class="wrap row">
-      <div class="brand"><span class="dot"></span>IbizaGirl.pics</div>
+      <div class="brand">IbizaGirl.pics</div>
       <nav>
-        <a href="index.html" data-i18n="menu.home">Home</a>
-        <a href="premium.html" data-i18n="menu.premium">Premium</a>
-        <a href="videos.html" data-i18n="menu.videos">Vídeos</a>
-        <a href="subscription.html" data-i18n="menu.subs">Subscriptions</a>
+        <a href="index.html">Home</a>
+        <a href="premium.html">Premium</a>
+        <a href="videos.html">Vídeos</a>
+        <a href="subscription.html">Subscriptions</a>
       </nav>
       <div>
         <button class="lang" onclick="setLang('es')">ES</button>
@@ -77,7 +76,7 @@
     </div>
   </header>
 
-  <!-- Banner con fuente real y tiras de imágenes REALES -->
+  <!-- Banner -->
   <section class="banner">
     <div class="wrap">
       <h1>ibizagirl.pics</h1>
@@ -86,7 +85,7 @@
     <div class="banner-strip" id="bannerStrip"></div>
   </section>
 
-  <!-- Carrusel de 30 imágenes aleatorias de content-data2.js -->
+  <!-- Carrusel 30 aleatorias -->
   <section class="carousel">
     <div class="carousel-track" id="fullCarousel"></div>
   </section>
@@ -102,7 +101,7 @@
     <div class="wrap"><p class="muted">© <span id="y"></span> IbizaGirl.pics · <a href="age-verification.html">+18</a></p></div>
   </footer>
 
-  <!-- Scripts (existentes en tu repo) -->
+  <!-- Scripts -->
   <script src="env.js"></script>
   <script src="ibg-env.js"></script>
   <script src="i18n.js"></script>
@@ -112,13 +111,13 @@
   <script src="chrome-ads-fix.js" defer></script>
 
   <script>
-    function setLang(l){try{localStorage.setItem('lang',l); if(window.I18N) I18N.apply(l);}catch(e){}}
+    function setLang(l){try{localStorage.setItem('lang',l);}catch(e){}}
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    /* Banner: usa exactamente tus imágenes reales en /decorative-images */
+    // Banner: imágenes REALES en /decorative-images
     (function bannerReal(){
-      var strip = document.getElementById('bannerStrip');
-      var imgs = [
+      var strip=document.getElementById('bannerStrip');
+      var imgs=[
         'decorative-images/1115ae7d-909f-4760-a3a1-037a05ad9931.jpg',
         'decorative-images/1618cbb2-8dd1-4127-99d9-d9f30536de72.jpg',
         'decorative-images/49830c0a-2fd8-439c-a583-029a0b39c4d6.jpg',
@@ -127,55 +126,49 @@
         'decorative-images/f062cb22-c99b-4dfa-9a79-572e98c6e75e.jpg',
         'decorative-images/paradise-beach.png'
       ];
-      strip.innerHTML = imgs.map(function(src){return '<img loading="lazy" src="'+src+'" alt="">' }).join('');
+      strip.innerHTML=imgs.map(function(src){return '<img loading="lazy" src="'+src+'" alt="">' }).join('');
     })();
 
-    /* Localiza el array REAL expuesto por content-data2.js (sin inventar nombres) */
+    // Detectar el array REAL de content-data2.js (sin inventar nombres)
     function findFullListFromContentData2(){
-      var imgExt = /\.(webp|jpg|jpeg|png|avif)$/i;
-      var candidates = [];
+      var imgExt=/\.(webp|jpg|jpeg|png|avif)$/i, candidates=[];
       for (var k in window){
-        var v = window[k];
-        if (Array.isArray(v) && v.length >= 10){
-          var strings = v.filter(function(x){return typeof x==='string' && imgExt.test(x)});
-          var objs = v.filter(function(x){return x && typeof x==='object' && (typeof x.file==='string' || typeof x.path==='string')});
-          if ((strings.length + objs.length) >= Math.min(10, v.length)){ candidates.push(v); }
+        var v=window[k];
+        if (Array.isArray(v) && v.length>=10){
+          var strings=v.filter(function(x){return typeof x==='string' && imgExt.test(x)});
+          var objs=v.filter(function(x){return x && typeof x==='object' && (typeof x.file==='string'||typeof x.path==='string')});
+          if ((strings.length+objs.length)>=Math.min(10,v.length)) candidates.push(v);
         }
       }
       if (!candidates.length) return [];
       return candidates[0].map(function(x){
-        if (typeof x === 'string') return x;
-        if (x && typeof x.path === 'string') return x.path;
-        if (x && typeof x.file === 'string') return x.file;
+        if (typeof x==='string') return x;
+        if (x && typeof x.path==='string') return x.path;
+        if (x && typeof x.file==='string') return x.file;
         return null;
       }).filter(Boolean);
     }
-    function normalizeToFullPath(name){
-      if (!name) return null;
-      return name.indexOf('full/')===0 ? name : ('full/'+name);
-    }
-    function shuffle(arr){ // aleatorio en cada recarga (no diario)
-      var a=arr.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a;
-    }
+    function normalizeToFull(name){return name && name.indexOf('full/')===0?name:('full/'+name)}
+    function shuffle(a){a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t;} return a;}
 
     (function init(){
-      var listRaw = findFullListFromContentData2();
-      if (!listRaw.length){ console.error('[home] No se encontró array desde content-data2.js'); return; }
-      var list = listRaw.map(normalizeToFullPath).filter(Boolean);
+      var listRaw=findFullListFromContentData2();
+      if(!listRaw.length){console.error('[home] content-data2 no detectado');return;}
+      var list=listRaw.map(normalizeToFull).filter(Boolean);
 
-      // Carrusel: 30 aleatorias por recarga
-      var car = document.getElementById('fullCarousel');
-      var carItems = shuffle(list).slice(0,30);
-      car.innerHTML = carItems.map(function(src){ return '<img loading="lazy" src="'+src+'" alt="">' }).join('');
+      // Carrusel 30 aleatorias
+      var car=document.getElementById('fullCarousel');
+      var carItems=shuffle(list).slice(0,30);
+      car.innerHTML=carItems.map(function(src){return '<img loading="lazy" src="'+src+'" alt="">' }).join('');
 
-      // Grid 5 columnas: mismas 30 (o cambia a 150 si quieres más)
-      var grid = document.getElementById('fiveCols');
-      var gridItems = shuffle(list).slice(0,30);
-      grid.innerHTML = gridItems.map(function(src){
+      // Grid 30 aleatorias
+      var grid=document.getElementById('fiveCols');
+      var gridItems=shuffle(list).slice(0,30);
+      grid.innerHTML=gridItems.map(function(src){
         return '<figure class="card"><img loading="lazy" src="'+src+'" alt=""><figcaption class="meta">full</figcaption></figure>';
       }).join('');
 
-      // Anuncios laterales (usa tus scripts actuales)
+      // Ads laterales
       try{ if (window.IBG_ADS && typeof IBG_ADS.initSidebars==='function'){ IBG_ADS.initSidebars('#ad-left','#ad-right'); } }catch(e){}
     })();
   </script>
