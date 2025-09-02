@@ -20,4 +20,5 @@ videos/
 *.old
 *~
 scripts/
-public/
+# === hygiene ===
+.DS_Store
