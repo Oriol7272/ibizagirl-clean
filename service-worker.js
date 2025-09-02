@@ -1,4 +1,4 @@
-// SW killer
+// SW killer: no cachea nada y desregistra cualquier SW previo
 self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('activate', e => {
   e.waitUntil((async () => {
