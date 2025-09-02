@@ -11,7 +11,7 @@ window.setLang = function(next) {
   return (typeof window!=="undefined" ? window.IBG_LANG : lang) || "es";
 }
 
-// compat: también export default
+// compat: también window.I18N=
 window.__default_export = lang;
 
 // side-effect: dejar IBG_LANG listo
