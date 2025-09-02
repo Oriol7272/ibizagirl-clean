@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="es">
-<<<<d>
+<html lang="<ht>
+<head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>IbizaGirl.pics — Home</title>
@@ -26,7 +26,6 @@
     .row{display:flex;gap:12px;align-items:center;justify-content:space-between}
     nav a{color:#ddd;text-decoration:none;margin:0 10px;font-weight:600}
     nav a:hover{color:#fff}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
 
     /* Banner */
     .banner{border-bottom:1px solid #1f1f24;background:radial-gradient(1200px 320px at 50% -80px,#1f2030,#0b0b0c);}
@@ -100,6 +99,23 @@
   <footer>
     <div class="wrap"><p class="muted">© <span id="y"></span> IbizaGirl.pics · <a href="age-verification.html">+18</a></p></div>
   </footer>
+
+  <!-- Desregistrar cualquier Service Worker previo en el cliente -->
+  <script>
+    (async function killSW(){
+      if ('serviceWorker' in navigator) {
+        try {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const r of regs) { await r.unregister(); }
+          // segunda pasada por si hay SW antiguo en scope superior
+          navigator.serviceWorker.getRegistrations && setTimeout(async()=>{
+            const regs2 = await navigator.serviceWorker.getRegistrations();
+            for (const r of regs2) { await r.unregister(); }
+          }, 500);
+        } catch(e){}
+      }
+    })();
+  </script>
 
   <!-- Scripts -->
   <script src="env.js"></script>
