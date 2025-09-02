@@ -1,61 +1,170 @@
-<!doctype html><html lang="es"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IBIZAGIRL.PICS — Home</title>
-<link rel="stylesheet" href="/css/ibg.css">
-<link rel="stylesheet" href="/css/ibg-home.css">
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IbizaGirl.pics — Home</title>
+  <meta name="description" content="Fotos y vídeos exclusivos estilo mediterráneo. Home con carrusel y galería." />
+  <link rel="icon" href="favicon.ico">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="side-ads.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root{--max:1400px}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,s ns-serif;background:#0b0b0c;color:#eee}
+    header{position:sticky;top:0;background:#0f0f12cc;backdrop-filter:saturate(120%) blur(6px);z-index:30;border-bottom:1px solid #1f1f24}
+    .wrap{max-width:var(--max);margin:0 auto;padding:10px 16px}
+    .row{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    nav a{color:#ddd;text-decoration:none;margin:0 10px;font-weight:600}
+    nav a:hover{color:#fff}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
+    .brand .dot{width:10px;height:10px;border-radius:50%;background:#ff4d6d;display:inline-block}
+    .banner{border-bottom:1px solid #1f1f24;background:radial-gradient(1200px 300px at 50% -80px,#1f2030,#0b0b0c);}
+    .banner .wrap{padding:28px 16px}
+    .banner h1{margin:0 0 6px 0;font-size:28px}
+    .banner p{margin:0;color:#bdbdc9}
+    .carousel{margin:18px auto 6px;max-width:var(--max);overflow:hidden}
+    .carousel-track{display:grid;grid-auto-flow:column;grid-auto-columns:300px;gap:12px;padding:8px 16px;scroll-snap-type:x mandatory;overflow:auto}
+    .carousel-track img{width:300px;height:180px;object-fit:cover;border-radius:14px;scroll-snap-align:start;background:#15151a}
+    .layout{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:160px 1fr 160px;gap:16px;padding:14px 16px}
+    @media (max-width:1100px){.layout{grid-template-columns:1fr}}
+    .grid{columns:5 260px;column-gap:12px}
+    .grid .card{break-inside:avoid;margin:0 0 12px;border-radius:14px;overflow:hidden;position:relative;background:#15151a;border:1px solid #1f1f24}
+    .grid img{width:100%;height:auto;display:block}
+    .grid .meta{position:absolute;left:8px;bottom:8px;background:#0009;padding:4px 8px;border-radius:10px;font-size:12px}
+    .sidebar .box{position:sticky;top:72px}
+    footer{border-top:1px solid #1f1f24;margin-top:24px}
+    .muted{color:#a9a9b2;font-size:13px}
+    button.lang{background:#1c1c22;border:1px solid #2a2a33;color:#ddd;border-radius:10px;padding:6px 10px;cursor:pointer}
+    button.lang:hover{border-color:#3a3a45;color:#fff}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap row">
+      <div class="brand"><span class="dot"></span>IbizaGirl.pics</div>
+      <nav>
+        <a href="index.html" data-i18n="menu.home">Home</a>
+        <a href="premium.html" data-i18n="menu.premium">Premium</a>
+        <a href="videos.html" data-i18n="menu.videos">Vídeos</a>
+      </nav>
+      <div>
+        <button class="lang" onclick="setLang('es')">ES</button>
+        <button class="lang" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </header>
 
-<script src="/content-data1.js"></script>
-<script src="/content-data3.js"></script>
-<script src="/content-data4.js"></script>
-<script src="/content-data5.js"></script>
-<script src="/content-data6.js"></script>
-(min-width:1100px){.ibg-side-ads{position:fixed;top:90px;bottom:20px;width:300px;z-index:5;display:block}.ibg-side-left{left:10px}.ibg-side-right{right:10px}.ibg-side-ads .ad{width:300px;min-height:600px;background:#111;border-radius:8px;padding:4px;box-sizing:border-box}}
-(max-width:1099px){.ibg-side-ads{display:none!important}}
-</style>
-<link rel="stylesheet" href="/css/ads.css">
+  <section class="banner">
+    <div class="wrap">
+      <h1 data-i18n="home.title">Exclusivo Mediterráneo</h1>
+      <p data-i18n="home.subtitle">Fotos y vídeos seleccionados. Carrusel y 5 columnas de contenido “full”.</p>
+    </div>
+  </section>
 
+  <section class="carousel">
+    <div class="carousel-track" id="fullCarousel"></div>
+  </section>
 
+  <main class="layout">
+    <aside class="sidebar"><div class="box" id="ad-left"></div></aside>
+    <section><div class="grid" id="fiveCols"></div></section>
+    <aside class="sidebar"><div class="box" id="ad-right"></div></aside>
+  </main>
 
-  <!-- Ads SDKs -->
-  <link rel="preconnect" href="https://poweredby.jads.co" crossorigin>
-  <link rel="preconnect" href="https://a.magsrv.com" crossorigin>
-  <link rel="preconnect" href="https://go.easrv.cl" crossorigin>
-  <script>window.adsbyjuicy = window.adsbyjuicy || [];</script>
-  <script async data-cfasync="false" src="https://poweredby.jads.co/js/jads.js"></script>
-  <script async src="https://a.magsrv.com/ad-provider.js"></script>
-  <script async src="https://go.easrv.cl/loadeactrl.go?pid=152716&spaceid=8177575&ctrlid=798544"></script>
-  <link rel="stylesheet" href="css/ibg-home.css">
-  <script type="module" src="/ibg-env.js"></script><script src="/content-data2.js" defer></script>
-  <script src="/js/pages/home.js" defer></script>
-</head><body>
-<aside id="ad-left" class="side-ad left"></aside>
-<aside id="ad-right" class="side-ad right"></aside>
-<div class="page-shell"><div id="app"></div></div>
-<script type="module" src="/js/bootstrap-ibg.js"></script>
-<div class="ad" data-ad-slot="home-top"></div><script>
-window.IBG_ASSETS_BASE_URL='https://ibizagirl-assets.s3.eu-north-1.amazonaws.com';
-window.EROADVERTISING_ZONE='8177575';
-window.EXOCLICK_ZONE='5696328';
-window.JUICYADS_ZONE='1099637';
-window.JUICYADS_SNIPPET_B64='2093981';
-window.POPADS_SITE_ID='e494ffb82839a29122608e933394c091';
-window.POPADS_ENABLE='true';
-window.CRISP_WEBSITE_ID='59e184b1-e679-4c93-b3ea-d60b63c1c04c';
-</script>
-<div id="ibg-ad-left"  class="ibg-side-ads ibg-side-left"><div class="ad" data-ad-slot="side-left"></div></div>
-<div id="ibg-ad-right" class="ibg-side-ads ibg-side-right"><div class="ad" data-ad-slot="side-right"></div></div>
-<script>
-window.__IBG_B64 = {
-  JUICYADS_ZONE:        'IjEwOTk2Mzci',
-  JUICYADS_SNIPPET_B64: 'IjIwOTM5ODEi',
-  EXOCLICK_ZONE:        'IjU2OTYzMjgi',
-  EROADVERTISING_ZONE:  'IjgxNzc1NzUi',
-  POPADS_SITE_ID:       'ImU0OTRmZmI4MjgzOWEyOTEyMjYwOGU5MzMzOTRjMDkxIg==',
-  POPADS_ENABLE:        'InRydWUi',
-  CRISP_WEBSITE_ID:     'IjU5ZTE4NGIxLWU2NzktNGM5My1iM2VhLWQ2MGI2M2MxYzA0YyI=',
-  IBG_ASSETS_BASE_URL:  'Imh0dHBzOi8vaWJpemFnaXJsLWFzc2V0cy5zMy5ldS1ub3J0aC0xLmFtYXpvbmF3cy5jb20i'
-};
-</script>
-<div class="ibg-side ad-left"  data-ad-slot="side-left"></div>
-<div class="ibg-side ad-right" data-ad-slot="side-right"></div>
-</body></html>
+  <footer>
+    <div class="wrap"><p class="muted">© <span id="y"></span> IbizaGirl.pics · <a href="age-verification.html">+18</a></p></div>
+  </footer>
+
+  <script src="env.js"></script>
+  <script src="ibg-env.js"></script>
+  <script src="i18n.js"></script>
+  <script src="content-data2.js"></script>
+  <script src="ads-loader.js" defer></script>
+  <script src="ads-sidebars.js" defer></script>
+  <script src="chrome-ads-fix.js" defer></script>
+
+  <script>
+    function setLang(l){ try{ localStorage.setItem('lang', l); if(window.I18N) I18N.apply(l);}catch(e){} }
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    function findFullListFromContentData2() {
+      const imgExt = /\.(webp|jpg|jpeg|png|avif)$/i;
+      const candidates = [];
+      for (const k in window) {
+        try{
+          const v = window[k];
+          if (Array.isArray(v) && v.length >= 10) {
+            const strings = v.filter(x => typeof x === 'string' && imgExt.test(x));
+            const objs = v.filter(x => x && typeof x === 'object' && (typeof x.file === 'string' || typeof x.path === 'string'));
+            if ((strings.length + objs.length) >= Math.min(10, v.length)) {
+              candidates.push({key:k, value:v});
+            }
+          }
+        }catch(e){}
+      }
+      candidates.sort((a,b)=>{
+        const as = Array.isArray(a.value)?a.value.join('|'):'';
+        const bs = Array.isArray(b.value)?b.value.join('|'):'';
+        const aScore = (/_?content[-_]?data2/i.test(a.key)?2:0) + (as.includes('full/')?1:0);
+        const bScore = (/_?content[-_]?data2/i.test(b.key)?2:0) + (bs.includes('full/')?1:0);
+        return bScore - aScore;
+      });
+      if (!candidates.length) return [];
+      const raw = candidates[0].value;
+      return raw.map(x=>{
+        if (typeof x === 'string') return x;
+        if (x && typeof x.path === 'string') return x.path;
+        if (x && typeof x.file === 'string') return x.file;
+        return null;
+      }).filter(Boolean);
+    }
+
+    function todaySeed(){
+      const d = new Date();
+      return Number(`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`);
+    }
+    function seededShuffle(arr){
+      let a = arr.slice();
+      let s = todaySeed() || 1;
+      for(let i=a.length-1;i>0;i--){
+        s = (s * 1664525 + 1013904223) >>> 0;
+        const j = Math.floor((s/4294967296)*(i+1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function normalizeToFullPath(name){
+      if (!name) return null;
+      return name.startsWith('full/') ? name : ('full/' + name);
+    }
+
+    (function init(){
+      const listRaw = findFullListFromContentData2();
+      if (!listRaw.length){ console.error('[home] No se encontró array desde content-data2.js'); return; }
+
+      const list = listRaw.map(normalizeToFullPath).filter(Boolean);
+
+      // Carrusel: primeros 12 del día
+      const car = document.getElementById('fullCarousel');
+      const carItems = seededShuffle(list).slice(0,12);
+      car.innerHTML = carItems.map(src => `<img loading="lazy" src="${src}" alt="">`).join('');
+
+      // Grid 5 columnas × 30 = 150
+      const grid = document.getElementById('fiveCols');
+      const gridItems = seededShuffle(list).slice(0,150);
+      grid.innerHTML = gridItems.map(src => `
+        <figure class="card">
+          <img loading="lazy" src="${src}" alt="">
+          <figcaption class="meta">full</figcaption>
+        </figure>`).join('');
+
+      // Ads sidebars si existe inicializador
+      try{ if (window.IBG_ADS && typeof IBG_ADS.initSidebars==='function'){ IBG_ADS.initSidebars('#ad-left','#ad-right'); } }catch(e){}
+    })();
+  </script>
+</body>
+</html>
