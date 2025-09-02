@@ -19,7 +19,6 @@ ibg_audit
 # Directorios de desarrollo no necesarios en producción estática
 api
 scripts
-tools
 snippets
 partials
 examples
