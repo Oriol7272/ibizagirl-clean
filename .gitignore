@@ -14,3 +14,10 @@ media/
 videos/
 .vercel
 .env*.local
+# === Repo hygiene ===
+*.bak
+*.bak_*
+*.old
+*~
+scripts/
+public/
