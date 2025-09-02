@@ -1,25 +1,3 @@
-if(window.__IBG_ONCE_cd6__){console.info("[IBG] content-data6.js ya cargado, skip");}else{window.__IBG_ONCE_cd6__=true;
-/* [content-data6] guard */(function(){try{var W=window,need=["CONTENT_CONFIG","CONTENT_PUBLIC","CONTENT_PREMIUM_1","CONTENT_PREMIUM_2","CONTENT_VIDEOS"];var miss=need.filter(function(k){return typeof W[k]==="undefined";});if(miss.length){for(var i=0;i<miss.length;i++){var k=miss[i]; try{W[k]=Array.isArray(W[k])?W[k]:[];}catch(_){}}} }catch(_){}})();
-/* deps guard (auto) */(function(){try{var W=window,need=["CONTENT_CONFIG","CONTENT_PUBLIC","CONTENT_PREMIUM_1","CONTENT_PREMIUM_2","CONTENT_VIDEOS"];var miss=need.filter(function(k){return typeof W[k]==="undefined";});if(miss.length){for(var i=0;i<miss.length;i++){var k=miss[i]; try{W[k]=Array.isArray(W[k])?W[k]:[];}catch(_){}}} }catch(_){}})();
-/* deps guard (auto) */(function(){try{var W=window,need=["CONTENT_CONFIG","CONTENT_PUBLIC","CONTENT_PREMIUM_1","CONTENT_PREMIUM_2","CONTENT_VIDEOS"];var miss=need.filter(k=>typeof W[k]==="undefined");if(miss.length){miss.forEach(k=>{try{W[k]=Array.isArray(W[k])?W[k]:[];}catch(_){}});} }catch(_){}})();
-/* === FIX: tolerant deps for UnifiedContentAPI === */
-(function(){
-  try {
-    const wanted = [
-      "CONTENT_CONFIG",      // de content-data1
-      "CONTENT_PUBLIC",      // de content-data2
-      "CONTENT_PREMIUM_1",   // de content-data3
-      "CONTENT_PREMIUM_2",   // de content-data4
-      "CONTENT_VIDEOS"       // de content-data5
-    ];
-    const miss = wanted.filter(k => typeof window!=="undefined" && !window[k]);
-    if (miss.length){
-      console.warn("[content-data6] Dependencias faltantes → creo stubs para continuar:", miss);
-      miss.forEach(k => { try { window[k] = Array.isArray(window[k]) ? window[k] : []; } catch(e){} });
-    }
-  } catch(e){ console.warn("[content-data6] FIX guard error", e); }
-})();
-/* === /FIX === */
 /**
  * content-data6.js - Unified API v4.1.0 FIXED
  * API unificada y funciones principales del sistema
@@ -205,7 +183,7 @@ const UnifiedContentAPI = {
         const missing = required.filter(dep => !window[dep]);
         
         if (missing.length > 0) {
-            console.info('ℹ️ Dependencias faltantes:', missing);
+            console.error('❌ Dependencias faltantes:', missing);
             return false;
         }
         
@@ -406,7 +384,7 @@ class ContentSystemManager {
         const apiReady = await UnifiedContentAPI.initialize();
         
         if (!apiReady) {
-            console.info('ℹ️ No se pudo inicializar UnifiedContentAPI');
+            console.error('❌ No se pudo inicializar UnifiedContentAPI');
             return false;
         }
         
@@ -487,5 +465,3 @@ console.log('📊 APIs disponibles:', {
     UnifiedContentAPI: !!window.UnifiedContentAPI,
     ContentSystemManager: !!window.ContentSystemManager
 });
-
-}

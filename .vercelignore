@@ -1,32 +1,10 @@
-# Backups / archives / logs / triggers / env locales
-.ibg_backup_*
-_archive
-_backup_*
-_backup_styles
+.vercel
+.git
+node_modules
 ibg_audit
-*.log
-*.tmp
-.deploy-trigger
-.deployment-trigger
-.vercel_build_trigger_*
-.ibg_vercel_last.txt
-.last_vercel*.txt
-.cleanup_marker
-.env*
-.!29080!subscription.html
-.!29081!subscription.html
-
-# Directorios de desarrollo no necesarios en producción estática
-api
+_backup_*
 scripts
-snippets
-partials
-examples
-sample
-demo
-assets
-images
-img
-
-# Copias .bak
-*.bak_*
+tools
+*.log
+*.md
+*.sh

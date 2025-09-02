@@ -1,13 +1,13 @@
 import { seededPick } from '../utils-home.js';
 
 var DECOS = [
-  '/full/paradise-beach.png',
-  '/full/49830c0a-2fd8-439c-a583-029a0b39c4d6.jpg',
-  '/full/4bfb7a8b-b81e-49d7-a160-90b834d0b751.jpg',
-  '/full/81f55f4d-b0df-49f4-9020-cbb0f5042c08.jpg',
-  '/full/1618cbb2-8dd1-4127-99d9-d9f30536de72.jpg',
-  '/full/115ae97d-909f-4760-a3a1-037a05ad9931.jpg',
-  '/full/f062cb22-c99b-4dfa-9a79-572e98c6e75e.jpg'
+  '/decorative-images/paradise-beach.png',
+  '/decorative-images/49830c0a-2fd8-439c-a583-029a0b39c4d6.jpg',
+  '/decorative-images/4bfb7a8b-b81e-49d7-a160-90b834d0b751.jpg',
+  '/decorative-images/81f55f4d-b0df-49f4-9020-cbb0f5042c08.jpg',
+  '/decorative-images/1618cbb2-8dd1-4127-99d9-d9f30536de72.jpg',
+  '/decorative-images/115ae97d-909f-4760-a3a1-037a05ad9931.jpg',
+  '/decorative-images/f062cb22-c99b-4dfa-9a79-572e98c6e75e.jpg'
 ];
 
 function toArr(v){ if(!v) return []; if(Array.isArray(v)) return v;

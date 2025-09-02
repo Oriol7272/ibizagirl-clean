@@ -1,45 +1,32 @@
-/* --- LAYOUT CON SIDEBARS --- */
-.ibg-layout{
-  display: grid;
-  grid-template-columns: 300px minmax(0,1fr) 300px;
-  gap: 16px;
-  align-items: start;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 8px;
-}
-.ibg-sidebar{ position: sticky; top: 12px; height: fit-content; }
-.ibg-sidebar .ad-slot{ width: 300px; min-height: 600px; }
-.ibg-sidebar iframe{ width: 300px; height: 600px; border: 0; display: block; }
+:root{ --side:164px; --gridW: 1400px }
+@media (min-width:1200px){ body{padding-left:var(--side);padding-right:var(--side)} .side-ad{display:flex} }
+.side-ad{position:fixed;top:0;bottom:0;width:var(--side);z-index:50;display:none;align-items:center;justify-content:center}
+.side-ad.left{left:0}.side-ad.right{right:0}
+.ad-box{width:160px;height:600px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 
-/* En móviles: sin sidebars, el contenido ocupa todo */
-@media (max-width: 980px){
-  .ibg-layout{ grid-template-columns: 1fr; }
-  .ibg-sidebar{ display: none; }
-}
+#premiumSection{max-width:var(--gridW);margin:12px auto;padding:0 8px}
+#premiumSection h1{font-family:'Sexy Beachy',system-ui;font-size:clamp(28px,4vw,44px);margin:0 0 10px}
 
-/* --- GRID PREMIUM: 5 columnas --- */
-#premium-grid{
-  display: grid !important;
-  grid-template-columns: repeat(5, minmax(0,1fr));
-  gap: 12px;
-}
+.premium-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+@media (max-width:1280px){.premium-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:1024px){.premium-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:800px){.premium-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:600px){.premium-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-/* Responsivo */
-@media (max-width: 1280px){
-  #premium-grid{ grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 1024px){
-  #premium-grid{ grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 768px){
-  #premium-grid{ grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 480px){
-  #premium-grid{ grid-template-columns: 1fr; }
-}
+.p-card{position:relative;border-radius:14px;overflow:hidden;background:#0c1624;border:1px solid rgba(255,255,255,.06);box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.p-card img{display:block;width:100%;height:220px;object-fit:cover;filter:blur(18px) saturate(1.1);transform:scale(1.03)}
+.p-card.unlocked img{filter:none;transform:none}
+.p-card.img-error{outline:2px solid #ef4444}
+.p-card.img-error img{filter:none;opacity:.25}
+.badge-err{position:absolute;top:8px;right:8px;background:#ef4444;color:#fff;font-weight:800;padding:4px 8px;border-radius:999px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 
-/* Tarjetas básicas (si no existen ya) */
-#premium-grid .card{ overflow: hidden; border-radius: 10px; background: rgba(0,0,0,0.25); }
-#premium-grid .thumb-wrap{ position: relative; }
-#premium-grid img{ width: 100%; height: auto; display: block; }
+.badge-new{position:absolute;top:8px;left:8px;background:#22c55e;color:#062235;font-weight:900;padding:4px 8px;border-radius:999px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+
+.overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,.12),transparent);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:8px}
+.prices{display:flex;gap:8px;margin-bottom:6px}
+.tag{background:#fff;color:#111;font-weight:800;border-radius:999px;padding:4px 10px;font-size:12px}
+.tag.bundle{opacity:.92}
+.btns{margin-bottom:6px}
+.btns .buy{background:#111827;border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:6px 12px;font-weight:800;cursor:pointer}
+.tiny{color:#e5eef6;font-size:11px;opacity:.9}

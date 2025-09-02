@@ -1,4 +1,3 @@
-if(window.__IBG_ONCE_cd1__){console.info("[IBG] content-data1.js ya cargado, skip");}else{window.__IBG_ONCE_cd1__=true;
 /**
  * content-data1.js - Configuration and Base Utilities v4.1.0 FIXED
  * Configuración base y utilidades para el sistema modular
@@ -417,5 +416,3 @@ console.log('🛠️ Utilidades disponibles:', {
     StorageManager: !!window.StorageManager,
     FeatureDetector: !!FeatureDetector
 });
-
-}

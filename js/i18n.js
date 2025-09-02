@@ -1,30 +1,10 @@
-(function(){ if (window.__IBG_I18N_GUARD__) return; window.__IBG_I18N_GUARD__=1;
-/**
- * i18n con API retrocompatible:
- *  - lang() -> devuelve el idioma actual (lo que pages-common espera)
- *  - setLang(next), t(key), messages
- */
-const _d = (typeof document !== 'undefined') ? document : null;
-const _ls = (typeof localStorage !== 'undefined') ? localStorage : null;
-
-let _lang =
-  (_ls && _ls.getItem('ibg_lang')) ||
-  (_d && _d.documentElement && _d.documentElement.getAttribute('lang')) ||
-  'es';
-
-export function lang(){ return _lang; }
-
-export const messages = (typeof window !== 'undefined' && window.IBG_MESSAGES) || { es:{}, en:{} };
-
-export function t(key){
-  try { return (messages[_lang] && messages[_lang][key]) || key } catch { return key }
-}
-
-export function setLang(next){
-  _lang = next;
-  try { _ls && _ls.setItem('ibg_lang', next) } catch {}
-  try { _d && _d.documentElement && _d.documentElement.setAttribute('lang', next) } catch {}
-}
-
-export default { t, setLang, lang, messages };
-})(); // __IBG_I18N_GUARD__
+export const T={
+  ES:{home:'Home',premium:'Premium',videos:'Vídeos',subs:'Suscripciones',lifetime:'Lifetime 100€ (sin anuncios)',welcome:'Bienvenido al paraíso para tu disfrute',new:'NUEVO',buy:'Comprar',unlock:'Desbloquear',price_img:'0,10€',price_vid:'0,30€',subscribe:'Suscribirse',monthly:'Mensual 14,99€',annual:'Anual 49,99€',lifetime2:'Lifetime 100€ (sin anuncios)'},
+  EN:{home:'Home',premium:'Premium',videos:'Videos',subs:'Subscriptions',lifetime:'Lifetime €100 (no ads)',welcome:'Welcome to your paradise',new:'NEW',buy:'Buy',unlock:'Unlock',price_img:'€0.10',price_vid:'€0.30',subscribe:'Subscribe',monthly:'Monthly €14.99',annual:'Annual €49.99',lifetime2:'Lifetime €100 (no ads)'},
+  FR:{home:'Accueil',premium:'Premium',videos:'Vidéos',subs:'Abonnements',lifetime:'À vie 100€ (sans pubs)',welcome:'Bienvenue au paradis',new:'NOUVEAU',buy:'Acheter',unlock:'Débloquer',price_img:'0,10€',price_vid:'0,30€',subscribe:'S’abonner',monthly:'Mensuel 14,99€',annual:'Annuel 49,99€',lifetime2:'À vie 100€ (sans pubs)'},
+  DE:{home:'Start',premium:'Premium',videos:'Videos',subs:'Abos',lifetime:'Lifetime 100€ (ohne Werbung)',welcome:'Willkommen im Paradies',new:'NEU',buy:'Kaufen',unlock:'Freischalten',price_img:'0,10€',price_vid:'0,30€',subscribe:'Abonnieren',monthly:'Monatlich 14,99€',annual:'Jährlich 49,99€',lifetime2:'Lifetime 100€ (ohne Werbung)'},
+  IT:{home:'Home',premium:'Premium',videos:'Video',subs:'Abbonamenti',lifetime:'Per sempre 100€ (senza ads)',welcome:'Benvenuto in paradiso',new:'NUOVO',buy:'Compra',unlock:'Sblocca',price_img:'0,10€',price_vid:'0,30€',subscribe:'Abbonati',monthly:'Mensile 14,99€',annual:'Annuale 49,99€',lifetime2:'Per sempre 100€ (senza ads)'}
+};
+export const lang=()=>localStorage.getItem('ibg_lang')||'ES';
+export const setLang=l=>(localStorage.setItem('ibg_lang',l),location.reload());
+export const t=k=>(T[lang()]||T.ES)[k]||k;

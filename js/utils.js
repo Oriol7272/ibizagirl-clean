@@ -6,12 +6,3 @@ export const sampleSeeded=(arr,n,seed)=>shuffleSeeded(arr,seed).slice(0,Math.min
 export const isSubscribed=()=>{try{return localStorage.getItem('ibg_sub_active')==='1'||localStorage.getItem('ibg_lifetime')==='1'}catch{return false}};
 export const b64Decode=t=>{try{return atob(t||'')}catch{return ''}};
 export function imgUrl(it){return it.banner||it.cover||it.thumb||it.src||it.file||it.url||it.path}
-
-/* added by fix_home_and_deploy */
-export function hasUnlock(){
-  try{
-    const v1 = localStorage.getItem("ibg_unlock");
-    const v2 = sessionStorage.getItem("ibg_unlock");
-    return v1==="1"||v1==="true"||v2==="1"||v2==="true";
-  }catch(_){ return false; }
-}

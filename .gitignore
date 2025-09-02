@@ -1,16 +1,17 @@
-node_modules/
-.vercel/
-.vercel/output/
-backup_*.tgz
-*.tgz
+.DS_Store
+*.bak
+.DS_Store
+Thumbs.db
+
+# evitar zips pesados
 *.zip
-*.rar
-*.7z
-uncensored/
-_uncensored/
-assets/raw/
-assets/originals/
-media/
-videos/
+ibizagirl-deployable2-main.zip
 .vercel
 .env*.local
+# evitar archivos gigantes
+ibizagirl-deployable2-main.zip
+*.zip
+.vercel/
+.vercel/
+.vercel/
+.vercel/

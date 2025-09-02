@@ -1,9 +1,0 @@
-@font-face{
-  font-fam  font-fam  fohy';
-  src:
-    url('https://ibizagirl-assets.s3.eu-north-1.amazonaws.com/decorative-images/Sexy%20Beachy.otf') format('opentype'),
-    url('https://ibizagirl-assets.s3.eu-north-1.amazonaws.com/decorative-images/Sexy%20Beachy.ttf') format('truetype'),
-    url('https://ibizagirl-assets.s3.eu-north-1.amazonaws.com/decorative-images/SexyBeachy.ttf') format('truetype');
-  font-display:swap;
-}
-body{ font-family:'Sexy Beachy', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
