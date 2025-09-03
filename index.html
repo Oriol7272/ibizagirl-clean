@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IbizaGirl.pics - Bienvenidos al Paraíso</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Galería premium de Ibiza - Fotos y videos exclusivos del paraíso mediterráneo">
+    <meta name="keywords" content="ibiza, gallery, premium, photos, videos, paradise, mediterranean">
+    <meta name="author" content="IbizaGirl.pics">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Caveat:wght@400;600;700&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DBXYNPBSPY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DBXYNPBSPY');
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -15,6 +35,31 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            position: relative;
+        }
+
+        /* Selector de idioma */
+        .language-selector {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 5px 10px;
+        }
+
+        .language-selector select {
+            background: transparent;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .language-selector option {
+            background: #333;
         }
 
         /* Menú Superior */
@@ -26,6 +71,7 @@
             top: 0;
             z-index: 1000;
             backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .navbar-content {
@@ -36,28 +82,50 @@
             align-items: center;
         }
 
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Dancing Script', cursive;
+        }
+
         .nav-links {
             display: flex;
             gap: 2rem;
             list-style: none;
+            align-items: center;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 20px;
+            position: relative;
         }
 
         .nav-links a:hover {
-            color: #764ba2;
+            background: rgba(118, 75, 162, 0.3);
+            transform: translateY(-2px);
         }
 
-        /* Banner */
+        .nav-links a.active {
+            background: rgba(118, 75, 162, 0.5);
+        }
+
+        /* Banner Principal */
         .banner {
             margin-top: 60px;
-            height: 400px;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/full/banner-1.webp') center/cover;
+            height: 500px;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/decorative-images/banner-1.webp') center/cover;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -66,26 +134,71 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            transition: background-image 1s ease-in-out;
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
 
         .banner h1 {
-            font-size: 4rem;
-            font-family: 'Brush Script MT', cursive;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-size: 5rem;
+            font-family: 'Dancing Script', cursive;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
             animation: fadeInUp 1s ease;
+            z-index: 1;
+            letter-spacing: 2px;
         }
 
         .banner p {
-            font-size: 1.5rem;
+            font-size: 2rem;
             margin-top: 1rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            font-family: 'Caveat', cursive;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             animation: fadeInUp 1s ease 0.3s both;
+            z-index: 1;
         }
 
-        /* Carousel */
+        /* Carousel Section */
         .carousel-section {
-            padding: 2rem;
+            padding: 3rem 2rem;
             background: white;
+            position: relative;
+        }
+
+        .carousel-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+            font-family: 'Kalam', cursive;
+            font-size: 2.5rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .carousel-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
         }
 
         .carousel-container {
@@ -93,53 +206,97 @@
             margin: 0 auto;
             overflow: hidden;
             position: relative;
+            padding: 20px 0;
         }
 
         .carousel {
             display: flex;
-            gap: 1rem;
-            animation: slide 30s linear infinite;
+            gap: 1.5rem;
+            animation: slide 40s linear infinite;
+            padding: 10px 0;
+        }
+
+        .carousel:hover {
+            animation-play-state: paused;
         }
 
         .carousel img {
-            width: 200px;
-            height: 280px;
+            width: 220px;
+            height: 300px;
             object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
 
-        /* Grid de imágenes */
+        .carousel img:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+
+        /* Gallery Section */
         .gallery-section {
-            padding: 2rem;
-            background: #f5f5f5;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+        }
+
+        .gallery-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+            font-family: 'Kalam', cursive;
+            font-size: 2.5rem;
         }
 
         .gallery-grid {
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 20px;
         }
 
         .gallery-item {
             position: relative;
             overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s;
             cursor: pointer;
+            background: white;
         }
 
         .gallery-item:hover {
-            transform: scale(1.05);
+            transform: scale(1.03) translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
 
         .gallery-item img {
             width: 100%;
-            height: 350px;
+            height: 380px;
             object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item::after {
+            content: '👁 Ver';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
         }
 
         /* Anuncios laterales */
@@ -148,13 +305,14 @@
             top: 80px;
             width: 160px;
             height: 600px;
-            background: rgba(255,255,255,0.1);
-            border: 1px dashed rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.95);
+            border: 2px solid rgba(118, 75, 162, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255,255,255,0.5);
-            z-index: 100;
+            z-index: 999;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .side-ad.left {
@@ -165,6 +323,43 @@
             right: 10px;
         }
 
+        .ad-content {
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #222;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            margin: 0.5rem 0;
+            opacity: 0.8;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .social-links a:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive */
         @media (max-width: 1600px) {
             .side-ad {
                 display: none;
@@ -173,7 +368,11 @@
 
         @media (max-width: 768px) {
             .banner h1 {
-                font-size: 2.5rem;
+                font-size: 3rem;
+            }
+            
+            .banner p {
+                font-size: 1.5rem;
             }
             
             .gallery-grid {
@@ -185,8 +384,14 @@
                 flex-direction: column;
                 gap: 0.5rem;
             }
+            
+            .carousel img {
+                width: 180px;
+                height: 240px;
+            }
         }
 
+        /* Animaciones */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -206,57 +411,110 @@
                 transform: translateX(-50%);
             }
         }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0,0,0,0.1);
+            border-top: 4px solid #764ba2;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+    <!-- Selector de Idiomas -->
+    <div class="language-selector">
+        <select id="languageSelect" onchange="changeLanguage(this.value)">
+            <option value="es">🇪🇸 Español</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="it">🇮🇹 Italiano</option>
+        </select>
+    </div>
+
     <!-- Menú Superior -->
     <nav class="navbar">
         <div class="navbar-content">
             <div class="logo">
-                <span style="color: white; font-size: 1.5rem; font-weight: bold;">IbizaGirl.pics</span>
+                <span>✨ IbizaGirl.pics</span>
             </div>
             <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/premium.html">Premium</a></li>
-                <li><a href="/videos.html">Videos</a></li>
-                <li><a href="/subscription.html">Subscripciones</a></li>
+                <li><a href="/" class="active" data-lang="home">Home</a></li>
+                <li><a href="/premium.html" data-lang="premium">Premium</a></li>
+                <li><a href="/videos.html" data-lang="videos">Videos</a></li>
+                <li><a href="/subscription.html" data-lang="subscription">Suscripciones</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Banner -->
+    <!-- Banner Principal -->
     <div class="banner" id="banner">
         <h1>ibizagirl.pics</h1>
-        <p>Bienvenidos al paraíso</p>
+        <p data-lang="welcome">Bienvenidos al paraíso</p>
     </div>
 
-    <!-- Carousel de 30 imágenes -->
+    <!-- Carousel de Imágenes -->
     <section class="carousel-section">
-        <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">Galería Destacada</h2>
+        <h2 data-lang="featured">Galería Destacada</h2>
         <div class="carousel-container">
             <div class="carousel" id="carousel">
-                <!-- Se llenará dinámicamente -->
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Grid de 40 imágenes -->
+    <!-- Galería Principal -->
     <section class="gallery-section">
-        <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">Explorar Galería</h2>
+        <h2 data-lang="explore">Explorar Galería</h2>
         <div class="gallery-grid" id="gallery">
-            <!-- Se llenará dinámicamente -->
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
         </div>
     </section>
 
-    <!-- Anuncios laterales -->
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 IbizaGirl.pics - <span data-lang="rights">Todos los derechos reservados</span></p>
+        <p data-lang="paradise">El paraíso de Ibiza en imágenes</p>
+        <div class="social-links">
+            <a href="#" aria-label="Instagram">📷</a>
+            <a href="#" aria-label="Twitter">🐦</a>
+            <a href="#" aria-label="TikTok">🎵</a>
+        </div>
+    </footer>
+
+    <!-- Anuncios Laterales -->
     <div class="side-ad left" id="ad-left">
-        <span>Anuncio</span>
+        <div class="ad-content" id="ad-content-left">
+            <p>Advertisement</p>
+        </div>
     </div>
     <div class="side-ad right" id="ad-right">
-        <span>Anuncio</span>
+        <div class="ad-content" id="ad-content-right">
+            <p>Advertisement</p>
+        </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts de Contenido -->
     <script src="/env.js"></script>
     <script src="/js/content-data1.js"></script>
     <script src="/js/content-data2.js"></script>
@@ -264,88 +522,268 @@
     <script src="/js/content-data4.js"></script>
     <script src="/js/content-data5.js"></script>
     <script src="/js/content-data6.js"></script>
-    
+
+    <!-- Lógica Principal -->
     <script>
+        // Sistema de idiomas
+        const translations = {
+            es: {
+                home: 'Inicio',
+                premium: 'Premium',
+                videos: 'Videos',
+                subscription: 'Suscripciones',
+                welcome: 'Bienvenidos al paraíso',
+                featured: 'Galería Destacada',
+                explore: 'Explorar Galería',
+                rights: 'Todos los derechos reservados',
+                paradise: 'El paraíso de Ibiza en imágenes'
+            },
+            en: {
+                home: 'Home',
+                premium: 'Premium',
+                videos: 'Videos',
+                subscription: 'Subscriptions',
+                welcome: 'Welcome to paradise',
+                featured: 'Featured Gallery',
+                explore: 'Explore Gallery',
+                rights: 'All rights reserved',
+                paradise: 'The paradise of Ibiza in images'
+            },
+            fr: {
+                home: 'Accueil',
+                premium: 'Premium',
+                videos: 'Vidéos',
+                subscription: 'Abonnements',
+                welcome: 'Bienvenue au paradis',
+                featured: 'Galerie en vedette',
+                explore: 'Explorer la galerie',
+                rights: 'Tous droits réservés',
+                paradise: 'Le paradis d\'Ibiza en images'
+            },
+            de: {
+                home: 'Startseite',
+                premium: 'Premium',
+                videos: 'Videos',
+                subscription: 'Abonnements',
+                welcome: 'Willkommen im Paradies',
+                featured: 'Ausgewählte Galerie',
+                explore: 'Galerie erkunden',
+                rights: 'Alle Rechte vorbehalten',
+                paradise: 'Das Paradies von Ibiza in Bildern'
+            },
+            it: {
+                home: 'Home',
+                premium: 'Premium',
+                videos: 'Video',
+                subscription: 'Abbonamenti',
+                welcome: 'Benvenuti in paradiso',
+                featured: 'Galleria in evidenza',
+                explore: 'Esplora la galleria',
+                rights: 'Tutti i diritti riservati',
+                paradise: 'Il paradiso di Ibiza in immagini'
+            }
+        };
+
+        let currentLang = 'es';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            localStorage.setItem('language', lang);
+        }
+
+        // Cargar idioma guardado
+        const savedLang = localStorage.getItem('language') || 'es';
+        document.getElementById('languageSelect').value = savedLang;
+        changeLanguage(savedLang);
+
         // Función para obtener imágenes aleatorias
         function getRandomImages(array, count) {
             const shuffled = [...array].sort(() => Math.random() - 0.5);
             return shuffled.slice(0, count);
         }
 
-        // Función para rotar banner
+        // Rotación del Banner
         function setupBannerRotation() {
             const banner = document.getElementById('banner');
-            const bannerImages = window.FULL_IMAGES_POOL || [];
             let currentIndex = 0;
+            
+            // Intentar usar imágenes del banner desde diferentes fuentes
+            let bannerImages = [];
+            
+            // Primera prioridad: BANNER_IMAGES de content-data
+            if (window.BANNER_IMAGES && window.BANNER_IMAGES.length > 0) {
+                bannerImages = window.BANNER_IMAGES;
+            }
+            // Segunda prioridad: primeras 10 de FULL_IMAGES_POOL
+            else if (window.FULL_IMAGES_POOL && window.FULL_IMAGES_POOL.length > 0) {
+                bannerImages = window.FULL_IMAGES_POOL.slice(0, 10);
+            }
+            // Fallback: intentar decorative-images
+            else {
+                bannerImages = [
+                    'decorative-images/banner-1.webp',
+                    'decorative-images/banner-2.webp',
+                    'decorative-images/banner-3.webp',
+                    'decorative-images/banner-4.webp',
+                    'decorative-images/banner-5.webp'
+                ];
+            }
             
             if (bannerImages.length > 0) {
                 setInterval(() => {
-                    currentIndex = (currentIndex + 1) % Math.min(10, bannerImages.length);
-                    banner.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/${bannerImages[currentIndex]}')`;
+                    currentIndex = (currentIndex + 1) % bannerImages.length;
+                    const imagePath = bannerImages[currentIndex].startsWith('/') ? 
+                        bannerImages[currentIndex] : '/' + bannerImages[currentIndex];
+                    banner.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('${imagePath}')`;
                 }, 5000);
             }
         }
 
-        // Cargar carousel
+        // Cargar Carousel
         function loadCarousel() {
             const carousel = document.getElementById('carousel');
-            const images = window.FULL_IMAGES_POOL || [];
-            const selected = getRandomImages(images, 30);
             
-            // Duplicar para efecto infinito
-            const allImages = [...selected, ...selected];
+            if (!window.FULL_IMAGES_POOL || window.FULL_IMAGES_POOL.length === 0) {
+                console.error('FULL_IMAGES_POOL no disponible');
+                return;
+            }
             
-            carousel.innerHTML = allImages.map(img => 
-                `<img src="/${img}" alt="Ibiza Gallery" loading="lazy">`
-            ).join('');
+            const selected = getRandomImages(window.FULL_IMAGES_POOL, 30);
+            const allImages = [...selected, ...selected]; // Duplicar para efecto infinito
+            
+            carousel.innerHTML = allImages.map(img => {
+                const imagePath = img.startsWith('/') ? img : '/' + img;
+                return `<img src="${imagePath}" alt="Ibiza Gallery" loading="lazy" onerror="this.style.display='none'">`;
+            }).join('');
         }
 
-        // Cargar galería
+        // Cargar Galería
         function loadGallery() {
             const gallery = document.getElementById('gallery');
-            const images = window.FULL_IMAGES_POOL || [];
-            const selected = getRandomImages(images, 40);
             
-            gallery.innerHTML = selected.map(img => `
-                <div class="gallery-item">
-                    <img src="/${img}" alt="Ibiza Gallery" loading="lazy">
-                </div>
-            `).join('');
+            if (!window.FULL_IMAGES_POOL || window.FULL_IMAGES_POOL.length === 0) {
+                console.error('FULL_IMAGES_POOL no disponible');
+                return;
+            }
+            
+            const selected = getRandomImages(window.FULL_IMAGES_POOL, 40);
+            
+            gallery.innerHTML = selected.map((img, index) => {
+                const imagePath = img.startsWith('/') ? img : '/' + img;
+                return `
+                    <div class="gallery-item" onclick="openImage('${imagePath}')">
+                        <img src="${imagePath}" alt="Ibiza Gallery ${index + 1}" loading="lazy">
+                    </div>
+                `;
+            }).join('');
         }
 
-        // Cargar anuncios (placeholder)
+        // Abrir imagen en nueva ventana
+        function openImage(src) {
+            window.open(src, '_blank');
+        }
+
+        // Cargar Anuncios
         function loadAds() {
             const env = window.ENV || {};
             
-            // Aquí irá la integración real con las redes de anuncios
-            if (env.EXOCLICK_ZONE || env.JUICYADS_ZONE) {
-                console.log('Ads configuration detected');
-                // Implementar carga de anuncios
+            // ExoClick
+            if (env.EXOCLICK_ZONE) {
+                const leftAd = document.getElementById('ad-content-left');
+                if (leftAd) {
+                    const exoScript = document.createElement('script');
+                    exoScript.src = '//a.exoclick.com/tag_gen.js';
+                    exoScript.async = true;
+                    document.body.appendChild(exoScript);
+                    
+                    leftAd.innerHTML = `<ins class="adsbyexoclick" data-zoneid="${env.EXOCLICK_ZONE}"></ins>`;
+                }
+            }
+            
+            // JuicyAds
+            if (env.JUICYADS_ZONE) {
+                const rightAd = document.getElementById('ad-content-right');
+                if (rightAd) {
+                    const juicyScript = document.createElement('script');
+                    juicyScript.src = '//js.juicyads.com/jads.js';
+                    juicyScript.async = true;
+                    document.body.appendChild(juicyScript);
+                    
+                    rightAd.innerHTML = `<ins id="ads_${env.JUICYADS_ZONE}" class="juicyads" data-zone="${env.JUICYADS_ZONE}"></ins>`;
+                }
+            }
+            
+            // PopAds
+            if (env.POPADS_SITE_ID) {
+                const popScript = document.createElement('script');
+                popScript.type = 'text/javascript';
+                popScript.innerHTML = `
+                    var pop_tag = document.createElement('script');
+                    pop_tag.src = '//c1.popads.net/pop.js';
+                    document.body.appendChild(pop_tag);
+                    pop_tag.onerror = function() {
+                        pop_tag = document.createElement('script');
+                        pop_tag.src = '//c2.popads.net/pop.js';
+                        document.body.appendChild(pop_tag);
+                    };
+                    window.pop = { uid: '${env.POPADS_SITE_ID}' };
+                `;
+                document.body.appendChild(popScript);
+            }
+            
+            // Crisp Chat
+            if (env.CRISP_WEBSITE_ID) {
+                window.$crisp = [];
+                window.CRISP_WEBSITE_ID = env.CRISP_WEBSITE_ID;
+                const crispScript = document.createElement('script');
+                crispScript.src = 'https://client.crisp.chat/l.js';
+                crispScript.async = true;
+                document.body.appendChild(crispScript);
             }
         }
 
-        // Inicializar todo cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
-            // Esperar a que los content-data se carguen
-            setTimeout(() => {
+        // Sistema de inicialización con reintentos
+        let initAttempts = 0;
+        const maxAttempts = 20;
+
+        function initializeApp() {
+            initAttempts++;
+            
+            // Verificar si los datos están cargados
+            if (window.FULL_IMAGES_POOL && window.FULL_IMAGES_POOL.length > 0) {
+                console.log('✅ Datos cargados correctamente. Inicializando aplicación...');
                 setupBannerRotation();
                 loadCarousel();
                 loadGallery();
                 loadAds();
-            }, 500);
-        });
-
-        // Recargar imágenes al refrescar
-        window.addEventListener('beforeunload', function() {
-            sessionStorage.setItem('needsRefresh', 'true');
-        });
-
-        window.addEventListener('load', function() {
-            if (sessionStorage.getItem('needsRefresh')) {
-                sessionStorage.removeItem('needsRefresh');
-                // Las imágenes ya se cargan aleatoriamente
+            } else if (initAttempts < maxAttempts) {
+                console.log(`⏳ Intento ${initAttempts}/${maxAttempts} - Esperando datos...`);
+                setTimeout(initializeApp, 500);
+            } else {
+                console.error('❌ No se pudieron cargar los datos después de ' + maxAttempts + ' intentos');
+                document.getElementById('carousel').innerHTML = '<p style="text-align:center; color:#666;">Error al cargar las imágenes</p>';
+                document.getElementById('gallery').innerHTML = '<p style="text-align:center; color:#666;">Error al cargar la galería</p>';
             }
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Iniciando IbizaGirl.pics...');
+            initializeApp();
         });
+
+        // Manejo de errores de imágenes
+        window.addEventListener('error', function(e) {
+            if (e.target.tagName === 'IMG') {
+                console.warn('Error cargando imagen:', e.target.src);
+            }
+        }, true);
     </script>
 </body>
 </html>
