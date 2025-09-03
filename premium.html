@@ -1,139 +1,474 @@
-<!doctype html><html lang="es"><head>
-<script>(function(){try{window.__PREMIUM_HTML_LOADED=true;console.log("[premium.html] HTML cargado");}catch(e){console.error("[premium.html] logger error",e);}})();</script>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IBIZAGIRL.PICS — Premium</title>
-<link rel="stylesheet" href="/css/ibg.css">
-<script src="js/ibg-env.global.js?v=1756848826"></script>
-<script src="/content-data1.js"></script>
-<script src="/content-data2.js"></script>
-<script src="/content-data3.js"></script>
-<script src="/content-data4.js"></script>
-<script src="/content-data5.js"></script>
-<script src="/content-data6.js"></script>
-  <link rel="stylesheet" href="css/premium.css"/>
-  <script>
-(() => {
-  const log=(...a)=>console.log('[IBG-Pay]',...a);
-  const GrantStore={
-    key:'ibg_grants',
-    get(){ try{ return JSON.parse(localStorage.getItem(this.key)||'[]'); }catch{ return []; } },
-    set(a){ localStorage.setItem(this.key, JSON.stringify(a)); },
-    add(grant){ if(!grant) return; const a=this.get().filter(g=>g.exp> Date.now()/1000); a.push(grant); this.set(a); },
-    hasValidForItem(item){
-      const now=Math.floor(Date.now()/1000);
-      const b64uToStr=s=>atob(s.replace(/-/g,'+').replace(/_/g,'/'));
-      for(const tok of this.get()){ const p=String(tok).split('.'); if(p.length!==3) continue;
-        try{ const pl=JSON.parse(b64uToStr(p[1]));
-          if(pl.typ==='grant' && pl.exp>now && (pl.scope==='all' || (pl.scope==='item' && pl.item===item))) return true;
-        }catch{}
-      }
-      return false;
-    }
-  };
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium - IbizaGirl.pics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  const IBG_Payments={
-    _sdkLoaded:false, _currency:'EUR',
-    async loadSdk(){
-      if(this._sdkLoaded && window.paypal) return window.paypal;
-      const cfg=await fetch('/api/paypal/config').then(r=>r.json()).catch(()=>({ok:false}));
-      if(!cfg?.ok || !cfg.clientId) throw new Error('paypal config');
-      this._currency=cfg.currency||'EUR';
-      await new Promise((res,rej)=>{
-        const s=document.createElement('script');
-        s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(cfg.clientId)}&currency=${this._currency}&intent=capture&components=buttons`;
-        s.onload=res; s.onerror=rej; document.head.appendChild(s);
-      });
-      this._sdkLoaded=true; return window.paypal;
-    },
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            color: white;
+        }
 
-    async checkoutPpv(itemName){
-      const paypal=await this.loadSdk();
-      let modal=document.getElementById('ibg-pay-modal');
-      if(!modal){
-        modal=document.createElement('div'); modal.id='ibg-pay-modal';
-        modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:99999;';
-        modal.innerHTML='<div style="background:#111;padding:16px;border-radius:12px;max-width:420px;width:100%"><div id="ibg-paypal-buttons"></div><button id="ibg-pay-close" style="margin-top:12px;width:100%;padding:10px;border-radius:8px;background:#333;color:#fff;border:0">Cancelar</button></div>';
-        document.body.appendChild(modal);
-        modal.querySelector('#ibg-pay-close').onclick=()=>modal.remove();
-      }else{
-        modal.style.display='flex';
-        modal.querySelector('#ibg-paypal-buttons').innerHTML='';
-      }
+        /* Menú Superior */
+        .navbar {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
 
-      paypal.Buttons({
-        style:{layout:'horizontal',color:'black',shape:'rect',label:'pay'},
-        createOrder: async ()=>{
-          const r=await fetch('/api/paypal/create-order',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({sku:'ppv_1'})});
-          const j=await r.json(); if(!j.ok) throw new Error('create-order failed');
-          log('order CREATED', j.id); return j.id;
-        },
-        onApprove: async ({orderID})=>{
-          try{
-            const r=await fetch('/api/paypal/capture',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({orderId:orderID,sku:'ppv_1',item:itemName})});
-            const j=await r.json(); if(!j.ok){ console.error('capture error', j); alert('No se pudo capturar el pago.'); return; }
-            log('capture COMPLETED', j); GrantStore.add(j.grant);
-            document.querySelector(`[data-ibg-name="${CSS.escape(itemName)}"]`)?.classList.remove('ibg-locked');
-            modal.remove();
-            alert('¡Pago completado! Acceso concedido durante 24h.');
-          }catch(e){ console.error('onApprove error',e); alert('Error durante la confirmación.'); }
-        },
-        onError:(err)=>{ console.error('PayPal Buttons error',err); alert('Error con PayPal.'); }
-      }).render('#ibg-paypal-buttons');
-    },
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    enableThumbHandlers(){
-      document.addEventListener('click',ev=>{
-        let btn=ev.target.closest('[data-ibg-ppv]'); let item=btn?.getAttribute('data-ibg-ppv')||null;
-        if(!item){ const fb=ev.target.closest('.ibg-ppv-btn,[data-ppv="1"]'); if(fb){ const wrap=fb.closest('[data-ibg-name]'); item=wrap?.getAttribute('data-ibg-name')||null; btn=fb; } }
-        if(!item) return; ev.preventDefault(); this.checkoutPpv(item);
-      });
-    },
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
 
-    markLockedThumbs(){
-      document.querySelectorAll('[data-ibg-name]').forEach(el=>{
-        const name=el.getAttribute('data-ibg-name');
-        if(!GrantStore.hasValidForItem(name)) el.classList.add('ibg-locked');
-      });
-    }
-  };
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
 
-  window.addEventListener('DOMContentLoaded',()=>{ IBG_Payments.enableThumbHandlers(); IBG_Payments.markLockedThumbs(); });
-  window.IBG_Payments=IBG_Payments;
-})();
-  </script>
-</head><body>
-<aside id="ad-left" class="side-ad left"></aside>
-<aside id="ad-right" class="side-ad right"></aside>
-<div class="page-shell"><div id="app"></div></div>
-<script type="module" src="js/i18n.global.js?v=1756848826"></script>
-<script type="module" src="/js/bootstrap-ibg.js?v=1756068653"></script>
-<div id="premium-root" style="padding:16px;font:14px/1.4 system-ui,Arial;">
-  <div id="premium-status">🔎 Cargando premium…</div>
-</div>
+        .nav-links a:hover, .nav-links a.active {
+            color: #ff6b6b;
+        }
 
-<script src="premium.js" defer></script>
-<script>(function(){var el=document.getElementById("premium-status");if(!el)return;try{var cid=(window.__ENV&&window.__ENV.PAYPAL_CLIENT_ID)||"(vacío)";console.log("[premium] ready, PAYPAL_CLIENT_ID len:", (cid||"").length);el.textContent="✅ premium listo • PAYPAL_CLIENT_ID: "+(cid?"•••"+cid.slice(-6):"(vacío)");}catch(e){console.error("[premium] post-load error",e);el.textContent="⚠️ premium error: "+e;}})();</script>
-<section id="premium-plans" style="padding:16px;max-width:1100px;margin:0 auto;">
-  <h2 style="font:600 24px system-ui,Arial;margin:0 0 12px;">Suscripciones Premium</h2>
-  <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
-    <div style="border:1px solid #ddd;border-radius:12px;padding:16px;"><div style="font-weight:600;margin-bottom:4px;">Mensual</div><div id="paypal-monthly"></div></div>
-    <div style="border:1px solid #ddd;border-radius:12px;padding:16px;"><div style="font-weight:600;margin-bottom:4px;">Anual</div><div id="paypal-yearly"></div></div>
-    <div style="border:1px solid #ddd;border-radius:12px;padding:16px;"><div style="font-weight:600;margin-bottom:4px;">Lifetime</div><div id="paypal-lifetime"></div></div>
-  </div><div id="paypal-status" style="margin-top:10px;font:12px system-ui,Arial;opacity:.8;"></div>
-</section>
+        /* Contenido Principal */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
+        /* Grid de imágenes premium */
+        .premium-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
 
+        .premium-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #2a2a2a;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
 
+        .premium-item:hover {
+            transform: scale(1.02);
+        }
 
+        .premium-item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            filter: blur(15px);
+            transition: filter 0.3s;
+        }
 
+        .premium-item:hover img {
+            filter: blur(10px);
+        }
 
+        .premium-item.unlocked img {
+            filter: none !important;
+        }
 
+        /* Overlay de precio */
+        .price-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
 
+        .premium-item.unlocked .price-overlay {
+            display: none;
+        }
 
-<script src="env.js"></script>
+        .premium-item:hover .price-overlay {
+            background: rgba(0, 0, 0, 0.8);
+        }
 
-<script src="/js/ibg-payments.js" defer></script>
-</body></html>
+        .paypal-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
 
-  
+        .paypal-icon::before {
+            content: "P";
+            color: #003087;
+            font-size: 2rem;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .price-tag {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd93d;
+        }
+
+        .unlock-text {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        /* Modal de PayPal */
+        .paypal-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .paypal-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            color: #333;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        #paypal-button-container {
+            min-height: 150px;
+        }
+
+        /* Anuncios laterales */
+        .side-ad {
+            position: fixed;
+            top: 80px;
+            width: 160px;
+            height: 600px;
+            background: rgba(255,255,255,0.05);
+            border: 1px dashed rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.3);
+            z-index: 100;
+        }
+
+        .side-ad.left {
+            left: 10px;
+        }
+
+        .side-ad.right {
+            right: 10px;
+        }
+
+        @media (max-width: 1600px) {
+            .side-ad {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .premium-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 1rem;
+            }
+            
+            .premium-item img {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú Superior -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                <span style="color: white; font-size: 1.5rem; font-weight: bold;">IbizaGirl.pics</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/premium.html" class="active">Premium</a></li>
+                <li><a href="/videos.html">Videos</a></li>
+                <li><a href="/subscription.html">Subscripciones</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="main-content">
+        <h1 class="page-title">Contenido Premium</h1>
+        
+        <div class="premium-grid" id="premiumGrid">
+            <!-- Se llenará dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Modal de PayPal -->
+    <div class="paypal-modal" id="paypalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Desbloquear Imagen</h3>
+                <button class="close-modal" onclick="closePayPalModal()">&times;</button>
+            </div>
+            <div id="paypal-button-container"></div>
+            <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                Pago seguro con PayPal
+            </p>
+        </div>
+    </div>
+
+    <!-- Anuncios laterales -->
+    <div class="side-ad left" id="ad-left">
+        <span>Anuncio</span>
+    </div>
+    <div class="side-ad right" id="ad-right">
+        <span>Anuncio</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/env.js"></script>
+    <script src="/js/content-data1.js"></script>
+    <script src="/js/content-data2.js"></script>
+    <script src="/js/content-data3.js"></script>
+    <script src="/js/content-data4.js"></script>
+    <script src="/js/content-data5.js"></script>
+    <script src="/js/content-data6.js"></script>
+    
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=EUR"></script>
+    
+    <script>
+        let currentImageId = null;
+        const PRICE_PER_IMAGE = 0.10; // 0.10€ por imagen
+        
+        // Función para obtener imágenes premium
+        function getPremiumImages() {
+            const part1 = window.PREMIUM_IMAGES_PART1 || [];
+            const part2 = window.PREMIUM_IMAGES_PART2 || [];
+            return [...part1, ...part2];
+        }
+        
+        // Función para cargar el grid de imágenes premium
+        function loadPremiumGrid() {
+            const grid = document.getElementById('premiumGrid');
+            const images = getPremiumImages();
+            
+            // Mostrar solo las primeras 100 imágenes
+            const imagesToShow = images.slice(0, 100);
+            
+            grid.innerHTML = imagesToShow.map((img, index) => {
+                const imageId = `premium_${index}`;
+                const isUnlocked = localStorage.getItem(imageId) === 'unlocked';
+                
+                return `
+                    <div class="premium-item ${isUnlocked ? 'unlocked' : ''}" 
+                         data-image-id="${imageId}" 
+                         data-image-src="/${img}"
+                         onclick="handlePremiumClick('${imageId}', '/${img}')">
+                        <img src="/${img}" alt="Premium content">
+                        ${!isUnlocked ? `
+                            <div class="price-overlay">
+                                <div class="paypal-icon"></div>
+                                <div class="price-tag">€0.10</div>
+                                <div class="unlock-text">Click para desbloquear</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Manejar click en imagen premium
+        function handlePremiumClick(imageId, imageSrc) {
+            if (localStorage.getItem(imageId) === 'unlocked') {
+                // Si está desbloqueada, abrir en nueva ventana
+                window.open(imageSrc, '_blank');
+            } else {
+                // Si no, mostrar modal de PayPal
+                currentImageId = imageId;
+                openPayPalModal();
+            }
+        }
+        
+        // Abrir modal de PayPal
+        function openPayPalModal() {
+            const modal = document.getElementById('paypalModal');
+            modal.classList.add('active');
+            initPayPalButton();
+        }
+        
+        // Cerrar modal de PayPal
+        function closePayPalModal() {
+            const modal = document.getElementById('paypalModal');
+            modal.classList.remove('active');
+            currentImageId = null;
+        }
+        
+        // Inicializar botón de PayPal
+        function initPayPalButton() {
+            const container = document.getElementById('paypal-button-container');
+            container.innerHTML = ''; // Limpiar botones anteriores
+            
+            // Obtener CLIENT_ID de las variables de entorno
+            const clientId = window.ENV?.PAYPAL_CLIENT_ID;
+            
+            if (!clientId) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <p style="color: #ff6b6b;">PayPal no configurado</p>
+                        <p style="font-size: 0.9rem; margin-top: 1rem;">
+                            Por favor, configura PAYPAL_CLIENT_ID en Vercel
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Renderizar botón de PayPal
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: PRICE_PER_IMAGE.toFixed(2),
+                                currency_code: 'EUR'
+                            },
+                            description: `Imagen Premium #${currentImageId}`
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        // Marcar imagen como desbloqueada
+                        localStorage.setItem(currentImageId, 'unlocked');
+                        
+                        // Actualizar UI
+                        const item = document.querySelector(`[data-image-id="${currentImageId}"]`);
+                        if (item) {
+                            item.classList.add('unlocked');
+                            const overlay = item.querySelector('.price-overlay');
+                            if (overlay) overlay.remove();
+                        }
+                        
+                        // Cerrar modal
+                        closePayPalModal();
+                        
+                        // Mostrar mensaje de éxito
+                        alert('¡Imagen desbloqueada con éxito!');
+                    });
+                },
+                onError: function(err) {
+                    console.error('Error de PayPal:', err);
+                    alert('Hubo un error con el pago. Por favor, intenta de nuevo.');
+                }
+            }).render('#paypal-button-container');
+        }
+        
+        // Cargar anuncios
+        function loadAds() {
+            const env = window.ENV || {};
+            
+            if (env.EXOCLICK_ZONE || env.JUICYADS_ZONE) {
+                console.log('Ads configuration detected');
+                // Aquí irá la integración real con las redes de anuncios
+            }
+        }
+        
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                loadPremiumGrid();
+                loadAds();
+            }, 500);
+        });
+        
+        // Cerrar modal al hacer click fuera
+        document.getElementById('paypalModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePayPalModal();
+            }
+        });
+    </script>
+</body>
+</html>
