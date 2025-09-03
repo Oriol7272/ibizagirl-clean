@@ -1,19 +1,351 @@
-<!doctype html><html lang="es"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IBIZAGIRL.PICS — Home</title>
-<link rel="stylesheet" href="/css/ibg.css">
-<link rel="stylesheet" href="/css/ibg-home.css">
-<script src="js/ibg-env.global.js?v=1756848826"></script>
-<script src="/content-data1.js"></script>
-<script src="/content-data2.js"></script>
-<script src="/content-data3.js"></script>
-<script src="/content-data4.js"></script>
-<script src="/content-data5.js"></script>
-<script src="/content-data6.js"></script>
-</head><body>
-<aside id="ad-left" class="side-ad left"></aside>
-<aside id="ad-right" class="side-ad right"></aside>
-<div class="page-shell"><div id="app"></div></div>
-<script type="module" src="js/i18n.global.js?v=1756848826"></script>
-<script type="module" src="/js/bootstrap-ibg.js"></script>
-</body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IbizaGirl.pics - Bienvenidos al Paraíso</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Menú Superior */
+        .navbar {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #764ba2;
+        }
+
+        /* Banner */
+        .banner {
+            margin-top: 60px;
+            height: 400px;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/full/banner-1.webp') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner h1 {
+            font-size: 4rem;
+            font-family: 'Brush Script MT', cursive;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: fadeInUp 1s ease;
+        }
+
+        .banner p {
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        /* Carousel */
+        .carousel-section {
+            padding: 2rem;
+            background: white;
+        }
+
+        .carousel-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel {
+            display: flex;
+            gap: 1rem;
+            animation: slide 30s linear infinite;
+        }
+
+        .carousel img {
+            width: 200px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Grid de imágenes */
+        .gallery-section {
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+
+        .gallery-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        /* Anuncios laterales */
+        .side-ad {
+            position: fixed;
+            top: 80px;
+            width: 160px;
+            height: 600px;
+            background: rgba(255,255,255,0.1);
+            border: 1px dashed rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.5);
+            z-index: 100;
+        }
+
+        .side-ad.left {
+            left: 10px;
+        }
+
+        .side-ad.right {
+            right: 10px;
+        }
+
+        @media (max-width: 1600px) {
+            .side-ad {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .banner h1 {
+                font-size: 2.5rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú Superior -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                <span style="color: white; font-size: 1.5rem; font-weight: bold;">IbizaGirl.pics</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/premium.html">Premium</a></li>
+                <li><a href="/videos.html">Videos</a></li>
+                <li><a href="/subscription.html">Subscripciones</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Banner -->
+    <div class="banner" id="banner">
+        <h1>ibizagirl.pics</h1>
+        <p>Bienvenidos al paraíso</p>
+    </div>
+
+    <!-- Carousel de 30 imágenes -->
+    <section class="carousel-section">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">Galería Destacada</h2>
+        <div class="carousel-container">
+            <div class="carousel" id="carousel">
+                <!-- Se llenará dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Grid de 40 imágenes -->
+    <section class="gallery-section">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">Explorar Galería</h2>
+        <div class="gallery-grid" id="gallery">
+            <!-- Se llenará dinámicamente -->
+        </div>
+    </section>
+
+    <!-- Anuncios laterales -->
+    <div class="side-ad left" id="ad-left">
+        <span>Anuncio</span>
+    </div>
+    <div class="side-ad right" id="ad-right">
+        <span>Anuncio</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/env.js"></script>
+    <script src="/js/content-data1.js"></script>
+    <script src="/js/content-data2.js"></script>
+    <script src="/js/content-data3.js"></script>
+    <script src="/js/content-data4.js"></script>
+    <script src="/js/content-data5.js"></script>
+    <script src="/js/content-data6.js"></script>
+    
+    <script>
+        // Función para obtener imágenes aleatorias
+        function getRandomImages(array, count) {
+            const shuffled = [...array].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, count);
+        }
+
+        // Función para rotar banner
+        function setupBannerRotation() {
+            const banner = document.getElementById('banner');
+            const bannerImages = window.FULL_IMAGES_POOL || [];
+            let currentIndex = 0;
+            
+            if (bannerImages.length > 0) {
+                setInterval(() => {
+                    currentIndex = (currentIndex + 1) % Math.min(10, bannerImages.length);
+                    banner.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/${bannerImages[currentIndex]}')`;
+                }, 5000);
+            }
+        }
+
+        // Cargar carousel
+        function loadCarousel() {
+            const carousel = document.getElementById('carousel');
+            const images = window.FULL_IMAGES_POOL || [];
+            const selected = getRandomImages(images, 30);
+            
+            // Duplicar para efecto infinito
+            const allImages = [...selected, ...selected];
+            
+            carousel.innerHTML = allImages.map(img => 
+                `<img src="/${img}" alt="Ibiza Gallery" loading="lazy">`
+            ).join('');
+        }
+
+        // Cargar galería
+        function loadGallery() {
+            const gallery = document.getElementById('gallery');
+            const images = window.FULL_IMAGES_POOL || [];
+            const selected = getRandomImages(images, 40);
+            
+            gallery.innerHTML = selected.map(img => `
+                <div class="gallery-item">
+                    <img src="/${img}" alt="Ibiza Gallery" loading="lazy">
+                </div>
+            `).join('');
+        }
+
+        // Cargar anuncios (placeholder)
+        function loadAds() {
+            const env = window.ENV || {};
+            
+            // Aquí irá la integración real con las redes de anuncios
+            if (env.EXOCLICK_ZONE || env.JUICYADS_ZONE) {
+                console.log('Ads configuration detected');
+                // Implementar carga de anuncios
+            }
+        }
+
+        // Inicializar todo cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esperar a que los content-data se carguen
+            setTimeout(() => {
+                setupBannerRotation();
+                loadCarousel();
+                loadGallery();
+                loadAds();
+            }, 500);
+        });
+
+        // Recargar imágenes al refrescar
+        window.addEventListener('beforeunload', function() {
+            sessionStorage.setItem('needsRefresh', 'true');
+        });
+
+        window.addEventListener('load', function() {
+            if (sessionStorage.getItem('needsRefresh')) {
+                sessionStorage.removeItem('needsRefresh');
+                // Las imágenes ya se cargan aleatoriamente
+            }
+        });
+    </script>
+</body>
+</html>
